@@ -1,0 +1,439 @@
+---
+import { opportunities, portals, CATEGORY_META, CATEGORY_ORDER, OBC_SCOPE_LABEL, FEED_STATUS, type Category } from '../data/opportunities';
+import { computeStatus, STATUS_LABEL, deadlineText, formatDate, todayISO, type Status } from '../lib/status';
+
+interface Props { category?: Category }
+const { category } = Astro.props;
+const today = todayISO();
+const records = opportunities.filter((o) => !category || o.categories.includes(category));
+const scopePortals = portals.filter((p) => !category || p.categories.includes(category));
+
+const statusOrder: Status[] = ['closing-soon', 'open', 'rolling', 'upcoming', 'amended', 'awaiting-notice', 'closed'];
+
+type Facet = { key: string; label: string; values: { value: string; label: string; count: number }[] };
+const facet = (key: string, label: string, get: (o: (typeof records)[number]) => string[], labeler: (v: string) => string = (v) => v): Facet => {
+  const counts = new Map<string, number>();
+  records.forEach((o) => get(o).forEach((v) => counts.set(v, (counts.get(v) ?? 0) + 1)));
+  return { key, label, values: [...counts].map(([value, count]) => ({ value, label: labeler(value), count })) };
+};
+const facets: Facet[] = [
+  facet('status', 'Status', (o) => [computeStatus(o, today)], (v) => STATUS_LABEL[v as Status]),
+  facet('aud', 'Who it is for', (o) => o.audience),
+  facet('geo', 'Where it applies', (o) => o.geography),
+  facet('level', 'Government', (o) => [o.level]),
+  facet('scope', 'Category rule', (o) => [o.obcScope], (v) => OBC_SCOPE_LABEL[v as keyof typeof OBC_SCOPE_LABEL]),
+  facet('edu', 'Education level', (o) => o.educationLevel ?? []),
+  facet('fund', 'Support type', (o) => o.fundingType ?? []),
+  facet('stage', 'Business stage', (o) => o.stage ?? []),
+].filter((f) => f.values.length > 0);
+facets[0]?.values.sort((a, b) => statusOrder.indexOf(a.value as Status) - statusOrder.indexOf(b.value as Status));
+
+const host = (u: string) => new URL(u).hostname.replace(/^www\./, '');
+const feed = category ? FEED_STATUS[category] : null;
+const title = category ? CATEGORY_META[category].label : 'All opportunities';
+---
+<div class="finder" data-finder data-category={category ?? 'all'}>
+  <nav class="cat-tabs" aria-label="Opportunity categories">
+    <a href="/opportunities" aria-current={!category ? 'page' : undefined}>All</a>
+    {CATEGORY_ORDER.map((c) => (
+      <a href={CATEGORY_META[c].path} aria-current={category === c ? 'page' : undefined}>{CATEGORY_META[c].label}</a>
+    ))}
+  </nav>
+
+  <form class="finder-bar" role="search" data-search onsubmit="return false">
+    <label class="visually-hidden" for="finder-q">Search {title.toLowerCase()}</label>
+    <div class="finder-input">
+      <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m14 14 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <input id="finder-q" class="input" type="search" name="q" autocomplete="off" placeholder="Search by name, authority or keyword" data-q />
+    </div>
+    <div class="finder-sort">
+      <label for="finder-sort" class="small muted">Sort</label>
+      <select id="finder-sort" class="select" data-sort>
+        <option value="closing">Closing soon first</option>
+        <option value="latest">Latest checked</option>
+        <option value="az">A to Z</option>
+      </select>
+    </div>
+    <button type="button" class="btn btn--ghost filter-open" data-filter-open aria-haspopup="dialog">
+      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M2 4h14M5 9h8M7.5 14h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      Filters <span class="filter-count" data-filter-count hidden></span>
+    </button>
+  </form>
+
+  <div class="finder-layout">
+    <aside class="finder-filters" aria-label="Filters">
+      <dialog class="filter-sheet" data-filter-sheet aria-labelledby="filter-sheet-title">
+        <div class="filter-sheet__head">
+          <h2 id="filter-sheet-title">Filters</h2>
+          <button type="button" class="icon-btn" data-filter-close aria-label="Close filters">
+            <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M4 4l10 10M14 4 4 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+        <div class="filter-groups" data-filter-groups>
+          {facets.map((f) => (
+            <fieldset class="filter-group">
+              <legend>{f.label}</legend>
+              {f.values.map((v) => (
+                <label class="check">
+                  <input type="checkbox" name={f.key} value={v.value} data-label={v.label} />
+                  <span class="check__box" aria-hidden="true"></span>
+                  <span class="check__label">{v.label}</span>
+                  <span class="check__count" data-count-for={`${f.key}:${v.value}`}>{v.count}</span>
+                </label>
+              ))}
+            </fieldset>
+          ))}
+          {facets.length === 0 && <p class="muted small">Filters appear when there are records to narrow down.</p>}
+        </div>
+        <div class="filter-sheet__foot">
+          <button type="button" class="btn btn--ghost" data-clear>Clear all</button>
+          <button type="button" class="btn" data-filter-apply>Show <span data-apply-count>{records.length}</span> results</button>
+        </div>
+      </dialog>
+    </aside>
+
+    <section class="finder-results" aria-labelledby="results-heading">
+      <div class="results-head">
+        <h2 id="results-heading" class="results-count" aria-live="polite" data-result-count>
+          {records.length} {records.length === 1 ? 'record' : 'records'}
+        </h2>
+        <p class="small muted">Checked against official sources. <a href="/opportunities/about-data">How we check</a></p>
+      </div>
+      <div class="active-filters" data-active hidden>
+        <span class="active-filters__label" data-active-label>Filtered by</span>
+        <ul class="chips" data-chips></ul>
+        <button type="button" class="link-btn" data-clear>Clear all</button>
+      </div>
+
+      {feed && !feed.live && (category === 'tenders' || category === 'jobs') && (
+        <div class="notice notice--warn feed-note" role="status"><strong>No live feed connected.</strong> {feed.message}</div>
+      )}
+
+      {records.length > 0 && (
+        <ol class="results" data-results>
+          {records.map((o) => {
+            const st = computeStatus(o, today);
+            return (
+              <li class="result" data-item
+                data-slug={o.slug}
+                data-title={o.title.toLowerCase()}
+                data-text={`${o.title} ${o.authority} ${o.summary} ${o.geography.join(' ')} ${o.audience.join(' ')}`.toLowerCase()}
+                data-closing={o.closingDate ?? ''}
+                data-opening={o.openingDate ?? ''}
+                data-amended={o.amendedDate ?? ''}
+                data-rolling={o.rolling ? '1' : ''}
+                data-awaiting={o.awaitingNotice ? '1' : ''}
+                data-verified={o.lastVerified}
+                data-status={st}
+                data-aud={o.audience.join('|')}
+                data-geo={o.geography.join('|')}
+                data-level={o.level}
+                data-scope={o.obcScope}
+                data-edu={(o.educationLevel ?? []).join('|')}
+                data-fund={(o.fundingType ?? []).join('|')}
+                data-stage={(o.stage ?? []).join('|')}>
+                <article class="result__card">
+                  <div class="result__top">
+                    <span class={`status status--${st}`} data-status-pill>{STATUS_LABEL[st]}</span>
+                    <span class={`scope scope--${o.obcScope}`}>{OBC_SCOPE_LABEL[o.obcScope]}</span>
+                    <span class="result__level">{o.level} · {o.geography.join(', ')}</span>
+                  </div>
+                  <h3 class="result__title"><a href={`/opportunities/${o.slug}`} data-result-link>{o.title}</a></h3>
+                  <p class="result__authority">{o.authority}</p>
+                  <p class="result__summary">{o.summary}</p>
+                  <dl class="result__facts">
+                    <div><dt>Deadline</dt><dd data-deadline>{deadlineText(o, today)}</dd></div>
+                    <div><dt>Who can apply</dt><dd>{o.whoCanApply[0]}</dd></div>
+                    <div><dt>Official source</dt><dd>{host(o.sources[0].url)} · verified {formatDate(o.lastVerified)}</dd></div>
+                  </dl>
+                </article>
+              </li>
+            );
+          })}
+        </ol>
+      )}
+
+      <div class="empty" data-empty hidden>
+        <h3>No records match these filters</h3>
+        <p>Try removing a filter or searching for a broader term. Only records checked against an official source are listed, so coverage is still small.</p>
+        <button type="button" class="btn btn--ghost btn--sm" data-clear>Clear all filters</button>
+      </div>
+
+      {records.length === 0 && (
+        <div class="empty">
+          <h3>No individual {category ? CATEGORY_META[category].plural : 'records'} listed yet</h3>
+          <p>BECCI lists an opportunity only after checking it against an official source. Until a verified record or authorised feed is available, use the official portals below.</p>
+        </div>
+      )}
+
+      {scopePortals.length > 0 && (
+        <section class="portals" aria-labelledby="portals-title">
+          <h2 id="portals-title" class="portals__title">Official portals{category ? ` for ${CATEGORY_META[category].plural}` : ''}</h2>
+          <p class="small muted">These links go straight to government websites. BECCI does not run them and has no integration with them.</p>
+          <ul class="portal-list">
+            {scopePortals.map((p) => (
+              <li class="portal">
+                <div>
+                  <a class="portal__name ext" href={p.url} rel="noopener" target="_blank">{p.name}<span class="visually-hidden"> (opens official site in a new tab)</span></a>
+                  <span class="portal__meta">{p.authority} · {p.geography}</span>
+                  <p class="portal__note">{p.note}</p>
+                </div>
+                <span class={p.reachable ? 'reach reach--ok' : 'reach reach--no'}>
+                  {p.reachable ? 'Reached' : 'Not reached'} {formatDate(p.checked)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </section>
+  </div>
+</div>
+
+<style is:global>
+  .cat-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 16px; scrollbar-width: none; mask-image: linear-gradient(90deg, #000 88%, transparent); }
+  .cat-tabs::-webkit-scrollbar { display: none; }
+  .cat-tabs a { flex: none; padding: 9px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--white); color: var(--ink-2); text-decoration: none; font-weight: 600; font-size: 0.93rem; min-height: 44px; display: inline-flex; align-items: center; }
+  .cat-tabs a:hover { border-color: var(--blue-700); color: var(--blue-900); }
+  .cat-tabs a[aria-current='page'] { background: var(--blue-800); border-color: var(--blue-800); color: #fff; }
+  .finder-bar { display: grid; grid-template-columns: 1fr auto auto; gap: 12px; align-items: end; margin-bottom: 20px; }
+  .finder-input { position: relative; }
+  .finder-input svg { position: absolute; left: 14px; top: 50%; translate: 0 -50%; color: var(--muted); }
+  .finder-input .input { padding-left: 44px; min-height: 52px; border-radius: 12px; }
+  .finder-sort { display: grid; gap: 4px; }
+  .finder-sort .select { min-height: 52px; border-radius: 12px; }
+  .filter-open { min-height: 52px; display: none; }
+  .filter-count { background: var(--gold-500); color: var(--blue-950); border-radius: 999px; padding: 2px 8px; font-size: 0.8rem; }
+  .finder-layout { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 32px; align-items: start; }
+  .filter-sheet { position: static; display: block; border: 0; padding: 0; margin: 0; background: transparent; width: auto; max-width: none; color: inherit; }
+  .filter-sheet__head, .filter-sheet__foot { display: none; }
+  .finder-filters { position: sticky; top: 92px; max-height: calc(100vh - 110px); overflow: auto; padding-right: 4px; }
+  .filter-group { border: 0; padding: 0 0 18px; margin: 0 0 18px; border-bottom: 1px solid var(--line); }
+  .filter-group:last-child { border-bottom: 0; }
+  .filter-group legend { font: 650 0.78rem/1 var(--font-body); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 10px; padding: 0; }
+  .check { display: grid; grid-template-columns: 22px 1fr auto; align-items: center; gap: 10px; min-height: 40px; font-size: 0.95rem; }
+  .check input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .check__box { width: 20px; height: 20px; border: 1.5px solid #9aa1ae; border-radius: 5px; background: #fff; display: grid; place-items: center; transition: background 120ms, border-color 120ms; }
+  .check input:checked + .check__box { background: var(--blue-800); border-color: var(--blue-800); }
+  .check input:checked + .check__box::after { content: ''; width: 10px; height: 6px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(-45deg) translate(1px, -1px); }
+  .check input:checked ~ .check__label { font-weight: 650; color: var(--blue-900); }
+  .check input:focus-visible + .check__box { outline: 3px solid var(--gold-500); outline-offset: 2px; }
+  .check__count { font-size: 0.8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .check[data-zero] { opacity: 0.5; }
+  .results-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 16px; margin-bottom: 10px; }
+  .results-count { font: 650 1.05rem var(--font-body); color: var(--ink); margin: 0; }
+  .results-head p { margin: 0; }
+  .active-filters { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; min-width: 0; }
+  .active-filters__label { font-size: 0.85rem; color: var(--muted); flex: none; }
+  .chips { display: flex; gap: 8px; list-style: none; padding: 0; margin: 0; overflow-x: auto; scrollbar-width: none; min-width: 0; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip { flex: none; display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 6px 8px 6px 12px; border-radius: 999px; background: var(--blue-100); color: var(--blue-900); border: 0; font: 600 0.88rem var(--font-body); }
+  .chip:hover { background: #d3e0f5; }
+  .chip svg { opacity: 0.7; }
+  .link-btn { flex: none; background: none; border: 0; padding: 8px 4px; color: var(--blue-700); font: 600 0.9rem var(--font-body); text-decoration: underline; text-underline-offset: 3px; min-height: 36px; }
+  .feed-note { margin-bottom: 16px; }
+  .results { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+  .result[hidden] { display: none; }
+  .result__card { position: relative; background: var(--white); border: 1px solid var(--line-2); border-radius: var(--radius); padding: clamp(18px, 2.4vw, 26px); transition: border-color 160ms, box-shadow 200ms; }
+  .result__card:hover { border-color: var(--gold-500); box-shadow: var(--shadow); }
+  .result__card:focus-within { border-color: var(--blue-700); }
+  .result__top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin-bottom: 12px; }
+  .result__level { font-size: 0.85rem; color: var(--muted); }
+  .result__title { font-size: var(--step-1); margin-bottom: 4px; }
+  .result__title a { color: var(--blue-900); text-decoration: none; }
+  .result__title a::after { content: ''; position: absolute; inset: 0; border-radius: var(--radius); }
+  .result__title a:hover { text-decoration: underline; }
+  .result__title a:focus-visible { outline: none; }
+  .result__title a:focus-visible::after { outline: 3px solid var(--gold-500); outline-offset: 2px; }
+  .result__authority { font-size: 0.9rem; color: var(--muted); margin-bottom: 10px; }
+  .result__summary { margin-bottom: 14px; color: var(--ink-2); }
+  .result__facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 20px; margin: 0; padding-top: 14px; border-top: 1px solid var(--line-2); font-size: 0.9rem; }
+  .result__facts dt { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 650; margin-bottom: 2px; }
+  .result__facts dd { margin: 0; color: var(--ink-2); }
+  .empty { background: var(--white); border: 1px dashed var(--line); border-radius: var(--radius); padding: 28px; text-align: left; }
+  .empty p { color: var(--muted); max-width: 60ch; }
+  .portals { margin-top: 40px; }
+  .portals__title { font-size: var(--step-2); }
+  .portal-list { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 10px; }
+  .portal { display: flex; justify-content: space-between; gap: 16px; padding: 16px 18px; border: 1px solid var(--line-2); border-radius: 12px; background: var(--white); }
+  .portal__name { font-weight: 650; }
+  .portal__meta { display: block; font-size: 0.85rem; color: var(--muted); }
+  .portal__note { font-size: 0.9rem; margin: 6px 0 0; color: var(--ink-2); }
+  .reach { flex: none; align-self: start; font-size: 0.75rem; font-weight: 650; padding: 4px 8px; border-radius: 6px; white-space: nowrap; }
+  .reach--ok { background: var(--ok-bg); color: var(--ok); }
+  .reach--no { background: var(--closed-bg); color: var(--closed); }
+  .icon-btn { width: 44px; height: 44px; display: inline-grid; place-items: center; border-radius: 999px; border: 1px solid var(--line); background: var(--white); color: var(--ink); }
+
+  @media (max-width: 900px) {
+    .finder-layout { grid-template-columns: 1fr; }
+    .finder-filters { position: static; max-height: none; overflow: visible; padding: 0; }
+    .finder-bar { grid-template-columns: 1fr auto; }
+    .finder-input { grid-column: 1 / -1; }
+    .finder-sort { grid-template-columns: auto 1fr; align-items: center; gap: 8px; }
+    .filter-open { display: inline-flex; }
+    .filter-sheet { display: none; position: fixed; inset: auto 0 0 0; width: 100%; max-width: 100%; max-height: 88dvh; margin: 0; border-radius: 20px 20px 0 0; background: var(--paper); padding: 0; box-shadow: 0 -10px 40px rgb(0 0 0 / 20%); }
+    .filter-sheet[open] { display: flex; flex-direction: column; animation: sheet 260ms var(--ease); }
+    .filter-sheet::backdrop { background: rgb(8 24 51 / 45%); }
+    .filter-sheet__head { display: flex; justify-content: space-between; align-items: center; padding: 16px var(--gutter); border-bottom: 1px solid var(--line); }
+    .filter-sheet__head h2 { font-size: 1.3rem; margin: 0; }
+    .filter-groups { overflow: auto; padding: 20px var(--gutter); flex: 1; }
+    .filter-sheet__foot { display: grid; grid-template-columns: auto 1fr; gap: 10px; padding: 12px var(--gutter) calc(12px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: var(--white); }
+    .check { min-height: 48px; }
+    .result__facts { grid-template-columns: 1fr; gap: 10px; }
+    .portal { flex-direction: column; gap: 8px; }
+  }
+  @keyframes sheet { from { transform: translateY(40px); opacity: 0.6; } }
+</style>
+
+<script>
+  import { computeStatus, STATUS_LABEL, deadlineText, todayISO } from '../lib/status';
+
+  const root = document.querySelector<HTMLElement>('[data-finder]');
+  if (root) {
+    const FILTER_KEYS = ['status', 'aud', 'geo', 'level', 'scope', 'edu', 'fund', 'stage'];
+    const q = root.querySelector<HTMLInputElement>('[data-q]')!;
+    const sort = root.querySelector<HTMLSelectElement>('[data-sort]')!;
+    const list = root.querySelector<HTMLOListElement>('[data-results]');
+    const items = Array.from(root.querySelectorAll<HTMLLIElement>('[data-item]'));
+    const boxes = Array.from(root.querySelectorAll<HTMLInputElement>('[data-filter-groups] input[type=checkbox]'));
+    const countEl = root.querySelector<HTMLElement>('[data-result-count]')!;
+    const applyCount = root.querySelector<HTMLElement>('[data-apply-count]')!;
+    const chips = root.querySelector<HTMLUListElement>('[data-chips]')!;
+    const active = root.querySelector<HTMLElement>('[data-active]')!;
+    const empty = root.querySelector<HTMLElement>('[data-empty]')!;
+    const badge = root.querySelector<HTMLElement>('[data-filter-count]')!;
+    const sheet = root.querySelector<HTMLDialogElement>('[data-filter-sheet]')!;
+    const mobile = window.matchMedia('(max-width: 900px)');
+    const today = todayISO();
+
+    // Re-evaluate statuses in the browser so a cached page never shows a stale "Open".
+    items.forEach((li) => {
+      const d = li.dataset;
+      const rec = { closingDate: d.closing || undefined, openingDate: d.opening || undefined, amendedDate: d.amended || undefined, rolling: !!d.rolling, awaitingNotice: !!d.awaiting };
+      const st = computeStatus(rec, today);
+      if (st !== d.status) {
+        li.dataset.status = st;
+        const pill = li.querySelector<HTMLElement>('[data-status-pill]')!;
+        pill.className = `status status--${st}`;
+        pill.textContent = STATUS_LABEL[st];
+        const box = boxes.find((b) => b.name === 'status' && b.value === st);
+        if (box) box.dataset.label = STATUS_LABEL[st];
+      }
+      li.querySelector('[data-deadline]')!.textContent = deadlineText(rec, today);
+    });
+
+    const selected = () => {
+      const s: Record<string, string[]> = {};
+      boxes.forEach((b) => { if (b.checked) (s[b.name] ??= []).push(b.value); });
+      return s;
+    };
+    const matches = (li: HTMLLIElement, s: Record<string, string[]>, term: string, skip?: string) => {
+      if (term && !term.split(/\s+/).every((t) => li.dataset.text!.includes(t))) return false;
+      return Object.entries(s).every(([k, vals]) => {
+        if (k === skip) return true;
+        const have = (li.dataset[k] ?? '').split('|');
+        return vals.some((v) => have.includes(v)); // OR within a group, AND across groups
+      });
+    };
+    const order = ['closing-soon', 'open', 'rolling', 'upcoming', 'amended', 'awaiting-notice', 'closed'];
+    const sorters: Record<string, (a: HTMLLIElement, b: HTMLLIElement) => number> = {
+      closing: (a, b) => {
+        const sa = order.indexOf(a.dataset.status!), sb = order.indexOf(b.dataset.status!);
+        const closedA = a.dataset.status === 'closed', closedB = b.dataset.status === 'closed';
+        if (closedA !== closedB) return closedA ? 1 : -1;
+        const ca = a.dataset.closing || '9999', cb = b.dataset.closing || '9999';
+        return ca.localeCompare(cb) || sa - sb || a.dataset.title!.localeCompare(b.dataset.title!);
+      },
+      latest: (a, b) => b.dataset.verified!.localeCompare(a.dataset.verified!) || a.dataset.title!.localeCompare(b.dataset.title!),
+      az: (a, b) => a.dataset.title!.localeCompare(b.dataset.title!),
+    };
+
+    const writeURL = (s: Record<string, string[]>) => {
+      const p = new URLSearchParams();
+      if (q.value.trim()) p.set('q', q.value.trim());
+      Object.entries(s).forEach(([k, v]) => p.set(k, v.join(',')));
+      if (sort.value !== 'closing') p.set('sort', sort.value);
+      const url = `${location.pathname}${p.toString() ? '?' + p : ''}`;
+      history.replaceState(history.state, '', url);
+    };
+
+    const render = (opts: { pushURL?: boolean } = {}) => {
+      const s = selected();
+      const term = q.value.trim().toLowerCase();
+      let n = 0;
+      items.forEach((li) => { const ok = matches(li, s, term); li.hidden = !ok; if (ok) n++; });
+      if (list) items.slice().sort(sorters[sort.value]).forEach((li) => list.appendChild(li));
+      // counts per option, given the other active groups
+      boxes.forEach((b) => {
+        const c = items.filter((li) => matches(li, s, term, b.name) && (li.dataset[b.name] ?? '').split('|').includes(b.value)).length;
+        const el = root.querySelector(`[data-count-for="${b.name}:${CSS.escape(b.value)}"]`);
+        if (el) el.textContent = String(c);
+        b.closest('.check')!.toggleAttribute('data-zero', c === 0 && !b.checked);
+      });
+      const noun = n === 1 ? 'record' : 'records';
+      countEl.textContent = items.length ? `${n} ${noun}${n !== items.length ? ` of ${items.length}` : ''}` : '0 records';
+      applyCount.textContent = String(n);
+      empty.hidden = !(items.length && n === 0);
+      // active chips
+      chips.innerHTML = '';
+      const all = boxes.filter((b) => b.checked);
+      if (term) all.unshift(Object.assign(document.createElement('input'), { name: 'q', value: q.value.trim() }));
+      all.forEach((b) => {
+        const li = document.createElement('li');
+        const btn = document.createElement('button');
+        btn.type = 'button'; btn.className = 'chip';
+        const text = b.name === 'q' ? `“${b.value}”` : b.dataset.label ?? b.value;
+        btn.setAttribute('aria-label', `Remove filter: ${text}`);
+        btn.innerHTML = `<span></span><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`;
+        btn.querySelector('span')!.textContent = text;
+        btn.addEventListener('click', () => {
+          if (b.name === 'q') q.value = ''; else b.checked = false;
+          render(); (chips.querySelector('.chip') as HTMLElement | null ?? q).focus();
+        });
+        li.appendChild(btn); chips.appendChild(li);
+      });
+      active.hidden = all.length === 0;
+      root.querySelector('[data-active-label]')!.textContent = `${all.length} active ${all.length === 1 ? 'filter' : 'filters'}`;
+      const fc = boxes.filter((b) => b.checked).length;
+      badge.hidden = fc === 0; badge.textContent = String(fc);
+      if (opts.pushURL !== false) writeURL(s);
+    };
+
+    // Restore state from URL
+    const params = new URLSearchParams(location.search);
+    q.value = params.get('q') ?? '';
+    if (params.get('sort') && sorters[params.get('sort')!]) sort.value = params.get('sort')!;
+    FILTER_KEYS.forEach((k) => (params.get(k) ?? '').split(',').filter(Boolean).forEach((v) => {
+      const b = boxes.find((x) => x.name === k && x.value === v); if (b) b.checked = true;
+    }));
+    render({ pushURL: false });
+
+    let t: number | undefined;
+    q.addEventListener('input', () => { clearTimeout(t); t = window.setTimeout(() => render(), 120); });
+    sort.addEventListener('change', () => render());
+    boxes.forEach((b) => b.addEventListener('change', () => render()));
+    root.querySelectorAll('[data-clear]').forEach((btn) => btn.addEventListener('click', () => { boxes.forEach((b) => (b.checked = false)); q.value = ''; render(); }));
+
+    // Mobile filter sheet
+    root.querySelector('[data-filter-open]')!.addEventListener('click', () => sheet.showModal());
+    const closeSheet = () => sheet.close();
+    root.querySelector('[data-filter-close]')!.addEventListener('click', closeSheet);
+    root.querySelector('[data-filter-apply]')!.addEventListener('click', closeSheet);
+    sheet.addEventListener('click', (e) => { if (e.target === sheet) closeSheet(); });
+    mobile.addEventListener('change', () => { if (!mobile.matches && sheet.open) sheet.close(); });
+
+    // Remember scroll position for the return trip from a detail page
+    const key = 'finder-scroll:' + location.pathname;
+    root.querySelectorAll<HTMLAnchorElement>('[data-result-link]').forEach((a) => a.addEventListener('click', () => {
+      sessionStorage.setItem(key, JSON.stringify({ y: window.scrollY, url: location.pathname + location.search }));
+      sessionStorage.setItem('finder-return', location.pathname + location.search);
+    }));
+    try {
+      const saved = JSON.parse(sessionStorage.getItem(key) ?? 'null');
+      if (saved && saved.url === location.pathname + location.search) {
+        requestAnimationFrame(() => window.scrollTo(0, saved.y));
+        sessionStorage.removeItem(key);
+      }
+    } catch { /* ignore */ }
+  }
+</script>

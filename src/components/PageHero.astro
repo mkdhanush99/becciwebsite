@@ -1,0 +1,19 @@
+---
+import InfinityMark from './InfinityMark.astro';
+interface Props { title: string; lede?: string; eyebrow?: string; crumbs?: { label: string; href?: string }[] }
+const { title, lede, eyebrow, crumbs = [] } = Astro.props;
+---
+<header class="page-hero on-dark">
+  <InfinityMark class="page-hero__mark" tone="light" />
+  <div class="wrap" style="position:relative">
+    {crumbs.length > 0 && (
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href="/">Home</a>{crumbs.map((c) => <><span> / </span>{c.href ? <a href={c.href}>{c.label}</a> : <span aria-current="page">{c.label}</span>}</>)}
+      </nav>
+    )}
+    {eyebrow && <span class="eyebrow">{eyebrow}</span>}
+    <h1>{title}</h1>
+    {lede && <p class="lede">{lede}</p>}
+    <slot />
+  </div>
+</header>

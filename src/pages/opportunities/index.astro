@@ -1,0 +1,9 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Finder from '../../components/Finder.astro';
+---
+<Base title="Opportunities" description="Search public schemes, scholarships, loans, tenders and jobs, with official sources and deadlines.">
+  <PageHero eyebrow="Opportunity finder" title="Find opportunities that fit you" lede="Schemes, scholarships, loans and funding, tenders and jobs. Every listing links to its official source and shows when we last checked it." crumbs={[{ label: 'Opportunities' }]} />
+  <section class="section--tight"><div class="wrap"><Finder /></div></section>
+</Base>

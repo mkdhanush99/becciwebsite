@@ -1,0 +1,35 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import { opportunities, portals } from '../../data/opportunities';
+import { formatDate } from '../../lib/status';
+const reached = portals.filter((p) => p.reachable).length;
+---
+<Base title="How we check opportunities">
+  <PageHero eyebrow="Data and sources" title="How we check opportunities" lede="What is listed, where it comes from, and what the dates mean." crumbs={[{ label: 'Opportunities', href: '/opportunities' }, { label: 'How we check' }]} />
+  <section class="section"><div class="wrap prose">
+    <h2>What is listed today</h2>
+    <p>{opportunities.length} individual records, each checked by hand against its official government page, plus a directory of {portals.length} official portals ({reached} reached by our checker on the last check).</p>
+    <p>BECCI does not yet receive any automatic feed for tenders, jobs, scholarships or schemes. Where no verified record exists, the site says so and links to the official portal instead of showing sample listings.</p>
+    <h2>What the dates mean</h2>
+    <ul>
+      <li><strong>Published / amended by source</strong> — the date the issuing authority published or changed the notice, when it states one.</li>
+      <li><strong>Last fetched</strong> — the last time the official page was successfully retrieved.</li>
+      <li><strong>Last verified</strong> — the last time a person checked every fact on the BECCI page against that official page.</li>
+    </ul>
+    <h2>Statuses</h2>
+    <ul>
+      <li><strong>Open</strong> — accepting applications, with a published closing date more than 14 days away.</li>
+      <li><strong>Closing soon</strong> — 14 days or fewer to the published closing date.</li>
+      <li><strong>Open · rolling</strong> — no deadline published; applications accepted year-round.</li>
+      <li><strong>Upcoming</strong> — published opening date not yet reached.</li>
+      <li><strong>Amended</strong> — the authority has changed the notice; read the latest version.</li>
+      <li><strong>Awaiting new notice</strong> — the latest official notice has lapsed and no new one has been found.</li>
+      <li><strong>Closed</strong> — the published closing date has passed. Statuses update in your browser using today's date in India.</li>
+    </ul>
+    <h2>Category rules</h2>
+    <p>Each record says whether it is only for Backward Classes, offers a documented OBC/BC preference, or is open to anyone who meets its rules. Where the source refers to the Central OBC list or a specific State BC/OBC list, we say which. These rules come from the scheme, not from BECCI membership.</p>
+    <h2>Corrections</h2>
+    <p>If an official source changes, the official source is correct. Records were last reviewed on {formatDate(opportunities[0]?.lastVerified)}.</p>
+  </div></section>
+</Base>

@@ -1,0 +1,35 @@
+---
+import { site, socials } from '../data/site';
+import InfinityMark from './InfinityMark.astro';
+---
+<footer class="site-footer on-dark">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <InfinityMark tone="light" class="footer-mark" />
+        <p class="footer-promise">{site.promise}</p>
+        <p>{site.fullName}</p>
+        {socials.length ? (
+          <ul class="tag-list">{socials.map((s) => <li><a href={s.url} rel="noopener">{s.label}</a></li>)}</ul>
+        ) : <p class="small">Official social media links will be added once BECCI confirms them.</p>}
+      </div>
+      <div><h2>Opportunities</h2><ul>
+        <li><a href="/schemes">Government Schemes</a></li><li><a href="/opportunities/tenders">Tenders</a></li>
+        <li><a href="/opportunities/jobs">Jobs &amp; Internships</a></li><li><a href="/opportunities/scholarships">Scholarships</a></li>
+        <li><a href="/opportunities/finance">Loans &amp; Funding</a></li><li><a href="/franchise">Franchise &amp; Enterprise</a></li></ul></div>
+      <div><h2>Chamber</h2><ul>
+        <li><a href="/about">About Us</a></li><li><a href="/leadership">Leadership</a></li><li><a href="/wings">Wings &amp; Chapters</a></li>
+        <li><a href="/wings/women">Women's Wing</a></li><li><a href="/wings/youth">Youth Wing</a></li><li><a href="/success-stories">Success Stories</a></li></ul></div>
+      <div><h2>Get involved</h2><ul>
+        <li><a href="/membership">Membership</a></li><li><a href="/partnerships">Partner with BECCI</a></li><li><a href="/services">Services</a></li>
+        <li><a href="/biz-connect">Biz Connect</a></li><li><a href="/marketplace">Marketplace</a></li></ul></div>
+      <div><h2>Updates</h2><ul>
+        <li><a href="/events">Event Calendar</a></li><li><a href="/news">News Desk</a></li><li><a href="/knowledge">Knowledge Centre</a></li><li><a href="/contact">Contact</a></li></ul></div>
+    </div>
+    <div class="footer-base">
+      <span>© {new Date().getFullYear()} BECCI</span>
+      <span><a href="/policies">Privacy Policy</a> · <a href="/policies#terms">Terms</a> · <a href="/opportunities/about-data">How we check opportunities</a></span>
+    </div>
+  </div>
+</footer>
+<style is:global>.footer-mark { width: 88px; }</style>

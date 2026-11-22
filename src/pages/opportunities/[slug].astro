@@ -1,0 +1,127 @@
+---
+import Base from '../../layouts/Base.astro';
+import { opportunities, CATEGORY_META, OBC_SCOPE_LABEL } from '../../data/opportunities';
+import { computeStatus, STATUS_LABEL, deadlineText, formatDate, todayISO } from '../../lib/status';
+
+export function getStaticPaths() {
+  return opportunities.map((o) => ({ params: { slug: o.slug }, props: { o } }));
+}
+const { o } = Astro.props;
+const today = todayISO();
+const st = computeStatus(o, today);
+const primary = o.categories[0];
+const cat = CATEGORY_META[primary];
+const notStated = 'Not stated by the official source.';
+---
+<Base title={o.title} description={o.summary}>
+  <div class="detail-top">
+    <div class="wrap">
+      <a class="back" href={cat.path} data-back>← Back to {cat.label}</a>
+    </div>
+  </div>
+  <article class="wrap detail" data-detail
+    data-closing={o.closingDate ?? ''} data-opening={o.openingDate ?? ''} data-amended={o.amendedDate ?? ''}
+    data-rolling={o.rolling ? '1' : ''} data-awaiting={o.awaitingNotice ? '1' : ''}>
+    <header class="detail__head">
+      <div class="detail__tags">
+        <span class={`status status--${st}`} data-status-pill>{STATUS_LABEL[st]}</span>
+        <span class={`scope scope--${o.obcScope}`}>{OBC_SCOPE_LABEL[o.obcScope]}</span>
+        {o.categories.map((c) => <a class="detail__cat" href={CATEGORY_META[c].path}>{CATEGORY_META[c].label}</a>)}
+      </div>
+      <h1>{o.title}</h1>
+      <p class="detail__authority">{o.authority}</p>
+      <p class="lede">{o.summary}</p>
+    </header>
+
+    <div class="detail__grid">
+      <div class="detail__main">
+        {o.discrepancies?.map((d) => <p class="notice notice--warn"><strong>Check before applying.</strong> {d}</p>)}
+
+        <section><h2>What it offers</h2><ul>{o.provides.map((p) => <li>{p}</li>)}</ul></section>
+        <section><h2>Who can apply</h2><ul>{o.whoCanApply.map((p) => <li>{p}</li>)}</ul></section>
+        <section>
+          <h2>Category rule</h2>
+          <p><strong>{OBC_SCOPE_LABEL[o.obcScope]}.</strong> {o.obcRule}</p>
+          <p class="small muted">Central OBC and State BC/OBC are separate lists. Being on one does not mean you are on the other.</p>
+        </section>
+        <section><h2>Key conditions</h2>{o.conditions?.length ? <ul>{o.conditions.map((p) => <li>{p}</li>)}</ul> : <p class="muted">{notStated}</p>}</section>
+        <section><h2>Documents and registrations</h2>{o.documents?.length ? <ul>{o.documents.map((p) => <li>{p}</li>)}</ul> : <p class="muted">{notStated}</p>}</section>
+        <section><h2>How to apply</h2><ol>{o.howToApply.map((p) => <li>{p}</li>)}</ol></section>
+        <p class="notice small">BECCI is not the issuing authority. The authority named above decides eligibility, awards and funding. This page summarises the official source in plain words and does not guarantee eligibility or approval. Eligibility for this opportunity is separate from BECCI membership.</p>
+      </div>
+
+      <aside class="decide" aria-label="Deadline, sources and application">
+        <div class="decide__card">
+          <dl class="decide__facts">
+            <div><dt>Deadline</dt><dd data-deadline>{deadlineText(o, today)}</dd></div>
+            <div><dt>Where it applies</dt><dd>{o.level} · {o.geography.join(', ')}{o.geographyNote && <span class="small muted"><br />{o.geographyNote}</span>}</dd></div>
+            {o.openingDate && <div><dt>Opens</dt><dd>{formatDate(o.openingDate)}</dd></div>}
+          </dl>
+          <a class="btn btn--gold decide__apply" href={o.applyUrl} target="_blank" rel="noopener">{o.applyLabel}<span aria-hidden="true">↗</span><span class="visually-hidden"> (official site, opens in a new tab)</span></a>
+          <p class="small muted decide__leave">You will leave BECCI and go to the official government website.</p>
+        </div>
+        <div class="decide__card">
+          <h2 class="decide__h">Official sources</h2>
+          <ul class="decide__sources">{o.sources.map((s) => <li><a class="ext" href={s.url} target="_blank" rel="noopener">{s.label}</a></li>)}</ul>
+        </div>
+        <div class="decide__card">
+          <h2 class="decide__h">Freshness</h2>
+          <dl class="decide__facts">
+            <div><dt>Published / amended by source</dt><dd>{o.publishedDate ? formatDate(o.publishedDate) : 'Not stated'}{o.amendedDate && ` · amended ${formatDate(o.amendedDate)}`}</dd></div>
+            <div><dt>Last fetched</dt><dd>{formatDate(o.lastFetched)}</dd></div>
+            <div><dt>Last verified</dt><dd>{formatDate(o.lastVerified)}</dd></div>
+            <div><dt>Method</dt><dd>{o.verification}</dd></div>
+          </dl>
+          <a class="small" href="/opportunities/about-data">How we check opportunities</a>
+        </div>
+      </aside>
+    </div>
+  </article>
+</Base>
+<script>
+  import { computeStatus, STATUS_LABEL, deadlineText } from '../../lib/status';
+  const el = document.querySelector<HTMLElement>('[data-detail]');
+  if (el) {
+    const d = el.dataset;
+    const rec = { closingDate: d.closing || undefined, openingDate: d.opening || undefined, amendedDate: d.amended || undefined, rolling: !!d.rolling, awaitingNotice: !!d.awaiting };
+    const st = computeStatus(rec);
+    const pill = el.querySelector<HTMLElement>('[data-status-pill]')!;
+    pill.className = `status status--${st}`; pill.textContent = STATUS_LABEL[st];
+    el.querySelector('[data-deadline]')!.textContent = deadlineText(rec);
+  }
+  // Return to the exact results the visitor came from (query, filters, scroll).
+  const back = document.querySelector<HTMLAnchorElement>('[data-back]');
+  const ret = sessionStorage.getItem('finder-return');
+  if (back && ret) {
+    back.href = ret;
+    back.textContent = '← Back to results';
+    back.addEventListener('click', (e) => {
+      const ref = document.referrer ? new URL(document.referrer) : null;
+      if (ref && ref.origin === location.origin && ref.pathname + ref.search === ret) { e.preventDefault(); history.back(); }
+    });
+  }
+</script>
+<style>
+  .detail-top { border-bottom: 1px solid var(--line-2); background: var(--white); }
+  .back { display: inline-flex; align-items: center; min-height: 48px; font-weight: 600; text-decoration: none; }
+  .detail { padding-block: clamp(28px, 5vw, 56px) clamp(56px, 8vw, 96px); }
+  .detail__tags { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 16px; }
+  .detail__cat { font-size: 0.85rem; font-weight: 600; }
+  .detail h1 { font-size: var(--step-3); max-width: 28ch; }
+  .detail__authority { color: var(--muted); }
+  .detail__grid { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: clamp(24px, 4vw, 56px); margin-top: 32px; align-items: start; }
+  .detail__main section { padding-block: 22px; border-top: 1px solid var(--line); }
+  .detail__main h2 { font-size: var(--step-1); }
+  .detail__main li { margin-bottom: 0.4em; }
+  .detail__main .notice { margin-bottom: 16px; }
+  .decide { position: sticky; top: 92px; display: grid; gap: 14px; }
+  .decide__card { background: var(--white); border: 1px solid var(--line-2); border-radius: var(--radius); padding: 20px; }
+  .decide__facts { margin: 0 0 16px; display: grid; gap: 12px; }
+  .decide__facts dt { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 650; }
+  .decide__facts dd { margin: 0; font-weight: 550; }
+  .decide__apply { width: 100%; white-space: normal; text-align: center; }
+  .decide__leave { margin: 10px 0 0; }
+  .decide__h { font: 650 0.78rem/1 var(--font-body); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 12px; }
+  .decide__sources { padding: 0; list-style: none; margin: 0; display: grid; gap: 8px; font-size: 0.95rem; }
+  @media (max-width: 900px) { .detail__grid { grid-template-columns: 1fr; } .decide { position: static; order: -1; } }
+</style>

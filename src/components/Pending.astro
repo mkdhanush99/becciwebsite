@@ -1,0 +1,8 @@
+---
+interface Props { label?: string }
+const { label = 'Awaiting approved content' } = Astro.props;
+---
+<div class="pending" role="note">
+  <span class="pending__label">{label}</span>
+  <p><slot /></p>
+</div>
