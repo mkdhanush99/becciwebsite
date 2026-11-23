@@ -54,12 +54,12 @@ const chevron = '<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="tr
     <div class="header-actions">
       <a class="hdr-login login-link" href="/membership#member-login">Member login</a>
       <a class="btn btn--accent btn--sm" href="/membership#join">Join BECCI</a>
-      <button class="menu-toggle" type="button" aria-label="Open menu" aria-haspopup="dialog" data-menu-open>
+      <button class="menu-toggle" type="button" aria-label="Open menu" aria-haspopup="dialog" aria-expanded="false" aria-controls="site-menu" data-menu-open>
         <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M3 6h16M3 11h16M3 16h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
       </button>
     </div>
   </div>
-  <dialog class="mobile-nav" aria-label="Menu" data-menu>
+  <dialog class="mobile-nav" id="site-menu" aria-label="Menu" data-menu>
     <div class="mobile-nav__inner">
       <div class="mobile-nav__top">
         <Logo />
@@ -123,7 +123,9 @@ const chevron = '<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="tr
   document.addEventListener('click', (e) => { if (!(e.target as Element).closest('.nav-item')) closeAll(); });
 
   const dlg = document.querySelector<HTMLDialogElement>('[data-menu]')!;
-  document.querySelector('[data-menu-open]')?.addEventListener('click', () => dlg.showModal());
+  const opener = document.querySelector<HTMLButtonElement>('[data-menu-open]');
+  opener?.addEventListener('click', () => { dlg.showModal(); opener.setAttribute('aria-expanded', 'true'); });
+  dlg.addEventListener('close', () => opener?.setAttribute('aria-expanded', 'false'));
   document.querySelector('[data-menu-close]')?.addEventListener('click', () => dlg.close());
   dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
 </script>

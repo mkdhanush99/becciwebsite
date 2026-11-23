@@ -110,7 +110,7 @@ const src = { label: `${S.short} statement`, url: S.url };
 <style>
   .st { --ice: #eaf3fc; --cyan-tint: #dcf4f7; background: var(--ivory); padding-block: clamp(var(--s-8), 9vw, 136px); border-top: 1px solid var(--silver-200); }
   .st-head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(var(--s-6), 6vw, var(--s-9)); align-items: end; margin-bottom: clamp(var(--s-6), 5vw, var(--s-8)); }
-  .st-head h2 { font-size: clamp(2.5rem, 1rem + 4.6vw, 5.25rem); font-weight: 600; line-height: 0.98; letter-spacing: -0.04em; margin: 0; max-width: 12ch; }
+  .st-head h2 { font-size: clamp(2.25rem, 1.4rem + 3vw, 4rem); font-weight: 500; line-height: 1.02; letter-spacing: -0.04em; margin: 0; max-width: 12ch; }
   .st-head__side p { color: var(--ink-2); margin: 0 0 var(--s-4); }
   .st-src { font-size: var(--fs-sm); color: var(--slate) !important; padding-top: var(--s-4); border-top: 1px solid var(--silver-300); }
   .st-src a { color: var(--royal-deep); }
@@ -125,13 +125,14 @@ const src = { label: `${S.short} statement`, url: S.url };
   .st-card { position: relative; overflow: hidden; isolation: isolate; display: flex; flex-direction: column; gap: var(--s-3); padding: clamp(var(--s-5), 3vw, var(--s-7)); border-radius: 24px; border: 1px solid transparent; }
   .st-card--midnight { background: var(--midnight); color: #c3d1e8; }
   .st-card--midnight::before { content: ''; position: absolute; inset: auto -20% -60% 30%; height: 120%; z-index: -1; background: radial-gradient(closest-side, rgb(40 105 232 / 55%), rgb(66 200 216 / 18%) 55%, transparent); }
-  .st-card--royal { background: linear-gradient(150deg, var(--royal) 0%, var(--sapphire-deep) 100%); color: #d5e0f3; }
+  .st-card--royal { background: var(--royal); color: #e6eefc; }
   .st-card--ice { background: var(--ice); border-color: #d3e4f5; color: var(--ink-2); }
   .st-card--cyan { background: var(--cyan-tint); border-color: #bfe7ed; color: var(--ink-2); }
   .st-card--ivory { background: var(--white); border-color: var(--silver-200); color: var(--ink-2); }
 
   .st-label { margin: 0; font-size: var(--fs-sm); font-weight: 600; letter-spacing: 0.01em; }
-  .st-card--midnight .st-label, .st-card--royal .st-label { color: var(--sky); }
+  .st-card--midnight .st-label { color: var(--sky); }
+  .st-card--royal .st-label, .st-card--royal .st-meta dt { color: #bfe7ff; }
   .st-card--ice .st-label, .st-card--cyan .st-label, .st-card--ivory .st-label { color: var(--royal-deep); }
   .st-num { margin: 0; font-weight: 600; letter-spacing: -0.045em; line-height: 0.92; font-variant-numeric: tabular-nums; color: var(--midnight); }
   .st-card--midnight .st-num { color: #fff; }
@@ -140,14 +141,14 @@ const src = { label: `${S.short} statement`, url: S.url };
   .st-num--md { font-size: clamp(2.25rem, 1rem + 2.8vw, 3.75rem); }
   .st-num small { font-size: 0.38em; letter-spacing: -0.01em; font-weight: 500; }
   .st-note { margin: 0; font-size: var(--fs-sm); max-width: 46ch; }
-  .st-card--midnight .st-note, .st-card--royal .st-note { color: #c3d1e8; }
+  .st-card--midnight .st-note { color: #c3d1e8; } .st-card--royal .st-note { color: #e6eefc; }
 
   .st-meta { margin: auto 0 0; padding-top: var(--s-4); border-top: 1px solid rgb(10 35 82 / 12%); display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); font-size: var(--fs-label); }
   .st-card--midnight .st-meta, .st-card--royal .st-meta { border-top-color: rgb(255 255 255 / 16%); }
   .st-meta div { display: flex; gap: 6px; }
   .st-meta dt { font-weight: 600; color: var(--slate); }
   .st-meta dd { margin: 0; }
-  .st-card--midnight .st-meta dt, .st-card--royal .st-meta dt { color: var(--sky); }
+  .st-card--midnight .st-meta dt { color: var(--sky); }
   .st-meta a { color: inherit; text-underline-offset: 3px; }
 
   .st-bars { list-style: none; margin: var(--s-3) 0 0; padding: 0; height: 220px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--s-3); align-items: end; }
@@ -182,8 +183,6 @@ const src = { label: `${S.short} statement`, url: S.url };
 
   /* Motion: blocks rise in turn, bars grow, numbers count (JS adds .is-on) */
   @media (prefers-reduced-motion: no-preference) {
-    :global(.js) .st-card { opacity: 0; transform: translateY(32px) scale(0.98); transition: opacity 700ms var(--ease), transform 900ms cubic-bezier(0.16, 1, 0.3, 1); transition-delay: calc(var(--k, 0) * 90ms); }
-    :global(.js) .st-grid.is-on .st-card { opacity: 1; transform: none; }
     :global(.js) .st-bars__bar { transform: scaleY(0); transition: transform 1100ms cubic-bezier(0.16, 1, 0.3, 1); }
     :global(.js) .st-grid.is-on .st-bars__bar { transform: scaleY(1); }
     :global(.js) .st-bars li:nth-child(2) .st-bars__bar { transition-delay: 380ms; }

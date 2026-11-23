@@ -8,14 +8,13 @@ const { icon, dark = false, class: cls = '' } = Astro.props;
 <div class:list={['spot', dark && 'spot--dark', cls]} aria-hidden="true">
   <span class="spot__ring"></span>
   <span class="spot__tile"><Icon name={icon as any} size={88} /></span>
-  <span class="spot__a"></span><span class="spot__b"></span><span class="spot__c"></span><span class="spot__d"></span>
+  
 </div>
 <style is:global>
   .spot { position: relative; width: clamp(200px, 24vw, 300px); aspect-ratio: 1; flex: none; }
   .spot__ring { position: absolute; inset: 4%; border-radius: 50%; border: 1.5px dashed rgb(23 79 193 / 25%); }
   .spot--dark .spot__ring { border-color: rgb(255 255 255 / 20%); }
-  .spot__tile { position: absolute; inset: 22%; display: grid; place-items: center; border-radius: 30%; color: #fff; --icon-accent: var(--sky); --icon-accent-o: 0.7; background: linear-gradient(150deg, var(--sapphire), var(--royal) 55%, var(--midnight)); box-shadow: 0 30px 60px -24px rgb(8 26 53 / 55%), inset 0 1px 0 rgb(255 255 255 / 25%); transform: rotate(-6deg); }
-  .spot__tile .icon { transform: rotate(6deg); }
+  .spot__tile { position: absolute; inset: 22%; display: grid; place-items: center; border-radius: 30%; color: #fff; --icon-accent: var(--sky); --icon-accent-o: 0.7; background: linear-gradient(150deg, var(--sapphire), var(--royal) 55%, var(--midnight)); box-shadow: 0 30px 60px -24px rgb(8 26 53 / 55%), inset 0 1px 0 rgb(255 255 255 / 25%); }
   .spot--dark .spot__tile { background: linear-gradient(150deg, var(--sky), var(--sapphire) 60%, var(--royal)); --icon-accent: #fff; --icon-accent-o: 0.45; }
   .spot__a, .spot__b, .spot__c, .spot__d { position: absolute; }
   .spot__a { top: 6%; right: 14%; width: 15%; aspect-ratio: 1; border-radius: 50%; background: var(--cyan); }
