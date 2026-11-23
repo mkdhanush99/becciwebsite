@@ -28,3 +28,17 @@ Not reached (connection reset, 403 or DNS): gem.gov.in, tender.apeprocurement.go
 
 ## To add a record
 Read the official page, copy only what it states, set `lastFetched`/`lastVerified`, and add it to `opportunities`. Run `npm test` (it checks for https sources, dates and unique slugs).
+
+## Homepage impact statistics (`src/data/impact.ts`)
+- **Source:** NBCFDC (Ministry of Social Justice & Empowerment), *Statement showing Statewise/UT wise/PSB wise Disbursement and no. of beneficiaries assisted during 2020-21 to 2024-25 and cumulative upto (31.03.2025)*.
+  - PDF: https://nbcfdc.gov.in/nbcfdc/web/sites/default/files/2025-05/Disb%20Chart%202020-25.pdf
+  - Linked from: https://nbcfdc.gov.in/nbcfdc/web/en/achivement
+- **Retrieved and checked:** 23 Nov 2026. File SHA-256 `41f94df3a2f0613c6657c7adf44a2166932741eed14353ebc322a1b25f81be69`.
+- **Copied as published:**
+  - the all-India cumulative total (3,305,532 beneficiaries; Rs. 767,433.16 lakh)
+  - the yearly totals for 2020-21 to 2024-25
+  - the Andhra Pradesh and Telangana rows
+- **Derived by BECCI and labelled on the page:**
+  - conversion from lakh to crore
+  - the two States' combined share of the national total (387,003 of 3,305,532 = 11.7%)
+- **Next step:** re-check whenever NBCFDC publishes a newer statement, and update `IMPACT_SOURCE.checked`.

@@ -1,0 +1,223 @@
+---
+// Impact statistics: colour-blocked composition of official NBCFDC figures.
+// Every block shows its measure, geography, period and source. Numbers render final on the
+// server; with motion allowed they count up from zero when scrolled into view.
+import { IMPACT_SOURCE as S, totals, homeStates, crore } from '../data/impact';
+import { formatDate } from '../lib/status';
+
+const fmt = (n: number, d = 0) => n.toLocaleString('en-IN', { minimumFractionDigits: d, maximumFractionDigits: d });
+const cum = totals.cumulative;
+const last = totals.byYear.at(-1)!;
+const peak = totals.byYear.reduce((a, b) => (b.beneficiaries > a.beneficiaries ? b : a));
+const low = totals.byYear.reduce((a, b) => (b.beneficiaries < a.beneficiaries ? b : a));
+const max = peak.beneficiaries;
+const homeTotal = homeStates.reduce((s, h) => s + h.cumulative.beneficiaries, 0);
+const share = (homeTotal / cum.beneficiaries) * 100; // derived
+const src = { label: `${S.short} statement`, url: S.url };
+---
+<section class="st" aria-labelledby="st-title">
+  <div class="wrap">
+    <div class="st-head" data-reveal>
+      <h2 id="st-title">The numbers behind the opportunity</h2>
+      <div class="st-head__side">
+        <p>NBCFDC is the Government of India’s finance corporation for Backward Classes. Its own published figures show how many people its loans have reached, and where. BECCI exists to help more OBC entrepreneurs find and use schemes like these.</p>
+        <p class="st-src">Source for every figure: <a href={S.url} rel="noopener">{S.publisher}, {S.title}</a>. Checked by BECCI on {formatDate(S.checked)}.</p>
+      </div>
+    </div>
+
+    <div class="st-grid" data-st>
+      <article class="st-card st-card--midnight st-a">
+        <p class="st-label">People assisted with NBCFDC loans</p>
+        <p class="st-num st-num--xl"><span data-count={cum.beneficiaries}>{fmt(cum.beneficiaries)}</span></p>
+        <p class="st-note">About {Math.round(cum.beneficiaries / 100000)} lakh beneficiaries since NBCFDC began lending.</p>
+        <dl class="st-meta">
+          <div><dt>Measure</dt><dd>Number of beneficiaries</dd></div>
+          <div><dt>Where</dt><dd>All States and UTs</dd></div>
+          <div><dt>Period</dt><dd>Cumulative to 31 Mar 2025</dd></div>
+          <div><dt>Source</dt><dd><a href={src.url} rel="noopener">{src.label}</a></dd></div>
+        </dl>
+      </article>
+
+      <article class="st-card st-card--ice st-b">
+        <p class="st-label">Loans disbursed</p>
+        <p class="st-num st-num--lg">₹<span data-count={Math.round(crore(cum.lakh))}>{fmt(Math.round(crore(cum.lakh)))}</span><small> crore</small></p>
+        <p class="st-note">Published as ₹{fmt(cum.lakh, 2)} lakh. Converted to crore by BECCI.</p>
+        <dl class="st-meta">
+          <div><dt>Measure</dt><dd>Amount disbursed</dd></div>
+          <div><dt>Where</dt><dd>All States and UTs</dd></div>
+          <div><dt>Period</dt><dd>Cumulative to 31 Mar 2025</dd></div>
+          <div><dt>Source</dt><dd><a href={src.url} rel="noopener">{src.label}</a></dd></div>
+        </dl>
+      </article>
+
+      <article class="st-card st-card--royal st-d">
+        <p class="st-label">People assisted each year</p>
+        <ol class="st-bars" aria-label="Beneficiaries per year, 2020-21 to 2024-25">
+          {totals.byYear.map((y) => (
+            <li style={`--h:${(y.beneficiaries / max).toFixed(3)}`}>
+              <span class="st-bars__v">{fmt(y.beneficiaries)}</span>
+              <span class="st-bars__bar" aria-hidden="true"></span>
+              <span class="st-bars__y">{y.year}</span>
+            </li>
+          ))}
+        </ol>
+        <p class="st-note">The highest of the five years was {peak.year} ({fmt(peak.beneficiaries)}); the lowest was {low.year} ({fmt(low.beneficiaries)}).</p>
+        <dl class="st-meta">
+          <div><dt>Measure</dt><dd>Number of beneficiaries per financial year</dd></div>
+          <div><dt>Where</dt><dd>All States and UTs</dd></div>
+          <div><dt>Period</dt><dd>2020-21 to 2024-25</dd></div>
+          <div><dt>Source</dt><dd><a href={src.url} rel="noopener">{src.label}</a></dd></div>
+        </dl>
+      </article>
+
+      <article class="st-card st-card--cyan st-c">
+        <p class="st-label">In the latest year, {last.year}</p>
+        <p class="st-num st-num--lg"><span data-count={last.beneficiaries}>{fmt(last.beneficiaries)}</span></p>
+        <p class="st-note">people were assisted, with ₹{fmt(crore(last.lakh), 2)} crore disbursed (₹{fmt(last.lakh, 2)} lakh as published).</p>
+        <dl class="st-meta">
+          <div><dt>Measure</dt><dd>Beneficiaries and amount disbursed</dd></div>
+          <div><dt>Where</dt><dd>All States and UTs</dd></div>
+          <div><dt>Period</dt><dd>Financial year {last.year}</dd></div>
+          <div><dt>Source</dt><dd><a href={src.url} rel="noopener">{src.label}</a></dd></div>
+        </dl>
+      </article>
+
+      <article class="st-card st-card--ivory st-e">
+        <div class="st-e__intro">
+          <p class="st-label">Where BECCI began</p>
+          <h3>Andhra Pradesh and Telangana</h3>
+          <p class="st-note">Together, the two States account for <strong>{fmt(share, 1)}%</strong> of all NBCFDC beneficiaries to date: {fmt(homeTotal)} of {fmt(cum.beneficiaries)}. Share calculated by BECCI from the same statement.</p>
+        </div>
+        {homeStates.map((h) => (
+          <div class="st-e__state">
+            <p class="st-e__name">{h.state}</p>
+            <p class="st-num st-num--md"><span data-count={h.cumulative.beneficiaries}>{fmt(h.cumulative.beneficiaries)}</span></p>
+            <p class="st-note">beneficiaries to 31 Mar 2025, ₹{fmt(crore(h.cumulative.lakh), 2)} crore disbursed. In {last.year}: {fmt(h.y2425.beneficiaries)} beneficiaries.</p>
+          </div>
+        ))}
+        <dl class="st-meta st-e__meta">
+          <div><dt>Measure</dt><dd>Number of beneficiaries; share of the all-India total</dd></div>
+          <div><dt>Where</dt><dd>Andhra Pradesh and Telangana, against all States and UTs</dd></div>
+          <div><dt>Period</dt><dd>Cumulative to 31 Mar 2025, and {last.year}</dd></div>
+          <div><dt>Source</dt><dd><a href={src.url} rel="noopener">{src.label}</a></dd></div>
+        </dl>
+      </article>
+    </div>
+    <p class="st-foot">These are NBCFDC’s figures, not BECCI’s. BECCI’s own membership and impact statistics will be published only once they can be verified, with their period and basis.</p>
+  </div>
+</section>
+
+<style>
+  .st { --ice: #e6f2fb; --cyan-tint: #dcf3fb; background: var(--ivory); padding-block: clamp(var(--s-8), 9vw, 136px); border-top: 1px solid var(--silver-200); }
+  .st-head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(var(--s-6), 6vw, var(--s-9)); align-items: end; margin-bottom: clamp(var(--s-6), 5vw, var(--s-8)); }
+  .st-head h2 { font-size: clamp(2.5rem, 1rem + 4.6vw, 5.25rem); font-weight: 600; line-height: 0.98; letter-spacing: -0.04em; margin: 0; max-width: 12ch; }
+  .st-head__side p { color: var(--ink-2); margin: 0 0 var(--s-4); }
+  .st-src { font-size: var(--fs-sm); color: var(--slate) !important; padding-top: var(--s-4); border-top: 1px solid var(--silver-300); }
+  .st-src a { color: var(--royal-deep); }
+
+  .st-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--s-4); }
+  .st-a { grid-column: span 7; }
+  .st-b { grid-column: span 5; }
+  .st-d { grid-column: span 8; }
+  .st-c { grid-column: span 4; }
+  .st-e { grid-column: 1 / -1; }
+
+  .st-card { position: relative; overflow: hidden; isolation: isolate; display: flex; flex-direction: column; gap: var(--s-3); padding: clamp(var(--s-5), 3vw, var(--s-7)); border-radius: 24px; border: 1px solid transparent; }
+  .st-card--midnight { background: var(--midnight); color: #c3d1e8; }
+  .st-card--midnight::before { content: ''; position: absolute; inset: auto -20% -60% 30%; height: 120%; z-index: -1; background: radial-gradient(closest-side, rgb(61 123 255 / 55%), rgb(34 184 230 / 18%) 55%, transparent); }
+  .st-card--royal { background: linear-gradient(150deg, var(--royal) 0%, var(--sapphire-deep) 100%); color: #d5e0f3; }
+  .st-card--ice { background: var(--ice); border-color: #cfe4f4; color: var(--ink-2); }
+  .st-card--cyan { background: var(--cyan-tint); border-color: #bfe8f6; color: var(--ink-2); }
+  .st-card--ivory { background: var(--white); border-color: var(--silver-200); color: var(--ink-2); }
+
+  .st-label { margin: 0; font-size: var(--fs-sm); font-weight: 600; letter-spacing: 0.01em; }
+  .st-card--midnight .st-label, .st-card--royal .st-label { color: #8fdcf7; }
+  .st-card--ice .st-label, .st-card--cyan .st-label, .st-card--ivory .st-label { color: var(--royal-deep); }
+  .st-num { margin: 0; font-weight: 600; letter-spacing: -0.045em; line-height: 0.92; font-variant-numeric: tabular-nums; color: var(--midnight); }
+  .st-card--midnight .st-num { color: #fff; }
+  .st-num--xl { font-size: clamp(3.25rem, 1rem + 7.5vw, 8.5rem); }
+  .st-num--lg { font-size: clamp(2.75rem, 1rem + 4.4vw, 5.25rem); }
+  .st-num--md { font-size: clamp(2.25rem, 1rem + 2.8vw, 3.75rem); }
+  .st-num small { font-size: 0.38em; letter-spacing: -0.01em; font-weight: 500; }
+  .st-note { margin: 0; font-size: var(--fs-sm); max-width: 46ch; }
+  .st-card--midnight .st-note, .st-card--royal .st-note { color: #c3d1e8; }
+
+  .st-meta { margin: auto 0 0; padding-top: var(--s-4); border-top: 1px solid rgb(10 35 82 / 12%); display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); font-size: var(--fs-label); }
+  .st-card--midnight .st-meta, .st-card--royal .st-meta { border-top-color: rgb(255 255 255 / 16%); }
+  .st-meta div { display: flex; gap: 6px; }
+  .st-meta dt { font-weight: 600; color: var(--slate); }
+  .st-meta dd { margin: 0; }
+  .st-card--midnight .st-meta dt, .st-card--royal .st-meta dt { color: #8fdcf7; }
+  .st-meta a { color: inherit; text-underline-offset: 3px; }
+
+  .st-bars { list-style: none; margin: var(--s-3) 0 0; padding: 0; height: 220px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--s-3); align-items: end; }
+  .st-bars li { display: flex; flex-direction: column; align-items: stretch; gap: var(--s-2); height: 100%; justify-content: flex-end; }
+  .st-bars__bar { display: block; height: calc(var(--h) * 150px); min-height: 6px; border-radius: 10px 10px 4px 4px; background: linear-gradient(180deg, #8fdcf7, rgb(143 220 247 / 35%)); transform-origin: bottom; }
+  .st-bars__v { font-size: var(--fs-sm); font-weight: 600; color: #fff; font-variant-numeric: tabular-nums; }
+  .st-bars__y { font-size: var(--fs-label); color: #c3d1e8; }
+
+  .st-e { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 3.5fr) minmax(0, 3.5fr); gap: var(--s-5) clamp(var(--s-5), 4vw, var(--s-7)); align-items: start; }
+  .st-e h3 { font-size: var(--fs-xl); margin: var(--s-2) 0 var(--s-3); }
+  .st-e__intro strong { color: var(--royal-deep); }
+  .st-e__state { padding-left: clamp(var(--s-4), 3vw, var(--s-6)); border-left: 1px solid var(--silver-200); display: grid; gap: var(--s-2); }
+  .st-e__name { margin: 0; font-weight: 600; color: var(--midnight); }
+  .st-e__meta { grid-column: 1 / -1; }
+  .st-foot { margin: var(--s-5) 0 0; font-size: var(--fs-sm); color: var(--slate); max-width: 80ch; }
+
+  @media (max-width: 1000px) {
+    .st-head { grid-template-columns: 1fr; align-items: start; }
+    .st-a, .st-b, .st-d, .st-c { grid-column: 1 / -1; }
+    .st-e { grid-template-columns: 1fr 1fr; }
+    .st-e__intro { grid-column: 1 / -1; }
+    .st-e__state:first-of-type { padding-left: 0; border-left: 0; }
+  }
+  @media (max-width: 560px) {
+    .st-card { border-radius: 18px; }
+    .st-bars { height: 190px; gap: var(--s-2); }
+    .st-bars__bar { height: calc(var(--h) * 120px); }
+    .st-bars__v { font-size: 0.6875rem; }
+    .st-e { grid-template-columns: 1fr; }
+    .st-e__state { padding-left: 0; border-left: 0; padding-top: var(--s-4); border-top: 1px solid var(--silver-200); }
+  }
+
+  /* Motion: blocks rise in turn, bars grow, numbers count (JS adds .is-on) */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) .st-card { opacity: 0; transform: translateY(32px) scale(0.98); transition: opacity 700ms var(--ease), transform 900ms cubic-bezier(0.16, 1, 0.3, 1); transition-delay: calc(var(--k, 0) * 90ms); }
+    :global(.js) .st-grid.is-on .st-card { opacity: 1; transform: none; }
+    :global(.js) .st-bars__bar { transform: scaleY(0); transition: transform 1100ms cubic-bezier(0.16, 1, 0.3, 1); }
+    :global(.js) .st-grid.is-on .st-bars__bar { transform: scaleY(1); }
+    :global(.js) .st-bars li:nth-child(2) .st-bars__bar { transition-delay: 380ms; }
+    :global(.js) .st-bars li:nth-child(3) .st-bars__bar { transition-delay: 460ms; }
+    :global(.js) .st-bars li:nth-child(4) .st-bars__bar { transition-delay: 540ms; }
+    :global(.js) .st-bars li:nth-child(5) .st-bars__bar { transition-delay: 620ms; }
+    :global(.js) .st-bars li:nth-child(1) .st-bars__bar { transition-delay: 300ms; }
+  }
+</style>
+
+<script>
+  const grid = document.querySelector<HTMLElement>('[data-st]');
+  if (grid && window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+    grid.querySelectorAll<HTMLElement>('.st-card').forEach((c, i) => c.style.setProperty('--k', String(i)));
+    const nums = Array.from(grid.querySelectorAll<HTMLElement>('[data-count]'));
+    const fmt = (n: number) => Math.round(n).toLocaleString('en-IN');
+    // Hold numbers at zero only once we know they will animate.
+    nums.forEach((el) => { el.dataset.final = el.textContent ?? ''; el.textContent = '0'; });
+    const ease = (t: number) => 1 - Math.pow(1 - t, 4);
+    const run = () => {
+      const t0 = performance.now(), dur = 1600;
+      const tick = (t: number) => {
+        const k = Math.min(1, (t - t0) / dur);
+        nums.forEach((el) => { el.textContent = k < 1 ? fmt(Number(el.dataset.count) * ease(k)) : el.dataset.final!; });
+        if (k < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return;
+      grid.classList.add('is-on');
+      setTimeout(run, 250);
+      io.disconnect();
+    }, { rootMargin: '0px 0px -15% 0px' });
+    io.observe(grid);
+  }
+</script>

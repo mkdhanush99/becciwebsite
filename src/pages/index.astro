@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import ScrollStory from '../components/ScrollStory.astro';
+import ImpactStats from '../components/ImpactStats.astro';
 import { site, audiences, advisors, events, news, stats } from '../data/site';
 import { opportunities, portals, CATEGORY_META, CATEGORY_ORDER, OBC_SCOPE_LABEL } from '../data/opportunities';
 import { computeStatus, STATUS_LABEL, deadlineText, todayISO, formatDate } from '../lib/status';
@@ -151,6 +152,8 @@ const tiers = [
       </div>
     </div>
   </section>
+
+  <ImpactStats />
 
   <ScrollStory />
 

@@ -29,6 +29,10 @@ Content audit and rewrite, 23 November 2026. Sources: *Project Requirements Docu
   - The five-letter story keeps the approved statements word for word. It adds an introduction that reads the letters as one journey, the full chapter name, and a link to where each stage lives on the site.
   - Membership and partnership calls to action.
   - Highlight links: Schemes, Franchise, Services, Events, Knowledge, Success Stories, Biz Connect, Marketplace.
+- **Added later (impact statistics)**
+  - A colour-blocked statistics section using only NBCFDC's official 2020-25 disbursement statement.
+  - Every figure shows its measure, geography, period and source.
+  - Derived figures (crore conversions, the AP+TS share) are labelled.
 - **Unsupported claims removed**
   - "Build capability through services", which implied services already exist. Replaced with "Being set up".
 - **Missing approved information**
