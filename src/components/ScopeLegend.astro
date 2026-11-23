@@ -1,15 +1,17 @@
 ---
 // Explains the three OBC/BC category rules used on every listing.
 import { OBC_SCOPE_LABEL } from '../data/opportunities';
+const { conditional = false } = Astro.props as { conditional?: boolean };
 ---
 <dl class="scope-legend" aria-label="How to read the category rule on each listing">
   <div><dt><span class="scope scope--exclusive">{OBC_SCOPE_LABEL.exclusive}</span></dt><dd>Reserved for OBC/BC applicants under the scheme’s own rules.</dd></div>
   <div><dt><span class="scope scope--preference">{OBC_SCOPE_LABEL.preference}</span></dt><dd>Open more widely, with a written preference or quota for OBC/BC applicants.</dd></div>
   <div><dt><span class="scope scope--open">{OBC_SCOPE_LABEL.open}</span></dt><dd>Open to anyone who meets the rules. Most opportunities are not OBC-only.</dd></div>
+  {conditional && <div><dt><span class="scope scope--conditional">{OBC_SCOPE_LABEL.conditional}</span></dt><dd>OBC/BC applicants qualify only through another condition, such as being a woman entrepreneur or practising a listed trade.</dd></div>}
 </dl>
 <p class="scope-legend__note">Where a rule depends on the <strong>Central OBC list</strong> or a specific <strong>State BC/OBC list</strong>, the listing says which. The two lists are separate, and eligibility for a scheme is separate from BECCI membership.</p>
 <style is:global>
-  .scope-legend { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-4); margin: 0; padding: var(--s-4) var(--s-5); border-radius: 16px; background: var(--white); border: 1px solid var(--silver-200); }
+  .scope-legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: var(--s-4); margin: 0; padding: var(--s-4) var(--s-5); border-radius: 16px; background: var(--white); border: 1px solid var(--silver-200); }
   .scope-legend dt { margin-bottom: var(--s-2); }
   .scope-legend dd { margin: 0; font-size: var(--fs-sm); color: var(--slate); }
   .scope-legend__note { font-size: var(--fs-sm); color: var(--slate); margin: var(--s-3) 0 var(--s-5); max-width: 90ch; }

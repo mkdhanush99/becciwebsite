@@ -5,6 +5,7 @@
 // Do not add records from memory, news reports or aggregators. See SOURCES.md.
 
 import type { DatedRecord } from '../lib/status';
+import { centralSchemes } from './schemes-central.ts';
 
 export type Category = 'tenders' | 'jobs' | 'scholarships' | 'finance' | 'schemes';
 
@@ -12,9 +13,36 @@ export type ObcScope =
   | 'exclusive' // only for backward classes / OBC (as defined by the scheme)
   | 'preference' // open to others, with a documented OBC/BC preference
   | 'open' // general opportunity, open to anyone who meets its rules
+  | 'conditional' // OBC/BC applicants qualify only through another condition (e.g. gender, trade, State list)
   | 'not-stated';
 
 export interface SourceLink { label: string; url: string }
+
+export type Beneficiary = 'Entrepreneurs' | 'Students' | 'Women' | 'Artisans and craftspeople' | 'Startups' | 'Groups and cooperatives' | 'Youth';
+
+// Story and verification layer for the Government Schemes library (/schemes).
+// Every value comes from the official page named in `sources`; nothing is inferred.
+export interface SchemeStory {
+  short?: string; // official short name, e.g. PMEGP
+  ministry: string; // issuing ministry or department
+  purpose: string[]; // Chapter 1: why the scheme exists, in the source's terms
+  beneficiaries: Beneficiary[];
+  purposeTags: string[]; // e.g. Credit, Subsidy, Grant, Skills, Scholarship, Market access, Seed funding
+  sectors: string[];
+  applicantTypes: string[];
+  links: {
+    scheme?: SourceLink; // official scheme website or page
+    guidelines?: SourceLink[]; // guidelines and notifications
+    ministry?: SourceLink; // ministry or department page
+    portal?: SourceLink; // application portal
+    notices?: SourceLink[]; // amendments, circulars, updated notices
+  };
+  // Official logos are not reproduced: reuse terms for scheme logos and the State Emblem were not
+  // confirmed as permitting reproduction on a non-government website. The identity panel shows the
+  // scheme name and issuing authority instead, with links to the official source.
+  identitySource: string;
+  humanReviewed: string | null; // date a BECCI staff member checked every fact; null = not yet
+}
 
 export interface Opportunity extends DatedRecord {
   slug: string;
@@ -44,6 +72,7 @@ export interface Opportunity extends DatedRecord {
   lastFetched: string; // last successful automated or manual fetch of the source page
   lastVerified: string; // last editorial check of every fact against the source
   verification: string;
+  scheme?: SchemeStory;
 }
 
 export const CATEGORY_META: Record<Category, { label: string; plural: string; blurb: string; path: string }> = {
@@ -85,6 +114,7 @@ export const OBC_SCOPE_LABEL: Record<ObcScope, string> = {
   exclusive: 'Backward Classes only',
   preference: 'Documented OBC/BC preference',
   open: 'Open to all eligible applicants',
+  conditional: 'Depends on other conditions',
   'not-stated': 'Category rules not stated',
 };
 
@@ -145,6 +175,22 @@ export const opportunities: Opportunity[] = [
     lastFetched: '2026-11-22',
     lastVerified: '2026-11-22',
     verification: 'Editorial check of the official NBCFDC pages listed under Official sources.',
+    scheme: {
+      purpose: ['Loans for income-generating activities that can give members of Backward Classes a sustainable income, routed through NBCFDC\'s channel partners in each State.'],
+      ministry: 'Ministry of Social Justice & Empowerment (NBCFDC)',
+      beneficiaries: ['Entrepreneurs'],
+      purposeTags: ['Credit'],
+      sectors: ['Any income-generating activity'],
+      applicantTypes: ['Individual'],
+      links: {
+        scheme: { label: 'NBCFDC — Individual Loan Scheme', url: NBCFDC_SOURCES.individual },
+        ministry: { label: 'NBCFDC home', url: 'https://nbcfdc.gov.in/' },
+        portal: { label: 'NBCFDC — How and Where to Apply', url: NBCFDC_SOURCES.how },
+        guidelines: [{ label: 'NBCFDC — Pattern of Finance (w.e.f. 01.04.2025)', url: NBCFDC_SOURCES.finance }],
+      },
+      identitySource: 'Official logo not shown: reuse terms were not confirmed. Name and authority as published on nbcfdc.gov.in.',
+      humanReviewed: null,
+    },
   },
   {
     slug: 'nbcfdc-group-loan-scheme',
@@ -182,6 +228,22 @@ export const opportunities: Opportunity[] = [
     lastFetched: '2026-11-22',
     lastVerified: '2026-11-22',
     verification: 'Editorial check of the official NBCFDC pages listed under Official sources.',
+    scheme: {
+      purpose: ['Credit for Self Help Groups in which most members belong to Backward Classes, so that groups can take up income-generating activity together.'],
+      ministry: 'Ministry of Social Justice & Empowerment (NBCFDC)',
+      beneficiaries: ['Groups and cooperatives', 'Women'],
+      purposeTags: ['Credit'],
+      sectors: ['Any income-generating activity'],
+      applicantTypes: ['SHG, FPO or cooperative'],
+      links: {
+        scheme: { label: 'NBCFDC — Group Loan Scheme', url: NBCFDC_SOURCES.group },
+        ministry: { label: 'NBCFDC home', url: 'https://nbcfdc.gov.in/' },
+        portal: { label: 'NBCFDC — How and Where to Apply', url: NBCFDC_SOURCES.how },
+        guidelines: [{ label: 'NBCFDC — Pattern of Finance (w.e.f. 01.04.2025)', url: NBCFDC_SOURCES.finance }],
+      },
+      identitySource: 'Official logo not shown: reuse terms were not confirmed. Name and authority as published on nbcfdc.gov.in.',
+      humanReviewed: null,
+    },
   },
   {
     slug: 'pm-yasasvi-top-class-school-education',
@@ -217,13 +279,25 @@ export const opportunities: Opportunity[] = [
     lastFetched: '2026-11-22',
     lastVerified: '2026-11-22',
     verification: 'Editorial check of the notice on the National Scholarship Portal homepage. No closing date was published in that notice.',
+    scheme: {
+      short: 'PM YASASVI',
+      ministry: 'Government of India (National Scholarship Portal)',
+      purpose: ['Support for OBC, EBC and DNT students in top-class schools, as named in the scheme title. The portal notice does not state further objectives; read the scheme guidelines on NSP.'],
+      beneficiaries: ['Students'],
+      purposeTags: ['Scholarship'],
+      sectors: ['Education'],
+      applicantTypes: ['Student'],
+      links: { portal: { label: 'National Scholarship Portal', url: 'https://scholarships.gov.in/' } },
+      identitySource: 'Official logo not shown: reuse terms were not confirmed. Name and authority as published on the National Scholarship Portal.',
+      humanReviewed: null,
+    },
   },
   {
     slug: 'pm-usp-csss-fresh',
     title: 'PM-USP – Central Sector Scheme of Scholarship for College and University Students (CSSS) — Fresh applications',
     authority: 'Government of India, via the National Scholarship Portal',
     level: 'Central',
-    categories: ['scholarships'],
+    categories: ['scholarships', 'schemes'],
     geography: ['All India'],
     summary: 'Merit-based scholarship for college and university students. Fresh applications close on 30 November 2026.',
     provides: ['Scholarship for college and university students. Amounts are not stated in the portal notice.'],
@@ -246,13 +320,25 @@ export const opportunities: Opportunity[] = [
     lastFetched: '2026-11-22',
     lastVerified: '2026-11-22',
     verification: 'Editorial check of the notice on the National Scholarship Portal homepage.',
+    scheme: {
+      short: 'PM-USP CSSS',
+      ministry: 'Government of India (National Scholarship Portal)',
+      purpose: ['A merit-based scholarship for college and university students. The portal notice does not state the objectives; read the scheme guidelines on NSP.'],
+      beneficiaries: ['Students'],
+      purposeTags: ['Scholarship'],
+      sectors: ['Education'],
+      applicantTypes: ['Student'],
+      links: { portal: { label: 'National Scholarship Portal', url: 'https://scholarships.gov.in/' } },
+      identitySource: 'Official logo not shown: reuse terms were not confirmed. Name and authority as published on the National Scholarship Portal.',
+      humanReviewed: null,
+    },
   },
   {
     slug: 'telangana-epass-post-matric',
     title: 'Telangana ePASS — Post-Matric Scholarships (Fresh and Renewal)',
     authority: 'Government of Telangana (ePASS portal; content owned by the Social Welfare Department)',
     level: 'State',
-    categories: ['scholarships'],
+    categories: ['scholarships', 'schemes'],
     geography: ['Telangana'],
     summary: 'State post-matric scholarship portal. The latest registration notice on the homepage is for 2024-25 and has closed.',
     provides: ['Post-matric scholarships administered through the ePASS portal. Benefit amounts are not stated on the homepage.'],
@@ -271,7 +357,19 @@ export const opportunities: Opportunity[] = [
     lastFetched: '2026-11-22',
     lastVerified: '2026-11-22',
     verification: 'Editorial check of the Telangana ePASS homepage.',
+    scheme: {
+      ministry: 'Government of Telangana',
+      purpose: ['The State\'s online portal for post-matric scholarships. The homepage does not state the scheme\'s objectives; read the current notice on the portal.'],
+      beneficiaries: ['Students'],
+      purposeTags: ['Scholarship'],
+      sectors: ['Education'],
+      applicantTypes: ['Student'],
+      links: { portal: { label: 'Telangana ePASS', url: 'https://telanganaepass.cgg.gov.in/' } },
+      identitySource: 'Official logo not shown: reuse terms were not confirmed. Name and authority as published on the ePASS portal.',
+      humanReviewed: null,
+    },
   },
+  ...centralSchemes,
 ];
 
 // Official portals: a directory of where to look, NOT individual listings.
@@ -299,12 +397,12 @@ export const portals: Portal[] = [
   { name: 'Telangana ePASS', authority: 'Government of Telangana', url: 'https://telanganaepass.cgg.gov.in/', categories: ['scholarships'], geography: 'Telangana', note: 'State post-matric scholarships.', checked: '2026-11-22', reachable: true },
   { name: 'Jnanabhumi', authority: 'Government of Andhra Pradesh', url: 'https://jnanabhumi.ap.gov.in/', categories: ['scholarships'], geography: 'Andhra Pradesh', note: 'State scholarships. Our checker could not reach it on the date shown.', checked: '2026-11-22', reachable: false },
   { name: 'NBCFDC', authority: 'Ministry of Social Justice & Empowerment', url: 'https://nbcfdc.gov.in/', categories: ['finance', 'schemes'], geography: 'All India', note: 'Loan schemes for Backward Classes through State Channelising Agencies and banks.', checked: '2026-11-22', reachable: true },
-  { name: 'PMEGP e-Portal', authority: 'KVIC, Ministry of MSME', url: 'https://www.kviconline.gov.in/pmegpeportal/pmegphome/index.jsp', categories: ['finance', 'schemes'], geography: 'All India', note: 'Official portal for PMEGP. Our checker could not reach it, so details are not listed here yet.', checked: '2026-11-22', reachable: false },
-  { name: 'PM Mudra Yojana', authority: 'MUDRA', url: 'https://www.mudra.org.in/', categories: ['finance', 'schemes'], geography: 'All India', note: 'Official MUDRA website. Our checker could not reach it, so details are not listed here yet.', checked: '2026-11-22', reachable: false },
-  { name: 'Stand-Up India', authority: 'SIDBI', url: 'https://www.standupmitra.in/', categories: ['finance', 'schemes'], geography: 'All India', note: 'Official Stand-Up India portal. Our checker could not reach it, so details are not listed here yet.', checked: '2026-11-22', reachable: false },
+  { name: 'PMEGP e-Portal', authority: 'KVIC, Ministry of MSME', url: 'https://www.kviconline.gov.in/pmegpeportal/pmegphome/index.jsp', categories: ['finance', 'schemes'], geography: 'All India', note: 'Scheme details are in the Government Schemes library, from the official scheme pages.', checked: '2026-11-22', reachable: false },
+  { name: 'PM Mudra Yojana', authority: 'MUDRA', url: 'https://www.mudra.org.in/', categories: ['finance', 'schemes'], geography: 'All India', note: 'Scheme details are in the Government Schemes library, from the official scheme pages.', checked: '2026-11-22', reachable: false },
+  { name: 'Stand-Up India', authority: 'SIDBI', url: 'https://www.standupmitra.in/', categories: ['finance', 'schemes'], geography: 'All India', note: 'Scheme details are in the Government Schemes library, from the official scheme pages.', checked: '2026-11-22', reachable: false },
   { name: 'CGTMSE', authority: 'Credit Guarantee Fund Trust for Micro and Small Enterprises', url: 'https://www.cgtmse.in/', categories: ['finance'], geography: 'All India', note: 'Credit guarantee for MSE loans. Our checker could not reach it, so details are not listed here yet.', checked: '2026-11-22', reachable: false },
-  { name: 'Startup India Seed Fund Scheme', authority: 'DPIIT', url: 'https://seedfund.startupindia.gov.in/', categories: ['finance', 'schemes'], geography: 'All India', note: 'Opened by our checker, but the content loads inside the portal; details are not listed here yet.', checked: '2026-11-22', reachable: true },
-  { name: 'PM Vishwakarma', authority: 'Government of India', url: 'https://pmvishwakarma.gov.in/', categories: ['finance', 'schemes'], geography: 'All India', note: 'Official portal. Our checker could not reach it, so details are not listed here yet.', checked: '2026-11-22', reachable: false },
+  { name: 'Startup India Seed Fund Scheme', authority: 'DPIIT', url: 'https://seedfund.startupindia.gov.in/', categories: ['finance', 'schemes'], geography: 'All India', note: 'Scheme details are in the Government Schemes library, from the official scheme pages.', checked: '2026-11-22', reachable: true },
+  { name: 'PM Vishwakarma', authority: 'Government of India', url: 'https://pmvishwakarma.gov.in/', categories: ['finance', 'schemes'], geography: 'All India', note: 'Scheme details are in the Government Schemes library, from the official scheme pages.', checked: '2026-11-22', reachable: false },
 ];
 
 export const FEED_STATUS: Record<Category, { live: boolean; message: string }> = {

@@ -1,7 +1,7 @@
 // Shared status logic for opportunity records. Used at build time and in the browser
 // so a static page never keeps showing "Open" after the official closing date passes.
 
-export type Status = 'open' | 'closing-soon' | 'rolling' | 'upcoming' | 'amended' | 'closed' | 'awaiting-notice';
+export type Status = 'open' | 'closing-soon' | 'rolling' | 'upcoming' | 'amended' | 'closed' | 'awaiting-notice' | 'unconfirmed';
 
 export interface DatedRecord {
   openingDate?: string; // ISO yyyy-mm-dd
@@ -9,6 +9,8 @@ export interface DatedRecord {
   amendedDate?: string;
   rolling?: boolean;
   awaitingNotice?: boolean;
+  closedBySource?: boolean; // the official source marks the scheme closed but gives no date
+  statusUnconfirmed?: boolean; // the source's approved period has passed and it neither confirms nor closes the scheme
 }
 
 export const CLOSING_SOON_DAYS = 14;
@@ -28,6 +30,7 @@ export function todayISO(now = new Date()): string {
 
 export function computeStatus(r: DatedRecord, today = todayISO()): Status {
   const t = toDay(today);
+  if (r.closedBySource) return 'closed';
   if (r.awaitingNotice) return 'awaiting-notice';
   if (r.openingDate && toDay(r.openingDate) > t) return 'upcoming';
   if (r.closingDate) {
@@ -38,6 +41,7 @@ export function computeStatus(r: DatedRecord, today = todayISO()): Status {
     return 'open';
   }
   if (r.amendedDate) return 'amended';
+  if (r.statusUnconfirmed) return 'unconfirmed';
   if (r.rolling) return 'rolling';
   return 'open';
 }
@@ -50,6 +54,7 @@ export const STATUS_LABEL: Record<Status, string> = {
   amended: 'Amended',
   closed: 'Closed',
   'awaiting-notice': 'Awaiting new notice',
+  unconfirmed: 'Status to confirm',
 };
 
 export function daysLeft(closingDate: string, today = todayISO()): number {
@@ -65,7 +70,9 @@ export function formatDate(iso?: string): string {
 }
 
 export function deadlineText(r: DatedRecord, today = todayISO()): string {
+  if (r.closedBySource) return 'Marked closed by the official source';
   if (r.awaitingNotice) return 'No current notice published';
+  if (r.statusUnconfirmed && !r.closingDate) return 'Approved period has passed · confirm with the official source';
   if (!r.closingDate) return r.rolling ? 'No deadline published · applications accepted year-round' : 'No deadline published';
   const n = daysLeft(r.closingDate, today);
   if (n < 0) return `Closed on ${formatDate(r.closingDate)}`;

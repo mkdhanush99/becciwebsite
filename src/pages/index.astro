@@ -11,11 +11,13 @@ import { computeStatus, STATUS_LABEL, deadlineText, todayISO, formatDate } from 
 const today = todayISO();
 const open = opportunities
   .map((o) => ({ o, st: computeStatus(o, today) }))
-  .filter((x) => x.st !== 'closed' && x.st !== 'awaiting-notice')
+  .filter((x) => x.st !== 'closed' && x.st !== 'awaiting-notice' && x.st !== 'unconfirmed')
   .sort((a, b) => (a.o.closingDate ?? '9999').localeCompare(b.o.closingDate ?? '9999'));
 const [featured, ...rest] = open;
 const lastChecked = opportunities.map((o) => o.lastVerified).sort().at(-1);
 const register = open.slice(0, 3);
+const schemeList = opportunities.filter((o) => o.categories.includes('schemes') && o.scheme);
+const featuredSchemes = ['pmegp', 'pm-mudra-yojana', 'nbcfdc-individual-loan-scheme', 'pm-vishwakarma'].map((slug) => schemeList.find((o) => o.slug === slug)!).filter(Boolean);
 const statement = 'Community and Commerce have not been sufficiently connected. BECCI brings them together, so connections turn into businesses and businesses turn into opportunities.';
 const words = (t: string) => t.split(' ');
 // The four questions every visitor should get an answer to (Critique Review §20),
@@ -163,6 +165,28 @@ const tiers = [
           ))}
         </ol>
       </div>
+    </div>
+  </section>
+
+  <section class="section h-gs" aria-labelledby="gs-title">
+    <div class="wrap h-gs__grid">
+      <div class="h-gs__copy">
+        <h2 id="gs-title">Government schemes, explained</h2>
+        <p>{schemeList.length} Central and State schemes, each told in six short chapters: why it exists, what it offers, who can benefit, what you need, how to apply, and where to check it officially.</p>
+        <p class="h-gs__rule">BECCI explains the opportunity. The issuing government authority remains the source of truth.</p>
+        <a class="btn" href="/schemes">Browse government schemes</a>
+      </div>
+      <ol class="h-gs__list">
+        {featuredSchemes.map((o) => (
+          <li>
+            <a href={`/schemes/${o.slug}`}>
+              <span class="h-gs__name">{o.title}</span>
+              <span class="h-gs__by">{o.scheme!.ministry}</span>
+              <span class="h-gs__meta"><span>For {o.scheme!.beneficiaries.join(', ').toLowerCase()}</span><span class={`scope scope--${o.obcScope}`}>{OBC_SCOPE_LABEL[o.obcScope]}</span></span>
+            </a>
+          </li>
+        ))}
+      </ol>
     </div>
   </section>
 
@@ -452,4 +476,19 @@ const tiers = [
   @media (max-width: 860px) { .h-close__links { grid-template-columns: 1fr 1fr; } }
   @media (max-width: 420px) { .h-close__links { grid-template-columns: 1fr; } }
   .h-stats { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--s-4); padding: 0; margin-top: var(--s-7); }
+  /* ── Government schemes ── */
+  .h-gs { background: var(--ivory); }
+  .h-gs__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(var(--s-6), 6vw, 96px); align-items: start; }
+  .h-gs h2 { font-size: clamp(2.25rem, 1.4rem + 3vw, 4rem); font-weight: 500; letter-spacing: -0.035em; line-height: 1.02; margin-bottom: var(--s-4); }
+  .h-gs__copy p { color: var(--slate); font-size: var(--fs-md); max-width: 46ch; }
+  .h-gs__copy .h-gs__rule { margin: var(--s-5) 0 var(--s-6); padding: var(--s-4) var(--s-5); border-radius: 14px; background: var(--white); border: 1px solid rgb(8 26 53 / 12%); color: var(--midnight); font-size: var(--fs-base); font-weight: 500; }
+  .h-gs__list { list-style: none; margin: 0; padding: 0; border-top: 1px solid rgb(8 26 53 / 14%); }
+  .h-gs__list a { position: relative; display: grid; gap: 4px; padding: var(--s-5) 48px var(--s-5) var(--s-3); border-bottom: 1px solid rgb(8 26 53 / 14%); color: var(--midnight); text-decoration: none; transition: background var(--dur); }
+  .h-gs__list a::after { content: '→'; position: absolute; right: var(--s-3); top: 50%; translate: 0 -50%; color: var(--royal); transition: translate 200ms var(--ease); }
+  .h-gs__list a:hover { background: var(--white); color: var(--midnight); }
+  .h-gs__list a:hover::after { translate: 4px -50%; }
+  .h-gs__name { font: 500 var(--fs-lg)/1.25 var(--font-display); letter-spacing: -0.015em; }
+  .h-gs__by { font-size: var(--fs-sm); color: var(--slate); }
+  .h-gs__meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-3); margin-top: var(--s-2); font-size: var(--fs-sm); color: var(--ink-2); }
+  @media (max-width: 900px) { .h-gs__grid { grid-template-columns: 1fr; } }
 </style>

@@ -10,7 +10,7 @@ const today = todayISO();
 const records = opportunities.filter((o) => !category || o.categories.includes(category));
 const scopePortals = portals.filter((p) => !category || p.categories.includes(category));
 
-const statusOrder: Status[] = ['closing-soon', 'open', 'rolling', 'upcoming', 'amended', 'awaiting-notice', 'closed'];
+const statusOrder: Status[] = ['closing-soon', 'open', 'rolling', 'upcoming', 'amended', 'unconfirmed', 'awaiting-notice', 'closed'];
 
 type Facet = { key: string; label: string; values: { value: string; label: string; count: number }[] };
 const facet = (key: string, label: string, get: (o: (typeof records)[number]) => string[], labeler: (v: string) => string = (v) => v): Facet => {
@@ -369,7 +369,7 @@ const title = category ? CATEGORY_META[category].label : 'All opportunities';
         return vals.some((v) => have.includes(v)); // OR within a group, AND across groups
       });
     };
-    const order = ['closing-soon', 'open', 'rolling', 'upcoming', 'amended', 'awaiting-notice', 'closed'];
+    const order = ['closing-soon', 'open', 'rolling', 'upcoming', 'amended', 'unconfirmed', 'awaiting-notice', 'closed'];
     const sorters: Record<string, (a: HTMLLIElement, b: HTMLLIElement) => number> = {
       closing: (a, b) => {
         const sa = order.indexOf(a.dataset.status!), sb = order.indexOf(b.dataset.status!);

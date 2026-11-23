@@ -42,3 +42,24 @@ Read the official page, copy only what it states, set `lastFetched`/`lastVerifie
   - conversion from lakh to crore
   - the two States' combined share of the national total (387,003 of 3,305,532 = 11.7%)
 - **Next step:** re-check whenever NBCFDC publishes a newer statement, and update `IMPACT_SOURCE.checked`.
+
+## Government Schemes library (added 23 Nov 2026)
+
+Scheme facts on /schemes and /schemes/[slug] come from these official pages, rendered and read on 23 Nov 2026:
+
+| Scheme | Page read | Ministry portal opened from our checker? |
+|---|---|---|
+| PMEGP | https://www.myscheme.gov.in/schemes/pmegp | No (kviconline.gov.in and msme.gov.in did not respond) |
+| Pradhan Mantri Mudra Yojana | https://www.myscheme.gov.in/schemes/pmmy | No (mudra.org.in, udyamimitra.in) |
+| Stand-Up India (marked closed on myScheme) | https://www.myscheme.gov.in/schemes/sui | No (standupmitra.in) |
+| PM Vishwakarma | https://www.myscheme.gov.in/schemes/pmv | No (pmvishwakarma.gov.in) |
+| PMFME | https://www.myscheme.gov.in/schemes/pmfmpe | No (pmfme.mofpi.gov.in) |
+| Startup India Seed Fund (closed 31 May 2026) | https://seedfund.startupindia.gov.in/ and /about | Yes; guidelines PDFs on port 3535 not reachable |
+
+myScheme is the Government of India's scheme platform (National e-Governance Division, MeitY). Links to guidelines, notices and portals are copied exactly as those pages publish them; where our checker could not open a link, it is listed as published, not as independently opened. Status of PMEGP and PMFME is shown as "Status to confirm" because their approved periods on myScheme have passed without a stated extension.
+
+The "Compendium of Schemes for MSMEs" (Grant Thornton Bharat with SIDBI, v2.0) supplied by the client was used only to choose which schemes to research. No figure on the site is taken from it.
+
+**Official logos are not reproduced.** Reuse terms for scheme logos and the State Emblem of India (whose use is restricted by the State Emblem of India (Prohibition of Improper Use) Act, 2005) were not confirmed as permitting reproduction on a non-government website. Each scheme page shows the scheme name and issuing authority instead, with links to the official source.
+
+No scheme record has been reviewed by BECCI staff yet (`humanReviewed: null`). Pages say so.

@@ -1,0 +1,62 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import ScopeLegend from '../../components/ScopeLegend.astro';
+import SchemeDirectory from '../../components/SchemeDirectory.astro';
+import { opportunities } from '../../data/opportunities';
+
+const schemes = opportunities.filter((o) => o.categories.includes('schemes') && o.scheme);
+const central = schemes.filter((o) => o.level === 'Central').length;
+const state = schemes.length - central;
+const latest = schemes.map((o) => o.lastVerified).sort().at(-1);
+---
+<Base title="Government Schemes" description="Central and State government schemes for entrepreneurs, students, artisans and groups, explained in plain language with links to the official source.">
+  <PageHero tone="ice" illo="finder" title="Government schemes, explained" lede="Find a scheme, read what it offers and who it is for in plain language, see what you will need, and go straight to the official portal to apply." crumbs={[{ label: 'Opportunities', href: '/opportunities' }, { label: 'Government Schemes' }]} />
+
+  <section class="section gs-intro" aria-labelledby="gs-how">
+    <div class="wrap gs-intro__grid">
+      <div>
+        <h2 id="gs-how">BECCI explains the opportunity. The issuing government authority remains the source of truth.</h2>
+        <p>Each scheme page is written from the official scheme pages and links to them. BECCI does not run these schemes, decide who qualifies or approve applications, and nothing here replaces the official process.</p>
+      </div>
+      <ol class="gs-steps">
+        <li><strong>Discover</strong><span>Search {schemes.length} schemes ({central} Central, {state} State) by who they are for and the support they give.</span></li>
+        <li><strong>Understand</strong><span>Each scheme is told in six short chapters: purpose, offer, who can benefit, what you need, how to apply, and the official sources.</span></li>
+        <li><strong>Apply officially</strong><span>Every apply button opens the government portal. You never apply through BECCI.</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section gs-dir" aria-labelledby="gs-find">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="gs-find">Find a scheme</h2>
+        <p>Checked against official sources, most recently on {latest && new Date(latest).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}. A listing is not a promise of eligibility or approval.</p>
+      </div>
+      <SchemeDirectory />
+      <details class="gs-rules">
+        <summary>What the category rules mean</summary>
+        <ScopeLegend conditional />
+      </details>
+      <p class="gs-foot">Looking for tenders, jobs or scholarships as well? Use the <a href="/opportunities">opportunity finder</a>. To learn how listings are checked, read <a href="/opportunities/about-data">how we check opportunities</a>. Know an official scheme that should be here? <a href="/contact">Tell BECCI</a>.</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .gs-intro { background: var(--white); border-bottom: 1px solid rgb(8 26 53 / 10%); }
+  .gs-intro__grid { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: clamp(var(--s-6), 5vw, var(--s-8)); align-items: start; }
+  .gs-intro h2 { font-size: clamp(1.75rem, 1.2rem + 1.8vw, 2.75rem); font-weight: 500; letter-spacing: -0.025em; line-height: 1.1; margin-bottom: var(--s-4); max-width: 22ch; }
+  .gs-intro p { color: var(--slate); max-width: 56ch; margin: 0; }
+  .gs-steps { list-style: none; margin: 0; padding: 0; counter-reset: step; border-left: 2px solid rgb(8 26 53 / 14%); }
+  .gs-steps li { counter-increment: step; position: relative; display: grid; gap: 4px; padding: 0 0 var(--s-5) var(--s-6); }
+  .gs-steps li:last-child { padding-bottom: 0; }
+  .gs-steps li::before { content: counter(step); position: absolute; left: -17px; top: -2px; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--midnight); color: #fff; font: 600 var(--fs-sm)/1 var(--font-body); }
+  .gs-steps strong { font: 500 var(--fs-lg)/1.2 var(--font-display); color: var(--midnight); }
+  .gs-steps span { color: var(--slate); font-size: var(--fs-sm); line-height: 1.55; }
+  .gs-rules { margin-top: var(--s-6); }
+  .gs-rules summary { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; color: var(--royal); cursor: pointer; }
+  .gs-rules[open] summary { margin-bottom: var(--s-3); }
+  .gs-foot { margin: var(--s-6) 0 0; max-width: 72ch; font-size: var(--fs-sm); color: var(--slate); }
+  @media (max-width: 860px) { .gs-intro__grid { grid-template-columns: 1fr; } }
+</style>

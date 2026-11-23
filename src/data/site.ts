@@ -43,14 +43,15 @@ export const nav: NavGroup[] = [
     label: 'Opportunities', href: '/opportunities', tone: 'royal', illo: 'finder',
     intro: 'Schemes, tenders, scholarships, jobs and funding, each checked against its official source.',
     children: [
-      { label: 'Government schemes', href: '/schemes', icon: 'schemes', desc: 'Central and State schemes' },
+      { label: 'Government schemes', href: '/schemes', icon: 'schemes', desc: 'Explained, with official links' },
       { label: 'Tenders and procurement', href: '/opportunities/tenders', icon: 'tenders', desc: 'Bids and supplier registration' },
       { label: 'Scholarships', href: '/opportunities/scholarships', icon: 'scholarship', desc: 'School, college and higher study' },
       { label: 'Jobs and internships', href: '/opportunities/jobs', icon: 'jobs', desc: 'Including apprenticeships' },
       { label: 'Loans and funding', href: '/opportunities/finance', icon: 'funding', desc: 'Credit, grants and subsidies' },
+      { label: 'Business opportunities', href: '/franchise', icon: 'franchise', desc: 'Franchise and enterprise models' },
     ],
     more: [
-      { label: 'Franchise and enterprise', href: '/franchise' },
+      { label: 'All opportunities', href: '/opportunities' },
       { label: 'How we check listings', href: '/opportunities/about-data' },
     ],
     feature: { eyebrow: 'Opportunity Finder', title: 'Search every verified listing', text: 'Filter by category, State and who can apply. No account needed.', href: '/opportunities', cta: 'Open the finder' },

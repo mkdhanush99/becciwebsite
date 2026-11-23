@@ -381,9 +381,12 @@ ul, ol { padding-left: 1.2em; }
 .status--upcoming { color: var(--info); background: var(--info-bg); }
 .status--amended { color: var(--amend); background: var(--amend-bg); }
 .status--closed, .status--awaiting-notice { color: var(--closed); background: var(--closed-bg); }
+.status--unconfirmed { color: var(--warn); background: var(--warn-bg); }
+.status--unconfirmed::before { background: transparent; border: 1.5px dashed currentColor; }
 .status--closed::before, .status--awaiting-notice::before { background: transparent; border: 1.5px solid currentColor; }
 .scope { display: inline-flex; align-items: center; font: 600 var(--fs-label)/1.2 var(--font-body); padding: 5px 8px; border-radius: 4px; border: var(--hair); background: var(--white); color: var(--ink-2); }
 .scope--exclusive { border-color: var(--sapphire); background: var(--sapphire-soft); color: var(--sapphire-deep); }
+.scope--conditional { border-style: dashed; border-color: var(--cyan-ink); color: var(--cyan-ink); }
 
 /* Forms */
 .field { display: grid; gap: 6px; margin-bottom: var(--s-4); }

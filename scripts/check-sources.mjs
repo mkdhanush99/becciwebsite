@@ -10,8 +10,9 @@
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 
-const src = await readFile(new URL('../src/data/opportunities.ts', import.meta.url), 'utf8');
-const urls = [...new Set([...src.matchAll(/https:\/\/[^'"\s)]+/g)].map((m) => m[0]))];
+const src = (await readFile(new URL('../src/data/opportunities.ts', import.meta.url), 'utf8'))
+  + (await readFile(new URL('../src/data/schemes-central.ts', import.meta.url), 'utf8'));
+const urls = [...new Set([...src.matchAll(/https:\/\/[^'"\s)`]+/g)].map((m) => m[0]).filter((u) => !u.endsWith('/schemes/$')))];
 const outFile = new URL('../data/source-status.json', import.meta.url);
 let prev = {};
 try { prev = JSON.parse(await readFile(outFile, 'utf8')); } catch {}

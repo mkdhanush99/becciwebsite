@@ -1,0 +1,254 @@
+---
+// One government scheme, told as six chapters (purpose, offer, who can benefit, what you need,
+// how to apply, official verification). Every sentence comes from the record in
+// src/data/opportunities.ts, which in turn quotes the official pages it links to.
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import { opportunities, OBC_SCOPE_LABEL, type Opportunity, type ObcScope } from '../../data/opportunities';
+import { computeStatus, STATUS_LABEL, deadlineText, formatDate, todayISO } from '../../lib/status';
+
+export function getStaticPaths() {
+  return opportunities.filter((o) => o.categories.includes('schemes') && o.scheme).map((o) => ({ params: { slug: o.slug }, props: { o } }));
+}
+const { o } = Astro.props as { o: Opportunity };
+const s = o.scheme!;
+const today = todayISO();
+const st = computeStatus(o, today);
+const closed = st === 'closed' || st === 'awaiting-notice';
+const chapters = [
+  { id: 'purpose', t: 'The purpose' },
+  { id: 'opportunity', t: 'The opportunity' },
+  { id: 'who', t: 'Who can benefit?' },
+  { id: 'need', t: 'What you need' },
+  { id: 'apply', t: 'How to apply' },
+  { id: 'verify', t: 'Official verification' },
+];
+const SCOPES: { k: ObcScope; d: string }[] = [
+  { k: 'exclusive', d: 'Only for OBC/BC applicants, under the scheme’s own definition.' },
+  { k: 'preference', d: 'Open more widely, with a written OBC/BC preference, quota or better terms.' },
+  { k: 'conditional', d: 'OBC/BC applicants qualify only through another condition.' },
+  { k: 'open', d: 'A general scheme. Eligible OBC/BC applicants can apply like anyone else.' },
+];
+const ext = { target: '_blank', rel: 'noopener' };
+const officialRows = [
+  s.links.scheme && { k: 'Official scheme website', l: [s.links.scheme] },
+  s.links.guidelines?.length && { k: 'Guidelines and notifications', l: s.links.guidelines },
+  s.links.ministry && { k: 'Ministry or department', l: [s.links.ministry] },
+  s.links.portal && { k: 'Application portal', l: [s.links.portal] },
+  s.links.notices?.length && { k: 'Amendments, circulars and help', l: s.links.notices },
+  { k: 'Pages BECCI read for this summary', l: o.sources },
+].filter(Boolean) as { k: string; l: { label: string; url: string }[] }[];
+const guideline = s.links.guidelines?.[0] ?? s.links.scheme;
+---
+<Base title={s.short ? `${s.short} — ${o.title}` : o.title} description={`${o.summary} Explained in plain language, with official links.`}>
+  <header class="gx-hero">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true"> / </span><a href="/opportunities">Opportunities</a><span aria-hidden="true"> / </span><a href="/schemes" data-sx-back>Government Schemes</a><span aria-hidden="true"> / </span><span aria-current="page">{s.short ?? o.title}</span></nav>
+      <div class="gx-hero__grid">
+        <div class="gx-id">
+          <p class="gx-id__auth"><Icon name="schemes" size={20} />{o.level} Government · {s.ministry}</p>
+          <h1>{o.title}</h1>
+          <p class="gx-id__sum">{o.summary}</p>
+          <p class="gx-id__note">{s.identitySource} BECCI is not a government body and is not endorsed by the issuing authority.</p>
+        </div>
+        <aside class="gx-glance" aria-label="At a glance">
+          <div class="gx-glance__row"><span class={`status status--${st}`}>{STATUS_LABEL[st]}</span><span class="gx-glance__when">{deadlineText(o, today)}</span></div>
+          <dl>
+            <div><dt>For</dt><dd>{s.beneficiaries.join(', ')}</dd></div>
+            <div><dt>Support</dt><dd>{s.purposeTags.join(', ')}</dd></div>
+            <div><dt>Where</dt><dd>{o.geography.join(', ')}</dd></div>
+            <div><dt>Category rule</dt><dd><span class={`scope scope--${o.obcScope}`}>{OBC_SCOPE_LABEL[o.obcScope]}</span></dd></div>
+          </dl>
+          <a class:list={['btn', closed ? 'btn--ghost' : 'btn--accent', 'gx-glance__go']} href={o.applyUrl} {...ext}>{closed ? `Check status on the official portal` : o.applyLabel}<span aria-hidden="true">↗</span></a>
+          <p class="gx-glance__fine">Opens the official government site in a new tab. You apply there, not through BECCI.</p>
+        </aside>
+      </div>
+    </div>
+  </header>
+
+  {(closed || st === 'unconfirmed' || o.discrepancies?.length) && (
+    <div class="wrap gx-alerts">
+      {o.discrepancies?.map((d) => <p class="gx-alert" role="note"><strong>{closed ? 'Not open for applications.' : 'Check before you apply.'}</strong> {d}</p>)}
+      {!o.discrepancies?.length && closed && <p class="gx-alert" role="note"><strong>Not open for applications.</strong> {deadlineText(o, today)}. The story below is kept so you can understand the scheme and watch for a new round.</p>}
+    </div>
+  )}
+
+  <div class="wrap gx-body">
+    <nav class="gx-toc" aria-label="Chapters">
+      <p class="gx-toc__t">In six chapters</p>
+      <ol>{chapters.map((c) => <li><a href={`#${c.id}`}>{c.t}</a></li>)}</ol>
+      <a class="gx-toc__back" href="/schemes" data-sx-back>← All government schemes</a>
+    </nav>
+
+    <article class="gx-story">
+      <section class="gx-ch" id="purpose" aria-labelledby="h-purpose">
+        <p class="gx-ch__n">Chapter 1</p>
+        <h2 id="h-purpose">The purpose</h2>
+        {s.purpose.map((p) => <p class="gx-lead">{p}</p>)}
+      </section>
+
+      <section class="gx-ch" id="opportunity" aria-labelledby="h-opp">
+        <p class="gx-ch__n">Chapter 2</p>
+        <h2 id="h-opp">The opportunity</h2>
+        <ul class="gx-offer">{o.provides.map((p) => <li>{p}</li>)}</ul>
+        {o.geographyNote && <p class="gx-aside"><strong>How it reaches you.</strong> {o.geographyNote}</p>}
+      </section>
+
+      <section class="gx-ch" id="who" aria-labelledby="h-who">
+        <p class="gx-ch__n">Chapter 3</p>
+        <h2 id="h-who">Who can benefit?</h2>
+        <ul class="gx-tick">{o.whoCanApply.map((w) => <li>{w}</li>)}</ul>
+        {o.conditions?.length && (<>
+          <h3 class="gx-h3">Conditions and exclusions</h3>
+          <ul class="gx-plain">{o.conditions.map((c) => <li>{c}</li>)}</ul>
+        </>)}
+        <div class="gx-rule">
+          <h3 class="gx-h3">What this means for OBC/BC applicants</h3>
+          <p class="gx-rule__lead">{o.obcRule}</p>
+          <ul class="gx-scale" aria-label="Category rule types">
+            {SCOPES.map((x) => <li class:list={[x.k === o.obcScope && 'is-this']} aria-current={x.k === o.obcScope ? 'true' : undefined}><span class={`scope scope--${x.k}`}>{OBC_SCOPE_LABEL[x.k]}</span><span>{x.d}</span>{x.k === o.obcScope && <em>This scheme</em>}</li>)}
+          </ul>
+          <p class="gx-rule__fine">Being OBC/BC does not by itself make anyone eligible. Every condition above still applies, and the issuing authority decides. Central and State OBC/BC lists are separate.</p>
+        </div>
+      </section>
+
+      <section class="gx-ch" id="need" aria-labelledby="h-need">
+        <p class="gx-ch__n">Chapter 4</p>
+        <h2 id="h-need">What you need</h2>
+        {o.documents?.length ? (<>
+          <p>Documents named on the official page. Keep them ready before you start the application.</p>
+          <ul class="gx-docs">{o.documents.map((d) => <li><span class="gx-docs__box" aria-hidden="true"></span>{d}</li>)}</ul>
+        </>) : <p class="gx-aside">The official page BECCI read does not list documents. Check the {guideline ? <a href={guideline.url} {...ext}>official guidelines ↗</a> : 'official guidelines'} before you apply.</p>}
+      </section>
+
+      <section class="gx-ch" id="apply" aria-labelledby="h-apply">
+        <p class="gx-ch__n">Chapter 5</p>
+        <h2 id="h-apply">How to apply</h2>
+        <ol class="gx-steps">{o.howToApply.map((h) => <li>{h}</li>)}</ol>
+        <div class="gx-cta">
+          <a class:list={['btn', closed ? 'btn--ghost' : 'btn--accent']} href={o.applyUrl} {...ext}>{closed ? 'Check status on the official portal' : o.applyLabel}<span aria-hidden="true">↗</span></a>
+          <p>{closed ? 'Applications are not open. The portal is the place to watch for a new round.' : 'You apply on the official portal or through the channels named above. BECCI does not take applications.'}</p>
+        </div>
+      </section>
+
+      <section class="gx-ch gx-ch--verify" id="verify" aria-labelledby="h-verify">
+        <p class="gx-ch__n">Chapter 6</p>
+        <h2 id="h-verify">Official verification</h2>
+        <p>Read the official pages before you rely on anything here. Links open the government site in a new tab.</p>
+        <dl class="gx-links">
+          {officialRows.map((r) => <div><dt>{r.k}</dt><dd><ul>{r.l.map((l) => <li><a href={l.url} {...ext} class="ext">{l.label}</a></li>)}</ul></dd></div>)}
+        </dl>
+        <h3 class="gx-h3">How current this page is</h3>
+        <dl class="gx-dates">
+          <div><dt>Published or notified</dt><dd>{o.publishedDate ? formatDate(o.publishedDate) : 'Not stated on the pages read'}</dd></div>
+          <div><dt>Last source check</dt><dd>{formatDate(o.lastFetched)}</dd></div>
+          <div><dt>Last editorial check</dt><dd>{formatDate(o.lastVerified)}</dd></div>
+          <div><dt>Reviewed by BECCI staff</dt><dd>{s.humanReviewed ? formatDate(s.humanReviewed) : 'Not yet'}</dd></div>
+        </dl>
+        <p class="gx-aside">{o.verification} A source check means the official page was opened and read; it is not a confirmation by the government. <a href="/opportunities/about-data">How we check opportunities</a>.</p>
+        <p class="gx-aside"><a href={`/opportunities/${o.slug}`}>See this scheme in the opportunity finder</a>, alongside tenders, jobs and scholarships.</p>
+      </section>
+    </article>
+  </div>
+</Base>
+
+<style>
+  .gx-hero { background: var(--ice); border-bottom: 1px solid rgb(8 26 53 / 10%); padding-block: clamp(var(--s-6), 5vw, var(--s-8)); background-image: linear-gradient(rgb(8 26 53 / 5%) 1px, transparent 1px), linear-gradient(90deg, rgb(8 26 53 / 5%) 1px, transparent 1px); background-size: 72px 72px; }
+  .gx-hero__grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(300px, 4fr); gap: clamp(var(--s-6), 5vw, var(--s-8)); align-items: start; }
+  .gx-id__auth { display: flex; align-items: center; gap: var(--s-2); margin: 0 0 var(--s-4); font-size: var(--fs-sm); font-weight: 600; color: var(--royal); --icon-accent: var(--cyan); }
+  .gx-id h1 { margin: 0 0 var(--s-4); max-width: 20ch; font-size: clamp(2rem, 1.2rem + 2.8vw, 3.5rem); font-weight: 500; letter-spacing: -0.035em; line-height: 1.04; }
+  .gx-id__sum { margin: 0; max-width: 56ch; font-size: var(--fs-md); line-height: 1.55; color: var(--ink-2); }
+  .gx-id__note { margin: var(--s-5) 0 0; max-width: 60ch; font-size: var(--fs-sm); color: var(--slate); }
+  .gx-glance { display: grid; gap: var(--s-4); padding: var(--s-5); border-radius: 20px; background: var(--white); border: 1px solid rgb(8 26 53 / 14%); box-shadow: 0 24px 48px -32px rgb(8 26 53 / 40%); }
+  .gx-glance__row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-3); }
+  .gx-glance__when { font-size: var(--fs-sm); color: var(--slate); }
+  .gx-glance dl { display: grid; gap: var(--s-3); margin: 0; padding-block: var(--s-4); border-block: 1px solid rgb(8 26 53 / 10%); }
+  .gx-glance dl div { display: grid; grid-template-columns: 112px 1fr; gap: var(--s-3); align-items: baseline; }
+  .gx-glance dt { font-size: var(--fs-sm); color: var(--slate); }
+  .gx-glance dd { margin: 0; font-weight: 500; color: var(--midnight); }
+  .gx-glance__go { width: 100%; white-space: normal; text-align: center; gap: var(--s-2); }
+  .gx-glance__fine { margin: calc(-1 * var(--s-2)) 0 0; font-size: var(--fs-label); color: var(--slate); text-align: center; }
+  @media (max-width: 900px) { .gx-hero__grid { grid-template-columns: 1fr; } }
+
+  .gx-alerts { display: grid; gap: var(--s-2); margin-top: var(--s-5); }
+  .gx-alert { margin: 0; padding: var(--s-4) var(--s-5); border-radius: 14px; background: var(--warn-bg); color: #5c3300; border: 1px solid rgb(138 77 0 / 25%); max-width: 90ch; }
+
+  .gx-body { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: clamp(var(--s-6), 6vw, 96px); padding-block: var(--s-7) var(--s-8); }
+  .gx-toc { position: sticky; top: calc(var(--header-h) + var(--s-4)); align-self: start; }
+  .gx-toc__t { margin: 0 0 var(--s-3); font-size: var(--fs-sm); font-weight: 600; color: var(--midnight); }
+  .gx-toc ol { list-style: none; margin: 0; padding: 0; border-left: 2px solid rgb(8 26 53 / 12%); counter-reset: ch; }
+  .gx-toc li { counter-increment: ch; }
+  .gx-toc li a { display: flex; gap: var(--s-2); min-height: 40px; align-items: center; padding-left: var(--s-4); margin-left: -2px; border-left: 2px solid transparent; color: var(--slate); font-size: var(--fs-sm); text-decoration: none; }
+  .gx-toc li a::before { content: counter(ch); font-variant-numeric: tabular-nums; color: var(--royal); font-weight: 600; }
+  .gx-toc li a:hover, .gx-toc li a[aria-current='true'] { color: var(--midnight); border-left-color: var(--royal); }
+  .gx-toc__back { display: inline-flex; align-items: center; min-height: 44px; margin-top: var(--s-5); font-size: var(--fs-sm); font-weight: 600; color: var(--royal); }
+  @media (max-width: 900px) { .gx-body { grid-template-columns: 1fr; } .gx-toc { position: static; } .gx-toc ol { display: flex; flex-wrap: wrap; gap: 0 var(--s-3); border: 0; } .gx-toc li a { padding-left: 0; border: 0; } }
+
+  .gx-story { max-width: 760px; }
+  .gx-ch { scroll-margin-top: calc(var(--header-h) + var(--s-5)); padding-bottom: var(--s-7); margin-bottom: var(--s-7); border-bottom: 1px solid rgb(8 26 53 / 12%); }
+  .gx-ch:last-child { border-bottom: 0; margin-bottom: 0; }
+  .gx-ch__n { margin: 0 0 var(--s-2); font-size: var(--fs-sm); font-weight: 600; color: var(--royal); }
+  .gx-ch h2 { margin: 0 0 var(--s-5); font-size: clamp(1.75rem, 1.3rem + 1.4vw, 2.5rem); font-weight: 500; letter-spacing: -0.025em; }
+  .gx-ch p { max-width: 68ch; }
+  .gx-lead { font-size: var(--fs-md); line-height: 1.6; color: var(--ink-2); }
+  .gx-h3 { margin: var(--s-6) 0 var(--s-3); font-size: var(--fs-lg); font-weight: 500; color: var(--midnight); }
+  .gx-aside { font-size: var(--fs-sm); color: var(--slate); }
+  .gx-offer, .gx-tick, .gx-plain, .gx-docs { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-3); }
+  .gx-offer li { position: relative; padding: var(--s-4) var(--s-5) var(--s-4) 56px; border-radius: 14px; background: var(--white); border: 1px solid rgb(8 26 53 / 10%); line-height: 1.55; }
+  .gx-offer li::before { content: ''; position: absolute; left: 18px; top: 18px; width: 22px; height: 22px; border-radius: 6px; background: var(--royal); mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 5v14M5 12h14' stroke='black' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E") center/14px no-repeat, linear-gradient(#000 0 0); mask-composite: exclude; }
+  .gx-tick li { position: relative; padding-left: 36px; line-height: 1.55; }
+  .gx-tick li::before { content: ''; position: absolute; left: 0; top: 2px; width: 24px; height: 24px; border-radius: 8px; background: var(--cyan-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m7 12.5 3.2 3.2L17 9' fill='none' stroke='%23081a35' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/18px no-repeat; border: 1px solid rgb(8 26 53 / 18%); }
+  .gx-plain li { position: relative; padding-left: 20px; color: var(--ink-2); line-height: 1.55; }
+  .gx-plain li::before { content: ''; position: absolute; left: 4px; top: 0.65em; width: 6px; height: 6px; border-radius: 50%; background: var(--slate); }
+  .gx-rule { margin-top: var(--s-6); padding: var(--s-5); border-radius: 18px; background: var(--ice); border: 1px solid rgb(8 26 53 / 12%); }
+  .gx-rule .gx-h3 { margin-top: 0; }
+  .gx-rule__lead { font-weight: 500; color: var(--midnight); }
+  .gx-scale { list-style: none; margin: var(--s-4) 0; padding: 0; display: grid; gap: var(--s-2); }
+  .gx-scale li { display: grid; grid-template-columns: 220px 1fr auto; gap: var(--s-3); align-items: center; padding: var(--s-2) var(--s-3); border-radius: 10px; font-size: var(--fs-sm); color: var(--slate); }
+  .gx-scale li.is-this { background: var(--white); border: 1px solid var(--midnight); color: var(--midnight); }
+  .gx-scale li > span:first-child { justify-self: start; }
+  .gx-scale em { font-style: normal; font-weight: 600; font-size: var(--fs-label); color: #fff; background: var(--midnight); padding: 4px 8px; border-radius: 999px; }
+  .gx-rule__fine { margin: 0; font-size: var(--fs-sm); color: var(--slate); }
+  @media (max-width: 640px) { .gx-scale li { grid-template-columns: 1fr; } .gx-scale em { justify-self: start; } }
+  .gx-docs li { display: flex; gap: var(--s-3); align-items: flex-start; padding: var(--s-3) 0; border-bottom: 1px dashed rgb(8 26 53 / 14%); line-height: 1.5; }
+  .gx-docs__box { flex: none; width: 20px; height: 20px; margin-top: 2px; border-radius: 5px; border: 1.5px solid var(--midnight); background: #fff; }
+  .gx-steps { list-style: none; margin: 0; padding: 0; counter-reset: s; border-left: 2px solid rgb(8 26 53 / 14%); margin-left: 15px; }
+  .gx-steps li { counter-increment: s; position: relative; padding: 0 0 var(--s-5) var(--s-6); line-height: 1.55; }
+  .gx-steps li::before { content: counter(s); position: absolute; left: -17px; top: -3px; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--midnight); color: #fff; font: 600 var(--fs-sm)/1 var(--font-body); }
+  .gx-cta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3) var(--s-5); margin-top: var(--s-4); padding: var(--s-5); border-radius: 18px; background: var(--white); border: 1px solid rgb(8 26 53 / 14%); }
+  .gx-cta .btn { white-space: normal; gap: var(--s-2); }
+  .gx-cta p { margin: 0; flex: 1 1 240px; font-size: var(--fs-sm); color: var(--slate); }
+  .gx-links { display: grid; gap: 0; margin: var(--s-4) 0 0; border-top: 1px solid rgb(8 26 53 / 12%); }
+  .gx-links div { display: grid; grid-template-columns: 220px 1fr; gap: var(--s-4); padding: var(--s-4) 0; border-bottom: 1px solid rgb(8 26 53 / 12%); }
+  .gx-links dt { font-size: var(--fs-sm); font-weight: 600; color: var(--midnight); }
+  .gx-links dd { margin: 0; }
+  .gx-links ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-1); }
+  .gx-links a { display: inline-flex; align-items: center; min-height: 32px; color: var(--royal); text-underline-offset: 4px; overflow-wrap: anywhere; }
+  .gx-dates { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-3); margin: 0 0 var(--s-4); }
+  .gx-dates div { padding: var(--s-4); border-radius: 14px; background: var(--white); border: 1px solid rgb(8 26 53 / 10%); }
+  .gx-dates dt { font-size: var(--fs-label); font-weight: 600; color: var(--slate); }
+  .gx-dates dd { margin: 4px 0 0; font-weight: 600; color: var(--midnight); font-variant-numeric: tabular-nums; }
+  @media (max-width: 760px) { .gx-links div { grid-template-columns: 1fr; gap: var(--s-1); } .gx-dates { grid-template-columns: 1fr 1fr; } }
+</style>
+
+<script>
+  // Return to the filtered directory the visitor came from
+  const ret = sessionStorage.getItem('schemes-return');
+  document.querySelectorAll<HTMLAnchorElement>('[data-sx-back]').forEach((a) => {
+    if (!ret) return;
+    a.href = ret;
+    a.addEventListener('click', (e) => {
+      const ref = document.referrer ? new URL(document.referrer) : null;
+      if (ref && ref.origin === location.origin && ref.pathname + ref.search === ret) { e.preventDefault(); history.back(); }
+    });
+  });
+  // Mark the chapter in view
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('.gx-toc li a')];
+  if ('IntersectionObserver' in window && links.length) {
+    const io = new IntersectionObserver((es) => es.forEach((e) => {
+      if (!e.isIntersecting) return;
+      links.forEach((l) => l.setAttribute('aria-current', String(l.hash === `#${e.target.id}`)));
+    }), { rootMargin: '-30% 0px -60% 0px' });
+    document.querySelectorAll('.gx-ch').forEach((c) => io.observe(c));
+  }
+</script>

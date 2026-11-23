@@ -1,140 +1,255 @@
 {
   "https://nbcfdc.gov.in/nbcfdc/web/en/individual-loan-scheme": {
-    "ok": true,
-    "lastAttempt": "2026-11-23T00:02:33.002Z",
+    "ok": false,
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
     "lastSuccess": "2026-11-23T00:02:33.002Z",
     "hash": "9d4136d9d93718d1",
     "changed": null,
-    "chars": 3296
+    "chars": 3296,
+    "error": "fetch failed"
   },
   "https://nbcfdc.gov.in/nbcfdc/web/en/group-loan-scheme": {
     "ok": true,
-    "lastAttempt": "2026-11-23T00:02:33.002Z",
-    "lastSuccess": "2026-11-23T00:02:33.002Z",
-    "hash": "9c81747a1be311a4",
-    "changed": null,
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
+    "lastSuccess": "2026-11-23T16:37:02.274Z",
+    "hash": "7498d0062bfe5f4b",
+    "changed": true,
     "chars": 3776
   },
   "https://nbcfdc.gov.in/nbcfdc/web/en/howapply": {
     "ok": true,
-    "lastAttempt": "2026-11-23T00:02:33.002Z",
-    "lastSuccess": "2026-11-23T00:02:33.002Z",
-    "hash": "79354417241b6d6b",
-    "changed": null,
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
+    "lastSuccess": "2026-11-23T16:37:02.274Z",
+    "hash": "896061900f01dae3",
+    "changed": true,
     "chars": 3535
   },
   "https://nbcfdc.gov.in/nbcfdc/web/en/loans-pattern-of-finance": {
     "ok": true,
-    "lastAttempt": "2026-11-23T00:02:33.002Z",
-    "lastSuccess": "2026-11-23T00:02:33.002Z",
-    "hash": "e0059ca6aebc7eab",
-    "changed": null,
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
+    "lastSuccess": "2026-11-23T16:37:02.274Z",
+    "hash": "d65d83bb94be203b",
+    "changed": true,
     "chars": 4136
+  },
+  "https://nbcfdc.gov.in/": {
+    "ok": true,
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
+    "lastSuccess": "2026-11-23T16:37:02.274Z",
+    "hash": "e05f0550c99a67ac",
+    "changed": true,
+    "chars": 2390
   },
   "https://scholarships.gov.in/": {
     "ok": true,
-    "lastAttempt": "2026-11-23T00:02:33.002Z",
-    "lastSuccess": "2026-11-23T00:02:33.002Z",
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
+    "lastSuccess": "2026-11-23T16:37:02.274Z",
     "hash": "b99d7372b3360a68",
-    "changed": null,
+    "changed": false,
     "chars": 6814
   },
   "https://telanganaepass.cgg.gov.in/": {
     "ok": true,
-    "lastAttempt": "2026-11-23T00:02:33.002Z",
-    "lastSuccess": "2026-11-23T00:02:33.002Z",
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
+    "lastSuccess": "2026-11-23T16:37:02.274Z",
     "hash": "974402ddddffa8c0",
-    "changed": null,
+    "changed": false,
     "chars": 3567
   },
   "https://eprocure.gov.in/cppp/": {
     "ok": true,
-    "lastAttempt": "2026-11-23T00:02:33.002Z",
-    "lastSuccess": "2026-11-23T00:02:33.002Z",
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
+    "lastSuccess": "2026-11-23T16:37:02.274Z",
     "hash": "a5b93a80132bbcd7",
-    "changed": null,
+    "changed": false,
     "chars": 113
   },
   "https://gem.gov.in/": {
     "ok": false,
-    "lastAttempt": "2026-11-23T00:02:33.002Z",
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
     "error": "fetch failed"
   },
   "https://tender.telangana.gov.in/": {
     "ok": true,
-    "lastAttempt": "2026-11-23T00:02:33.002Z",
-    "lastSuccess": "2026-11-23T00:02:33.002Z",
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
+    "lastSuccess": "2026-11-23T16:37:02.274Z",
     "hash": "e3b0c44298fc1c14",
-    "changed": null,
+    "changed": false,
     "chars": 0
   },
   "https://tender.apeprocurement.gov.in/": {
     "ok": false,
-    "lastAttempt": "2026-11-23T00:02:33.002Z",
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
     "error": "fetch failed"
   },
   "https://pminternship.mca.gov.in/": {
     "ok": true,
-    "lastAttempt": "2026-11-23T00:02:33.002Z",
-    "lastSuccess": "2026-11-23T00:02:33.002Z",
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
+    "lastSuccess": "2026-11-23T16:37:02.274Z",
     "hash": "80f36352a58973e0",
-    "changed": null,
+    "changed": false,
     "chars": 32
   },
   "https://www.apprenticeshipindia.gov.in/": {
     "ok": false,
-    "lastAttempt": "2026-11-23T00:02:33.002Z",
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
     "error": "HTTP 403"
   },
   "https://www.ncs.gov.in/": {
     "ok": false,
-    "lastAttempt": "2026-11-23T00:02:33.002Z",
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
     "error": "fetch failed"
   },
   "https://jnanabhumi.ap.gov.in/": {
     "ok": false,
-    "lastAttempt": "2026-11-23T00:02:33.002Z",
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
     "error": "fetch failed"
-  },
-  "https://nbcfdc.gov.in/": {
-    "ok": true,
-    "lastAttempt": "2026-11-23T00:02:33.002Z",
-    "lastSuccess": "2026-11-23T00:02:33.002Z",
-    "hash": "592400a7b4263d1f",
-    "changed": null,
-    "chars": 2390
   },
   "https://www.kviconline.gov.in/pmegpeportal/pmegphome/index.jsp": {
     "ok": false,
-    "lastAttempt": "2026-11-23T00:02:33.002Z",
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
     "error": "fetch failed"
   },
   "https://www.mudra.org.in/": {
     "ok": false,
-    "lastAttempt": "2026-11-23T00:02:33.002Z",
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
     "error": "fetch failed"
   },
   "https://www.standupmitra.in/": {
     "ok": false,
-    "lastAttempt": "2026-11-23T00:02:33.002Z",
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
     "error": "fetch failed"
   },
   "https://www.cgtmse.in/": {
     "ok": false,
-    "lastAttempt": "2026-11-23T00:02:33.002Z",
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
     "error": "fetch failed"
   },
   "https://seedfund.startupindia.gov.in/": {
     "ok": true,
-    "lastAttempt": "2026-11-23T00:02:33.002Z",
-    "lastSuccess": "2026-11-23T00:02:33.002Z",
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
+    "lastSuccess": "2026-11-23T16:37:02.274Z",
     "hash": "d426d001925129f2",
-    "changed": null,
+    "changed": false,
     "chars": 52
   },
   "https://pmvishwakarma.gov.in/": {
     "ok": false,
-    "lastAttempt": "2026-11-23T00:02:33.002Z",
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
     "error": "fetch failed"
+  },
+  "https://www.myscheme.gov.in/schemes/${slug}": {
+    "ok": true,
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
+    "lastSuccess": "2026-11-23T16:37:02.274Z",
+    "hash": "fb6a4e81fa205762",
+    "changed": null,
+    "chars": 652
+  },
+  "https://msme.gov.in/1-prime-ministers-employment-generation-programme-pmegp": {
+    "ok": false,
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
+    "error": "fetch failed"
+  },
+  "https://msme.gov.in/": {
+    "ok": false,
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
+    "error": "fetch failed"
+  },
+  "https://msme.gov.in/sites/default/files/Revisedguidelines07.12.2023.pdf": {
+    "ok": false,
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
+    "error": "fetch failed"
+  },
+  "https://www.kviconline.gov.in/pmegpeportal/dashboard/notification/PMEGP_Guidelines_Certified_2022_3.pdf": {
+    "ok": false,
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
+    "error": "fetch failed"
+  },
+  "https://msme.gov.in/sites/default/files/final-guidlines-for-2nd-loan.pdf": {
+    "ok": false,
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
+    "error": "fetch failed"
+  },
+  "https://www.kviconline.gov.in/pmegpeportal/dashboard/notification/Circular%20-%20issued.pdf": {
+    "ok": false,
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
+    "error": "fetch failed"
+  },
+  "https://www.kviconline.gov.in/pmegpeportal/dashboard/notification/SoP_Compendium_14_12_2023.pdf": {
+    "ok": false,
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
+    "error": "fetch failed"
+  },
+  "https://www.kviconline.gov.in/pmegpeportal/dynamicdistrict/officeSearchForm.jsp": {
+    "ok": false,
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
+    "error": "fetch failed"
+  },
+  "https://udyamimitra.in/": {
+    "ok": false,
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
+    "error": "fetch failed"
+  },
+  "https://www.mudra.org.in/Default/DownloadFile/MudraLoan-SalientFeatures-English.pdf": {
+    "ok": false,
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
+    "error": "fetch failed"
+  },
+  "https://www.mudra.org.in/FAQ": {
+    "ok": false,
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
+    "error": "fetch failed"
+  },
+  "https://www.standupmitra.in/LDMS": {
+    "ok": false,
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
+    "error": "fetch failed"
+  },
+  "https://pmvishwakarma.gov.in/Registration": {
+    "ok": false,
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
+    "error": "fetch failed"
+  },
+  "https://pmvishwakarma.gov.in/FileHandling/GetPdf/MiscFiles%5Ceng_v28.0_PM_Vishwakarma_Guidelines_final.pdf": {
+    "ok": false,
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
+    "error": "fetch failed"
+  },
+  "https://pmvishwakarma.gov.in/Home/FAQ": {
+    "ok": false,
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
+    "error": "fetch failed"
+  },
+  "https://pmfme.mofpi.gov.in/pmfme/#/Home-Page": {
+    "ok": false,
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
+    "error": "fetch failed"
+  },
+  "https://seedfund.startupindia.gov.in/about": {
+    "ok": true,
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
+    "lastSuccess": "2026-11-23T16:37:02.274Z",
+    "hash": "d426d001925129f2",
+    "changed": null,
+    "chars": 52
+  },
+  "https://seedfundapi.startupindia.gov.in:3535/filestorage/samplefiles/seedfund-gazette.pdf": {
+    "ok": false,
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
+    "error": "fetch failed"
+  },
+  "https://seedfundapi.startupindia.gov.in:3535/filestorage/samplefiles/Guidelines_for_Startup_India_Seed_Fund_Scheme.pdf": {
+    "ok": false,
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
+    "error": "fetch failed"
+  },
+  "https://seedfund.startupindia.gov.in/faq": {
+    "ok": true,
+    "lastAttempt": "2026-11-23T16:37:02.274Z",
+    "lastSuccess": "2026-11-23T16:37:02.274Z",
+    "hash": "d426d001925129f2",
+    "changed": null,
+    "chars": 52
   }
 }

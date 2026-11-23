@@ -1,0 +1,214 @@
+---
+// Searchable directory of government schemes (/schemes).
+// Rows, not cards: name and authority lead, then what the scheme offers, then the three facts
+// people decide on (who it is for, the category rule, the application status).
+// Filters live in the URL so Back, refresh and shared links keep them (UXPeak, Design Filters 3).
+import Icon from './Icon.astro';
+import { opportunities, OBC_SCOPE_LABEL, type Opportunity } from '../data/opportunities';
+import { computeStatus, STATUS_LABEL, deadlineText, todayISO, type Status } from '../lib/status';
+
+const today = todayISO();
+const schemes = opportunities.filter((o) => o.categories.includes('schemes') && o.scheme);
+const ORDER: Status[] = ['closing-soon', 'open', 'rolling', 'upcoming', 'amended', 'unconfirmed', 'awaiting-notice', 'closed'];
+const rows = schemes
+  .map((o) => ({ o, st: computeStatus(o, today) }))
+  .sort((a, b) => ORDER.indexOf(a.st) - ORDER.indexOf(b.st) || a.o.title.localeCompare(b.o.title));
+
+const uniq = (xs: string[]) => [...new Set(xs)].sort();
+const beneficiaries = uniq(schemes.flatMap((o) => o.scheme!.beneficiaries));
+const purposes = uniq(schemes.flatMap((o) => o.scheme!.purposeTags));
+const applicants = uniq(schemes.flatMap((o) => o.scheme!.applicantTypes));
+const areas = uniq(schemes.flatMap((o) => o.geography));
+const scopes = (['exclusive', 'preference', 'conditional', 'open', 'not-stated'] as const).filter((s) => schemes.some((o) => o.obcScope === s));
+const statuses = ORDER.filter((s) => rows.some((r) => r.st === s));
+const iconFor = (o: Opportunity) => {
+  const t = o.scheme!.purposeTags;
+  if (t.includes('Scholarship')) return 'scholarship';
+  if (t.includes('Seed funding')) return 'entrepreneur';
+  if (t.includes('Skills')) return 'education';
+  if (t.includes('Subsidy') || t.includes('Grant')) return 'schemes';
+  return 'funding';
+};
+const quick: { label: string; value: string }[] = [
+  { label: 'Entrepreneurs', value: 'Entrepreneurs' }, { label: 'Students', value: 'Students' }, { label: 'Women', value: 'Women' },
+  { label: 'Artisans', value: 'Artisans and craftspeople' }, { label: 'Startups', value: 'Startups' }, { label: 'Groups', value: 'Groups and cooperatives' },
+].filter((q) => beneficiaries.includes(q.value));
+---
+<div class="sd" data-sd>
+  <form class="sd-bar" role="search" aria-label="Find a scheme" onsubmit="return false">
+    <div class="sd-q">
+      <label for="sd-q" class="visually-hidden">Search schemes by name, ministry or what they offer</label>
+      <Icon name="search" size={20} class="sd-q__icon" />
+      <input id="sd-q" name="q" type="search" class="input" placeholder="Search by name, ministry or benefit" autocomplete="off" />
+    </div>
+    <fieldset class="sd-for">
+      <legend>Who are you looking for?</legend>
+      <button type="button" class="sd-pill" data-for="" aria-pressed="true">Everyone</button>
+      {quick.map((q) => <button type="button" class="sd-pill" data-for={q.value} aria-pressed="false">{q.label}</button>)}
+    </fieldset>
+    <div class="sd-selects">
+      <label>Government<select name="level" class="select"><option value="">Central and State</option><option value="Central">Central Government</option><option value="State">State Government</option></select></label>
+      <label>Area<select name="area" class="select"><option value="">Anywhere</option>{areas.map((a) => <option value={a}>{a}</option>)}</select></label>
+      <label>Support<select name="purpose" class="select"><option value="">Any support</option>{purposes.map((p) => <option value={p}>{p}</option>)}</select></label>
+      <label>Applicant<select name="applicant" class="select"><option value="">Any applicant</option>{applicants.map((a) => <option value={a}>{a}</option>)}</select></label>
+      <label>Category rule<select name="scope" class="select"><option value="">Any rule</option>{scopes.map((s) => <option value={s}>{OBC_SCOPE_LABEL[s]}</option>)}</select></label>
+      <label>Status<select name="status" class="select"><option value="">Any status</option>{statuses.map((s) => <option value={s}>{STATUS_LABEL[s]}</option>)}</select></label>
+    </div>
+  </form>
+
+  <div class="sd-head">
+    <p class="sd-count" aria-live="polite" data-sd-count>{rows.length} schemes</p>
+    <div class="sd-chips" data-sd-chips></div>
+  </div>
+
+  <ol class="sd-list" data-sd-list>
+    {rows.map(({ o, st }) => {
+      const s = o.scheme!;
+      return (
+        <li class:list={['sd-row', st === 'closed' && 'sd-row--closed']} data-row
+          data-level={o.level} data-area={o.geography.join('|')} data-for={s.beneficiaries.join('|')}
+          data-purpose={s.purposeTags.join('|')} data-applicant={s.applicantTypes.join('|')} data-scope={o.obcScope} data-status={st}
+          data-text={[o.title, s.short, o.authority, s.ministry, o.summary, ...s.purposeTags, ...s.beneficiaries, ...s.sectors].join(' ').toLowerCase()}>
+          <span class="sd-row__mark" aria-hidden="true"><Icon name={iconFor(o) as any} size={24} /></span>
+          <div class="sd-row__main">
+            <h3><a href={`/schemes/${o.slug}`} data-sd-link>{o.title}</a></h3>
+            <p class="sd-row__by">{s.ministry} · {o.level} Government · {o.geography.join(', ')}</p>
+            <p class="sd-row__sum">{o.summary}</p>
+            <p class="sd-row__for"><span>For</span> {s.beneficiaries.join(', ')}</p>
+          </div>
+          <div class="sd-row__facts">
+            <span class={`status status--${st}`}>{STATUS_LABEL[st]}</span>
+            <span class={`scope scope--${o.obcScope}`} title="Category rule">{OBC_SCOPE_LABEL[o.obcScope]}</span>
+            <span class="sd-row__when">{deadlineText(o, today)}</span>
+          </div>
+        </li>
+      );
+    })}
+  </ol>
+
+  <div class="sd-empty" data-sd-empty hidden>
+    <p class="sd-empty__t">No scheme matches all of these filters.</p>
+    <p>Remove a filter, or search the whole <a href="/opportunities">opportunity finder</a>, which also covers tenders, jobs and scholarships.</p>
+    <button type="button" class="btn btn--ghost btn--sm" data-sd-clear>Clear all filters</button>
+  </div>
+</div>
+
+<style is:global>
+  .sd-bar { display: grid; gap: var(--s-4); padding: var(--s-5); border-radius: 20px; background: var(--white); border: 1px solid rgb(8 26 53 / 12%); }
+  .sd-q { position: relative; }
+  .sd-q__icon { position: absolute; left: 16px; top: 50%; translate: 0 -50%; color: var(--slate); pointer-events: none; }
+  .sd-q .input { width: 100%; min-height: 52px; padding-left: 48px; border-radius: 999px; font-size: var(--fs-base); }
+  .sd-for { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2); margin: 0; padding: 0; border: 0; }
+  .sd-for legend { float: left; margin-right: var(--s-3); font-size: var(--fs-sm); font-weight: 600; color: var(--midnight); }
+  .sd-pill { min-height: 44px; padding: 0 var(--s-4); border-radius: 999px; border: 1px solid rgb(8 26 53 / 16%); background: var(--white); color: var(--midnight); font: 500 var(--fs-sm) var(--font-body); cursor: pointer; transition: background var(--dur), border-color var(--dur), color var(--dur); }
+  .sd-pill:hover { border-color: var(--midnight); }
+  .sd-pill[aria-pressed='true'] { background: var(--midnight); border-color: var(--midnight); color: #fff; }
+  .sd-selects { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--s-3); }
+  .sd-selects label { display: grid; gap: 4px; font-size: var(--fs-label); font-weight: 600; color: var(--slate); }
+  .sd-selects .select { min-height: 44px; width: 100%; font-size: var(--fs-sm); }
+  @media (max-width: 1100px) { .sd-selects { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 600px) { .sd-bar { padding: var(--s-4); } .sd-selects { grid-template-columns: 1fr 1fr; } .sd-for legend { float: none; width: 100%; margin-bottom: var(--s-1); } }
+
+  .sd-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3) var(--s-4); margin: var(--s-6) 0 var(--s-3); }
+  .sd-count { margin: 0; font-weight: 600; color: var(--midnight); }
+  .sd-chips { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+  .sd-chip { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 var(--s-2) 0 var(--s-3); border-radius: 999px; border: 1px solid rgb(8 26 53 / 16%); background: var(--ice); color: var(--midnight); font: 500 var(--fs-sm) var(--font-body); cursor: pointer; }
+  .sd-chip span { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: #fff; font-size: 0.875rem; }
+  .sd-chip:hover { border-color: var(--midnight); }
+  .sd-chip--clear { background: none; border-color: transparent; text-decoration: underline; text-underline-offset: 4px; padding: 0 var(--s-2); }
+
+  .sd-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid rgb(8 26 53 / 14%); }
+  .sd-row { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(200px, 260px); gap: var(--s-5); align-items: start; padding: var(--s-5) var(--s-3); border-bottom: 1px solid rgb(8 26 53 / 14%); transition: background var(--dur); }
+  .sd-row:hover { background: var(--white); }
+  .sd-row__mark { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 12px; background: var(--ice); border: 1px solid rgb(8 26 53 / 12%); color: var(--royal); --icon-accent: var(--cyan); }
+  .sd-row h3 { margin: 0; font-size: clamp(1.125rem, 1rem + 0.4vw, 1.375rem); font-weight: 500; letter-spacing: -0.015em; line-height: 1.25; }
+  .sd-row h3 a { color: var(--midnight); text-decoration: none; }
+  .sd-row h3 a::after { content: ''; position: absolute; inset: 0; }
+  .sd-row h3 a:hover { color: var(--royal); }
+  .sd-row h3 a:focus-visible { outline: none; }
+  .sd-row:has(a:focus-visible) { outline: 3px solid var(--blue-500); outline-offset: -3px; border-radius: 12px; }
+  .sd-row__by { margin: 4px 0 var(--s-2); font-size: var(--fs-sm); color: var(--slate); }
+  .sd-row__sum { margin: 0; max-width: 68ch; color: var(--ink-2); }
+  .sd-row__for { margin: var(--s-2) 0 0; font-size: var(--fs-sm); color: var(--midnight); }
+  .sd-row__for span { font-weight: 600; color: var(--royal); margin-right: 4px; }
+  .sd-row__facts { display: grid; justify-items: start; gap: var(--s-2); }
+  .sd-row__when { font-size: var(--fs-sm); color: var(--slate); }
+  .sd-row--closed .sd-row__mark { background: var(--silver-100); color: var(--slate); }
+  .sd-row--closed h3 a { color: var(--ink-2); }
+  @media (max-width: 760px) { .sd-row { grid-template-columns: auto minmax(0, 1fr); gap: var(--s-3) var(--s-4); padding-inline: 0; } .sd-row__facts { grid-column: 2; display: flex; flex-wrap: wrap; align-items: center; } .sd-row__mark { width: 40px; height: 40px; } }
+  .sd-row[hidden], .sd-empty[hidden] { display: none; }
+  .sd-empty { display: grid; justify-items: start; gap: var(--s-2); padding: var(--s-6); margin-top: var(--s-4); border-radius: 18px; border: 1px dashed rgb(8 26 53 / 22%); background: var(--ice); }
+  .sd-empty p { margin: 0; color: var(--slate); }
+  .sd-empty .sd-empty__t { font: 500 var(--fs-lg)/1.2 var(--font-display); color: var(--midnight); }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-sd]');
+  if (root) {
+    const q = root.querySelector<HTMLInputElement>('#sd-q')!;
+    const selects = [...root.querySelectorAll<HTMLSelectElement>('.sd-selects select')];
+    const pills = [...root.querySelectorAll<HTMLButtonElement>('[data-for]')].filter((b) => b.tagName === 'BUTTON');
+    const rows = [...root.querySelectorAll<HTMLElement>('[data-row]')];
+    const count = root.querySelector<HTMLElement>('[data-sd-count]')!;
+    const chips = root.querySelector<HTMLElement>('[data-sd-chips]')!;
+    const empty = root.querySelector<HTMLElement>('[data-sd-empty]')!;
+    const FIELD: Record<string, string> = { level: 'level', area: 'area', purpose: 'purpose', applicant: 'applicant', scope: 'scope', status: 'status' };
+    let who = '';
+
+    const read = () => {
+      const p = new URLSearchParams(location.search);
+      q.value = p.get('q') ?? '';
+      who = p.get('for') ?? '';
+      selects.forEach((s) => { s.value = p.get(s.name) ?? ''; if (s.selectedIndex < 0) s.value = ''; });
+    };
+    const write = () => {
+      const p = new URLSearchParams();
+      if (q.value.trim()) p.set('q', q.value.trim());
+      if (who) p.set('for', who);
+      selects.forEach((s) => { if (s.value) p.set(s.name, s.value); });
+      const url = location.pathname + (p.toString() ? `?${p}` : '');
+      history.replaceState(history.state, '', url);
+      sessionStorage.setItem('schemes-return', url);
+    };
+    const apply = () => {
+      const terms = q.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+      let n = 0;
+      rows.forEach((r) => {
+        const d = r.dataset;
+        let ok = terms.every((t) => d.text!.includes(t));
+        if (ok && who) ok = d.for!.split('|').includes(who);
+        selects.forEach((s) => { if (ok && s.value) ok = d[FIELD[s.name]]!.split('|').includes(s.value); });
+        r.hidden = !ok; if (ok) n++;
+      });
+      count.textContent = `${n} ${n === 1 ? 'scheme' : 'schemes'}${n < rows.length ? ` of ${rows.length}` : ''}`;
+      empty.hidden = n > 0;
+      pills.forEach((b) => b.setAttribute('aria-pressed', String((b.dataset.for ?? '') === who)));
+      // Applied filters as removable chips
+      chips.replaceChildren();
+      const add = (label: string, clear: () => void) => {
+        const b = document.createElement('button'); b.type = 'button'; b.className = 'sd-chip';
+        b.setAttribute('aria-label', `Remove filter: ${label}`); b.textContent = label;
+        const x = document.createElement('span'); x.setAttribute('aria-hidden', 'true'); x.textContent = '×'; b.append(x);
+        b.addEventListener('click', () => { clear(); update(); }); chips.append(b);
+      };
+      if (q.value.trim()) add(`“${q.value.trim()}”`, () => (q.value = ''));
+      if (who) add(`For: ${pills.find((b) => b.dataset.for === who)?.textContent ?? who}`, () => (who = ''));
+      selects.forEach((s) => { if (s.value) add(s.options[s.selectedIndex].text, () => (s.value = '')); });
+      if (chips.children.length > 1) {
+        const c = document.createElement('button'); c.type = 'button'; c.className = 'sd-chip sd-chip--clear'; c.textContent = 'Clear all';
+        c.addEventListener('click', clearAll); chips.append(c);
+      }
+    };
+    const update = () => { apply(); write(); };
+    const clearAll = () => { q.value = ''; who = ''; selects.forEach((s) => (s.value = '')); update(); q.focus(); };
+
+    let t: number | undefined;
+    q.addEventListener('input', () => { clearTimeout(t); t = window.setTimeout(update, 120); });
+    selects.forEach((s) => s.addEventListener('change', update));
+    pills.forEach((b) => b.addEventListener('click', () => { who = b.dataset.for ?? ''; update(); }));
+    root.querySelector('[data-sd-clear]')?.addEventListener('click', clearAll);
+    window.addEventListener('pageshow', () => { read(); apply(); });
+    read(); apply();
+    sessionStorage.setItem('schemes-return', location.pathname + location.search);
+  }
+</script>
