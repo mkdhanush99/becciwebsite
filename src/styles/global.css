@@ -1,12 +1,8 @@
 /* BECCI design system — see DESIGN.md */
-/* Client typeface: New Black (all weights, self-hosted in /public/fonts) */
-@font-face { font-family: 'New Black'; src: url('/fonts/NewBlackTypeface-UltraLight.woff2') format('woff2'), url('/fonts/NewBlackTypeface-UltraLight.woff') format('woff'); font-weight: 200; font-style: normal; font-display: swap; }
-@font-face { font-family: 'New Black'; src: url('/fonts/NewBlackTypeface-Light.woff2') format('woff2'), url('/fonts/NewBlackTypeface-Light.woff') format('woff'); font-weight: 300; font-style: normal; font-display: swap; }
-@font-face { font-family: 'New Black'; src: url('/fonts/NewBlackTypeface-Regular.woff2') format('woff2'), url('/fonts/NewBlackTypeface-Regular.woff') format('woff'); font-weight: 400; font-style: normal; font-display: swap; }
-@font-face { font-family: 'New Black'; src: url('/fonts/NewBlackTypeface-Medium.woff2') format('woff2'), url('/fonts/NewBlackTypeface-Medium.woff') format('woff'); font-weight: 500; font-style: normal; font-display: swap; }
-@font-face { font-family: 'New Black'; src: url('/fonts/NewBlackTypeface-SemiBold.woff2') format('woff2'), url('/fonts/NewBlackTypeface-SemiBold.woff') format('woff'); font-weight: 600; font-style: normal; font-display: swap; }
-@font-face { font-family: 'New Black'; src: url('/fonts/NewBlackTypeface-Bold.woff2') format('woff2'), url('/fonts/NewBlackTypeface-Bold.woff') format('woff'); font-weight: 700; font-style: normal; font-display: swap; }
-@font-face { font-family: 'New Black'; src: url('/fonts/NewBlackTypeface-ExtraBold.woff2') format('woff2'), url('/fonts/NewBlackTypeface-ExtraBold.woff') format('woff'); font-weight: 800; font-style: normal; font-display: swap; }
+/* Typeface: Quicksand (the face used on bizpole.in), self-hosted variable font, weights 300–700.
+   SIL Open Font License 1.1 (public/fonts/Quicksand-OFL.txt). Source: @fontsource-variable/quicksand 5.3.0. */
+@font-face { font-family: 'Quicksand'; src: url('/fonts/Quicksand-latin-wght.woff2') format('woff2-variations'), url('/fonts/Quicksand-latin-wght.woff2') format('woff2'); font-weight: 300 700; font-style: normal; font-display: swap; unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: 'Quicksand'; src: url('/fonts/Quicksand-latin-ext-wght.woff2') format('woff2-variations'), url('/fonts/Quicksand-latin-ext-wght.woff2') format('woff2'); font-weight: 300 700; font-style: normal; font-display: swap; unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
 
 /* ───────────── Tokens ───────────── */
 :root {
@@ -60,8 +56,8 @@
   --amend: #63389a; --amend-bg: #efe6f8;
   --closed: #5b5f68; --closed-bg: #ebebeb;
 
-  /* Type — one family (New Black), 1.25 scale: 13 · 14 · 16 · 18 · 22 · 28 · 40 · 56 · 72 */
-  --font-display: 'New Black', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  /* Type — one family (Quicksand), 1.25 scale: 13 · 14 · 16 · 18 · 22 · 28 · 40 · 56 · 72 */
+  --font-display: 'Quicksand', 'Segoe UI', system-ui, -apple-system, sans-serif;
   --font-body: var(--font-display);
   --fs-label: 0.8125rem;
   --fs-sm: 0.875rem;
