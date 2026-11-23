@@ -10,23 +10,43 @@ const tiers = [
 ];
 ---
 <Base title="Membership" description="Who can join BECCI, proposed membership categories and how to get involved.">
-  <PageHero eyebrow="Membership / Join Us" title="Join a chamber built for you" lede="BECCI membership is for Bahujan entrepreneurs, professionals, students and first-generation founders. Here is who can join, what the categories are planned to offer, and where things stand today." crumbs={[{ label: 'Membership' }]}>
+  <PageHero title="Join a chamber built for you" lede="BECCI membership is for Bahujan entrepreneurs, professionals, students and first-generation founders. Here is who can join, what the categories are planned to offer, and where things stand today." crumbs={[{ label: 'Membership' }]}>
     <div style="display:flex;gap:var(--s-3);flex-wrap:wrap;margin-top:var(--s-5)"><a class="btn btn--accent" href="#join">Join as a Member</a><a class="btn btn--ghost" href="#member-login">Member Login</a></div>
   </PageHero>
 
+  <section class="m-join" id="join" aria-labelledby="join-title">
+    <div class="wrap m-join__grid">
+      <div>
+        <h2 id="join-title">Applying for membership</h2>
+        <p class="m-join__elig">You can join if your community is in the Central OBC list for your State or in your State's BC/OBC list. Individuals and businesses are both welcome. <a href="#eligibility">Full eligibility</a></p>
+      </div>
+      <div class="m-join__status">
+        {destinations.joinApplication ? <a class="btn btn--accent" href={destinations.joinApplication}>Start your application</a> : (
+          <>
+            <p><strong>Online applications are not open yet.</strong> When they open, the application link will appear here. Nothing on this website collects an application today.</p>
+            <a class="btn btn--accent" href="#request-call">Ask the membership team to call you</a>
+          </>
+        )}
+        <p class="m-join__login" id="member-login">
+          <strong>Member Login:</strong> {destinations.memberLogin ? <a href={destinations.memberLogin}>Go to Member Login</a> : 'the member portal, including the directory and referral programme, is not available yet.'}
+        </p>
+      </div>
+    </div>
+  </section>
+
   <section class="section"><div class="wrap two-col">
-    <div><span class="eyebrow">Eligibility</span><h2>Who can join</h2></div>
+    <div id="eligibility"><h2>Who can join</h2></div>
     <div class="prose">
       <p>You can apply if your caste or community is recognised in <strong>either</strong>:</p>
       <ol><li>the Government of India's Central OBC list applicable to your State, or</li><li>your State Government's official BC/OBC list.</li></ol>
       <p>Recognition in both is not required. The two lists are separate classifications, and being on one does not mean you are on the other. Applications are subject to document verification and BECCI's membership rules.</p>
       <p>Both individuals and businesses can become members. Aspiring entrepreneurs do not need business registrations such as Udyam or GSTIN.</p>
-      <p class="notice notice--info">Membership eligibility is separate from eligibility for any government scheme. Each scheme applies its own rules.</p>
+      <p class="muted">Membership eligibility is separate from eligibility for any government scheme. Each scheme applies its own rules.</p>
     </div>
   </div></section>
 
   <section class="section section--white"><div class="wrap">
-    <div class="section-head"><div><span class="eyebrow">Categories</span><h2>Proposed membership categories</h2></div>
+    <div class="section-head"><div><h2>Proposed membership categories</h2></div>
       <p>These categories are proposed by BECCI. <strong>Fees and final benefits have not been decided yet</strong> and will be confirmed before applications open.</p></div>
     <div class="grid grid--3">
       {tiers.map((t) => (
@@ -36,37 +56,27 @@ const tiers = [
     <p class="small muted" style="margin-top:var(--s-5)">Biz Connect, BECCI's structured business networking programme, is planned as a separate membership with its own fee. <a href="/biz-connect">About Biz Connect</a>.</p>
   </div></section>
 
-  <section class="section"><div class="wrap grid grid--2">
-    <div id="join">
-      <span class="eyebrow">Join now</span><h2>Applying for membership</h2>
-      {destinations.joinApplication ? <a class="btn btn--accent" href={destinations.joinApplication}>Start your application</a> : (
-        <>
-          <p class="notice notice--warn"><strong>Online applications are not open yet.</strong> The membership application with OTP and document verification is being built separately and is not part of this website. Nothing on this page collects an application.</p>
-          <p>When applications open, the application link will appear here. Until then, you can ask the membership team to call you.</p>
-        </>
-      )}
-    </div>
-    <div id="member-login">
-      <span class="eyebrow">Members</span><h2>Member Login</h2>
-      {destinations.memberLogin ? <a class="btn" href={destinations.memberLogin}>Go to Member Login</a> : (
-        <p class="notice notice--warn"><strong>The member portal is not available yet.</strong> Member Login, the Membership Directory, Upgrade Membership and the Membership Referral Programme will be offered inside the member portal when it launches.</p>
-      )}
-    </div>
-  </div></section>
 
   <section class="section section--white" id="request-call"><div class="wrap two-col">
-    <div><span class="eyebrow">Talk to us</span><h2>Request a call from the membership team</h2><p class="muted">BECCI's office staff explain categories and arrangements personally.</p></div>
+    <div><h2>Request a call</h2><p class="muted">BECCI's membership team explains categories and arrangements personally.</p></div>
     <EnquiryForm id="call" purpose="membership-call" submitLabel="Request a call" fields={[
       { name: 'name', label: 'Your name', required: true, autocomplete: 'name' },
-      { name: 'phone', label: 'Mobile number', type: 'tel', required: true, autocomplete: 'tel' },
+      { name: 'phone', label: 'Mobile number', type: 'tel', required: true, autocomplete: 'tel', hint: '10 digits, for example 98765 43210' },
       { name: 'email', label: 'Email', type: 'email', autocomplete: 'email' },
-      { name: 'state', label: 'State', required: true },
+      { name: 'state', label: 'State or Union Territory', type: 'select', required: true, options: ['Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chhattisgarh','Goa','Gujarat','Haryana','Himachal Pradesh','Jharkhand','Karnataka','Kerala','Madhya Pradesh','Maharashtra','Manipur','Meghalaya','Mizoram','Nagaland','Odisha','Punjab','Rajasthan','Sikkim','Tamil Nadu','Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal','Andaman and Nicobar Islands','Chandigarh','Dadra and Nagar Haveli and Daman and Diu','Delhi','Jammu and Kashmir','Ladakh','Lakshadweep','Puducherry'] },
       { name: 'type', label: 'I am interested as', type: 'select', required: true, options: ['An individual', 'A business', 'A student', 'Not sure yet'] },
       { name: 'message', label: 'Anything you would like us to know', type: 'textarea' },
     ]} />
   </div></section>
 </Base>
 <style>
+  .m-join { background: var(--white); border-bottom: var(--hair); padding-block: var(--s-7); }
+  .m-join__grid { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: var(--s-6); align-items: start; }
+  .m-join h2 { font-size: var(--fs-xl); }
+  .m-join__elig { color: var(--ink-2); max-width: 52ch; }
+  .m-join__status p { color: var(--ink-2); max-width: 52ch; }
+  .m-join__login { margin: var(--s-5) 0 0; padding-top: var(--s-4); border-top: var(--hair); font-size: var(--fs-sm); color: var(--slate) !important; }
+  @media (max-width: 860px) { .m-join__grid { grid-template-columns: 1fr; gap: var(--s-4); } }
   .tier { display: flex; flex-direction: column; }
   .tier ul { padding-left: 1.1em; flex: 1; }
   .tier li { margin-bottom: var(--s-2); }
