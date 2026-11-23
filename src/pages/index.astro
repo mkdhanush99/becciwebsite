@@ -55,27 +55,27 @@ const tiers = [
     <div class="h-hero__bg" aria-hidden="true"></div>
     <div class="wrap h-hero__grid">
       <div class="h-hero__copy">
-        <h1 class="kinetic" aria-label="Where Community Meets Commerce">
+        <h1 class="kinetic" aria-label="Where Community Meets Commerce.">
           <span class="kinetic__line" aria-hidden="true"><span class="kw" style="--i:0"><span>Where</span></span> <span class="kw" style="--i:1"><span>Community</span></span></span>
-          <span class="kinetic__line kinetic__line--lit" aria-hidden="true"><span class="kw" style="--i:2"><span>Meets</span></span> <span class="kw" style="--i:3"><span>Commerce</span></span></span>
+          <span class="kinetic__line kinetic__line--lit" aria-hidden="true"><span class="kw" style="--i:2"><span>Meets</span></span> <span class="kw" style="--i:3"><span>Commerce.</span></span></span>
         </h1>
         <p class="h-hero__lede h-in" style="--i:4">{site.supporting}</p>
-        <p class="h-hero__id h-in" style="--i:5">BECCI is the <strong>Bahujan Entrepreneurs Chamber for Commerce &amp; Industry</strong>, an OBC-exclusive national Chamber of Commerce.</p>
-        <form class="h-search h-in" style="--i:6" action="/opportunities" method="get" role="search">
+        <div class="h-hero__actions h-in" style="--i:5">
+          <a class="btn btn--light btn--lg" href="/opportunities">Explore Opportunities <Icon name="arrow" size={18} /></a>
+          <a class="btn btn--ghost btn--lg" href="/membership#join">Join as a Member</a>
+        </div>
+        <p class="h-hero__id h-in" style="--i:6">BECCI is the <strong>Bahujan Entrepreneurs Chamber for Commerce &amp; Industry</strong>, an OBC-exclusive national Chamber of Commerce.</p>
+        <form class="h-search h-in" style="--i:7" action="/opportunities" method="get" role="search">
           <label for="hero-q" class="visually-hidden">Find schemes, scholarships, loans, tenders and jobs</label>
           <div class="h-search__row">
-            <Icon name="search" size={20} class="h-search__icon" />
+            <Icon name="search" size={18} class="h-search__icon" />
             <input id="hero-q" name="q" type="search" class="input" placeholder="Search loans, scholarships, tenders…" />
             <button class="btn" type="submit">Search</button>
           </div>
         </form>
-        <ul class="h-cats h-in" style="--i:7" aria-label="Browse by category">
+        <ul class="h-cats h-in" style="--i:8" aria-label="Browse by category">
           {CATEGORY_ORDER.map((c) => <li><a href={CATEGORY_META[c].path}>{CATEGORY_META[c].label}</a></li>)}
         </ul>
-        <div class="h-hero__actions h-in" style="--i:8">
-          <a class="btn btn--light" href="/membership#join">Join BECCI</a>
-          <a class="btn btn--ghost" href="/about">About the chamber</a>
-        </div>
       </div>
       <div class="h-art" aria-labelledby="reg-title">
         <div class="h-art__scene"><Illo name="hero" /></div>
@@ -260,14 +260,15 @@ const tiers = [
   .h-hero { position: relative; z-index: 2; isolation: isolate; overflow: hidden; background: var(--royal); color: #dbe6fb; padding-top: clamp(var(--s-7), 6vw, 96px); }
   .h-hero__bg { position: absolute; inset: 0; z-index: -1; background-image: linear-gradient(rgb(255 255 255 / 9%) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / 9%) 1px, transparent 1px); background-size: 72px 72px; background-position: -1px -1px; mask-image: linear-gradient(180deg, #000 60%, transparent); }
   .h-hero__bg::after { content: ''; position: absolute; inset: 0; background: radial-gradient(50% 60% at 80% 40%, rgb(101 185 242 / 35%), transparent 70%); }
-  .h-hero__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s-6); align-items: center; }
-  .kinetic { color: #fff; font-size: clamp(2.75rem, 0.6rem + 4.2vw, 5rem); font-weight: 500; line-height: 0.98; letter-spacing: -0.04em; margin: 0 0 var(--s-5); max-width: none; }
+  .h-hero__grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--s-6); align-items: center; }
+  /* Headline: heavier editorial weight (ref. Bizpole's bold display), tight leading, measured tracking */
+  .kinetic { color: #fff; font-size: clamp(2.75rem, 0.8rem + 4.4vw, 5.25rem); font-weight: 700; line-height: 0.96; letter-spacing: -0.035em; margin: 0 0 var(--s-5); max-width: none; font-kerning: normal; }
   .kinetic__line { display: block; white-space: nowrap; }
   .kinetic__line--lit { color: #bfe7ff; }
   .kw { display: inline-block; overflow: hidden; padding: 0.14em 0.06em 0.08em; margin: -0.14em -0.06em -0.08em; vertical-align: top; }
   .kw > span { display: inline-block; }
-  .h-hero__lede { font-size: var(--fs-md); color: #e6eefc; max-width: 46ch; margin: 0 0 var(--s-2); }
-  .h-hero__id { font-size: var(--fs-sm); color: #e6eefc; max-width: 52ch; margin: 0 0 var(--s-5); }
+  .h-hero__lede { font-size: clamp(1.125rem, 1rem + 0.45vw, 1.375rem); font-weight: 400; line-height: 1.5; letter-spacing: -0.005em; color: #eef3fd; max-width: 34ch; margin: 0 0 var(--s-6); text-wrap: pretty; }
+  .h-hero__id { font-size: var(--fs-sm); line-height: 1.55; color: #d3e0f8; max-width: 50ch; margin: var(--s-6) 0 var(--s-4); padding-top: var(--s-4); border-top: 1px solid rgb(255 255 255 / 18%); }
   .h-hero__id strong { color: #fff; font-weight: 600; }
   @media (prefers-reduced-motion: no-preference) {
     :global(.js) .kw > span { transform: translateY(105%) rotate(4deg); animation: rise 900ms cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: calc(120ms + var(--i) * 90ms); }
@@ -280,18 +281,20 @@ const tiers = [
   @keyframes fadeUp { to { opacity: 1; transform: none; } }
   @keyframes cardIn { from { opacity: 0; translate: 0 40px; } to { opacity: 1; translate: 0 0; } }
 
-  .h-search { width: min(100% - 6px, 560px); margin-bottom: var(--s-4); }
-  .h-search__row { position: relative; display: flex; align-items: center; gap: var(--s-2); padding: 6px; background: #fff; border-radius: 999px; border: 1px solid var(--midnight); box-shadow: 5px 5px 0 var(--midnight); }
+  .h-search { width: min(100%, 520px); margin-bottom: var(--s-3); }
+  .h-search__row { position: relative; display: flex; align-items: center; gap: var(--s-2); padding: 6px; background: #fff; border-radius: 999px; border: 1px solid var(--midnight); box-shadow: none; }
   :global(.h-search__icon) { position: absolute; left: 20px; color: var(--slate); pointer-events: none; }
-  .h-search .input { flex: 1; min-width: 0; border: 0; background: transparent; min-height: 48px; padding-left: 46px; font-size: var(--fs-base); box-shadow: none; }
+  .h-search .input { flex: 1; min-width: 0; border: 0; background: transparent; min-height: 44px; padding-left: 46px; font-size: var(--fs-base); box-shadow: none; }
   .h-search .input:focus-visible { outline: 2px solid var(--royal); outline-offset: 2px; border-radius: 999px; }
-  .h-search__row:focus-within { box-shadow: 5px 5px 0 var(--midnight), 0 0 0 4px var(--cyan); }
-  .h-search .btn { min-height: 48px; padding: 0 var(--s-5); border-radius: 999px; --bg: var(--midnight); --bd: var(--midnight); }
+  .h-search__row:focus-within { box-shadow: 0 0 0 4px var(--cyan); }
+  .h-search .btn { min-height: 44px; padding: 0 var(--s-5); border-radius: 999px; --bg: var(--midnight); --bd: var(--midnight); }
   .h-cats { display: flex; flex-wrap: wrap; gap: var(--s-2); list-style: none; padding: 0; margin: 0 0 var(--s-5); }
   .h-cats a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--s-3); border-radius: 999px; border: 1px solid rgb(255 255 255 / 30%); background: rgb(255 255 255 / 8%); color: #fff; font-size: var(--fs-sm); font-weight: 500; text-decoration: none; transition: background var(--dur), border-color var(--dur), color var(--dur); }
   .h-cats a:hover { color: var(--midnight); background: #fff; border-color: #fff; }
   .h-hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3); }
-  .h-hero__actions .btn { border-radius: 999px; }
+  .h-hero__actions .btn { border-radius: 999px; min-height: 56px; padding: 0 var(--s-6); font-size: 1.0625rem; font-weight: 600; letter-spacing: -0.005em; }
+  .h-hero__actions .btn--light { box-shadow: 4px 4px 0 var(--midnight); }
+  .h-hero__actions .btn--light:hover { transform: translateY(-1px); }
   :global(.btn--light) { --bg: #fff; --bd: #fff; --fg: var(--midnight); }
   :global(.btn--light:hover) { --bg: var(--cyan-soft); --bd: var(--cyan-soft); --fg: var(--midnight); }
 
@@ -319,13 +322,16 @@ const tiers = [
   .h-sources li { font: 500 var(--fs-base)/1.4 var(--font-display); color: #fff; }
 
   @media (max-width: 1000px) {
-    .h-hero__grid { grid-template-columns: 1fr; }
+    .h-hero__grid { grid-template-columns: minmax(0, 1fr); }
     .h-art { min-height: 0; aspect-ratio: 640 / 520; max-width: 640px; width: 100%; margin-inline: auto; }
     .h-art__scene { inset: 0; }
   }
   @media (max-width: 560px) {
     .h-hero { padding-top: var(--s-6); }
-    .kinetic { font-size: clamp(2.2rem, 11vw, 3.2rem); }
+    .kinetic { font-size: clamp(2.75rem, 13.5vw, 3.75rem); line-height: 0.98; letter-spacing: -0.03em; }
+    .kinetic__line { white-space: normal; }
+    .h-hero__actions .btn { flex: 1 1 100%; }
+    .h-hero__lede { margin-bottom: var(--s-5); }
     .h-search__row { flex-wrap: wrap; border-radius: 20px; }
     .h-search .btn { width: 100%; border-radius: 14px; }
     :global(.h-search__icon) { top: 20px; }
