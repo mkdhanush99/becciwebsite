@@ -138,7 +138,7 @@ const tiers = [
     </div>
   </section>
 
-  <section class="section section--midnight h-close" aria-labelledby="close-title">
+  <section class="section h-close" aria-labelledby="close-title">
     <div class="wrap h-close__grid">
       <div>
         
@@ -161,8 +161,8 @@ const tiers = [
   .h-hero { background: var(--midnight); color: var(--on-dark-2); padding-top: clamp(var(--s-6), 5vw, var(--s-8)); overflow: hidden; display: flex; flex-direction: column; justify-content: center; }
   @media (min-width: 961px) and (min-height: 700px) { .h-hero { min-height: calc(100svh - var(--header-h)); } }
   .h-hero__grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(var(--s-6), 5vw, var(--s-8)); align-items: center; }
-  .h-hero h1 { color: #fff; font-size: var(--fs-4xl); font-weight: 600; line-height: 1.02; letter-spacing: -0.025em; margin-bottom: var(--s-5); }
-  .h-hero h1 span { display: block; color: var(--accent-300); }
+  .h-hero h1 { color: #fff; font-size: clamp(2.5rem, 1.5rem + 3.6vw, 4rem); font-weight: 500; line-height: 1.04; letter-spacing: -0.02em; margin-bottom: var(--s-5); }
+  .h-hero h1 span { display: block; }
   .h-hero__lede { font-size: var(--fs-md); color: var(--on-dark); max-width: 46ch; margin-bottom: var(--s-6); }
   .h-search { border-top: 1px solid rgb(255 255 255 / 14%); padding-top: var(--s-5); margin-bottom: var(--s-6); }
   .h-search__label { display: block; font-size: var(--fs-sm); font-weight: 500; color: var(--on-dark-2); margin-bottom: var(--s-3); }
@@ -173,7 +173,7 @@ const tiers = [
   .h-cats a { display: inline-flex; align-items: center; min-height: 44px; color: #fff; font-weight: 500; text-decoration: underline; text-decoration-color: rgb(255 255 255 / 35%); text-underline-offset: 6px; }
   .h-cats a:hover { color: #fff; text-decoration-color: #fff; }
   .h-hero__actions { display: flex; flex-wrap: wrap; gap: var(--s-3); }
-  .h-promise p { margin: clamp(var(--s-6), 5vw, var(--s-7)) 0 0; padding: var(--s-5) 0; border-top: 1px solid rgb(255 255 255 / 12%); font: 500 var(--fs-md)/1 var(--font-display); letter-spacing: 0.04em; color: var(--on-dark); }
+  .h-promise p { margin: clamp(var(--s-6), 5vw, var(--s-7)) 0 0; padding: var(--s-5) 0; border-top: 1px solid rgb(255 255 255 / 10%); font: 400 var(--fs-base)/1 var(--font-display); letter-spacing: 0.06em; color: var(--on-dark-2); }
   @media (max-width: 960px) { .h-hero__grid { grid-template-columns: 1fr; } .h-hero__media { display: none; } }
   @media (max-width: 520px) { .h-search__row { flex-direction: column; } .h-search .btn { width: 100%; } .h-hero .eyebrow { display: none; } .h-hero__lede { margin-bottom: var(--s-5); } .h-search { padding-top: var(--s-4); margin-bottom: var(--s-5); } .h-hero__actions .btn--ghost { display: none; } .h-promise p { margin-top: var(--s-5); } }
 
@@ -183,7 +183,7 @@ const tiers = [
   .h-paths__list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--s-6); border-top: var(--hair); }
   .h-paths__list li { border-bottom: var(--hair); }
   .h-paths__list a { display: flex; flex-direction: column; gap: var(--s-1); height: 100%; padding: var(--s-5) 0; color: var(--slate); text-decoration: none; font-size: var(--fs-sm); }
-  .h-paths__list strong { font-size: var(--fs-lg); font-weight: 600; color: var(--midnight); letter-spacing: -0.01em; display: flex; justify-content: space-between; gap: var(--s-2); transition: color var(--dur); }
+  .h-paths__list strong { font-size: var(--fs-md); font-weight: 600; color: var(--midnight); letter-spacing: -0.01em; display: flex; justify-content: space-between; gap: var(--s-2); transition: color var(--dur); }
   .h-paths__list strong::after { content: '→'; color: var(--sapphire); transition: transform var(--dur) var(--ease); }
   .h-paths__list a:hover strong { color: var(--sapphire); }
   .h-paths__list a:hover strong::after { transform: translateX(4px); }
@@ -193,7 +193,7 @@ const tiers = [
   .h-open { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--s-6); align-items: start; }
   .h-open__feature { position: relative; background: var(--white); border: var(--hair); border-radius: var(--radius); padding: var(--s-6); display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-3); transition: border-color var(--dur); }
   .h-open__feature:hover { border-color: var(--sapphire); }
-  .h-open__feature h3 { font-size: var(--fs-xl); line-height: 1.2; margin: 0; }
+  .h-open__feature h3 { font-size: var(--fs-lg); line-height: 1.25; margin: 0; }
   .h-open__feature p { margin: 0; }
   .h-open h3 a { color: var(--midnight); text-decoration: none; }
   .h-open h3 a::after { content: ''; position: absolute; inset: 0; }
@@ -210,7 +210,7 @@ const tiers = [
   .h-does__more { list-style: none; padding: 0; margin: var(--s-6) 0 0; display: grid; gap: var(--s-2); }
   .h-does__more li { display: flex; align-items: center; gap: var(--s-3); min-height: 32px; }
   .h-does__more a { font-weight: 500; }
-  .h-does__list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; border-top: 2px solid var(--midnight); }
+  .h-does__list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; border-top: var(--hair); }
   .h-does__list li { padding: var(--s-5) var(--s-5) var(--s-6) 0; border-bottom: var(--hair); display: flex; flex-direction: column; }
   .h-does__list li:nth-child(odd) { border-right: var(--hair); }
   .h-does__list li:nth-child(even) { padding-left: var(--s-5); }
@@ -229,13 +229,13 @@ const tiers = [
   @media (max-width: 760px) { .h-tiers { grid-template-columns: 1fr; } .h-tiers li + li { border-left: 0; border-top: var(--hair); } }
 
   .h-close__grid { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: clamp(var(--s-6), 6vw, var(--s-9)); align-items: start; }
-  .h-close p { color: var(--on-dark-2); max-width: 48ch; margin-bottom: var(--s-5); }
-  .h-close__links { list-style: none; padding: 0; margin: 0; border-top: 1px solid rgb(255 255 255 / 16%); }
-  .h-close__links li { border-bottom: 1px solid rgb(255 255 255 / 16%); }
-  .h-close__links a { display: flex; justify-content: space-between; align-items: center; gap: var(--s-4); min-height: 64px; color: #fff; text-decoration: none; }
+  .h-close p { color: var(--slate); max-width: 48ch; margin-bottom: var(--s-5); }
+  .h-close__links { list-style: none; padding: 0; margin: 0; border-top: var(--hair); }
+  .h-close__links li { border-bottom: var(--hair); }
+  .h-close__links a { display: flex; justify-content: space-between; align-items: center; gap: var(--s-4); min-height: 64px; color: var(--midnight); text-decoration: none; }
   .h-close__links strong { font-size: var(--fs-md); font-weight: 600; }
-  .h-close__links span { color: var(--on-dark-2); font-size: var(--fs-sm); text-align: right; }
-  .h-close__links a:hover strong { text-decoration: underline; }
+  .h-close__links span { color: var(--slate); font-size: var(--fs-sm); text-align: right; }
+  .h-close__links a:hover strong { color: var(--sapphire); text-decoration: underline; }
   @media (max-width: 860px) { .h-close__grid { grid-template-columns: 1fr; } }
   .h-stats { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--s-4); padding: 0; margin-top: var(--s-7); }
 </style>

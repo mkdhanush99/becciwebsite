@@ -1,80 +1,154 @@
 ---
 import { destinations } from '../data/site';
-interface Field { name: string; label: string; type?: 'text' | 'email' | 'tel' | 'textarea' | 'select'; required?: boolean; options?: string[]; hint?: string; autocomplete?: string }
+interface Field { name: string; label: string; type?: 'text' | 'email' | 'tel' | 'textarea' | 'select'; required?: boolean; options?: string[]; hint?: string; autocomplete?: string; max?: number }
 interface Props { id: string; purpose: string; fields: Field[]; submitLabel: string }
 const { id, purpose, fields, submitLabel } = Astro.props;
 const endpoint = destinations.formEndpoint;
+// Sensible length limits so pasted text can't break layouts or the inbox.
+const limit = (f: Field) => f.max ?? (f.type === 'textarea' ? 2000 : f.type === 'email' ? 254 : f.type === 'tel' ? 20 : 120);
 ---
 <form class="enquiry" id={id} novalidate onsubmit="event.preventDefault()" data-enquiry data-endpoint={endpoint ?? ''} data-purpose={purpose}>
   {!endpoint && (
     <p class="notice notice--warn" role="note"><strong>Online submission is not connected yet.</strong> You can fill in and check this form, but nothing will be sent until BECCI connects its inbox. No details are stored.</p>
   )}
+  <div class="enquiry__summary notice notice--error" role="alert" tabindex="-1" hidden></div>
   {fields.map((f) => (
     <div class="field">
       <label for={`${id}-${f.name}`}>{f.label}{!f.required && <span class="muted small"> (optional)</span>}</label>
       {f.hint && <span class="hint" id={`${id}-${f.name}-hint`}>{f.hint}</span>}
       {f.type === 'textarea' ? (
-        <textarea class="textarea" id={`${id}-${f.name}`} name={f.name} required={f.required} aria-describedby={f.hint ? `${id}-${f.name}-hint` : undefined}></textarea>
+        <>
+          <textarea class="textarea" id={`${id}-${f.name}`} name={f.name} required={f.required} maxlength={limit(f)} data-label={f.label} aria-describedby={[f.hint && `${id}-${f.name}-hint`, `${id}-${f.name}-count`].filter(Boolean).join(' ')}></textarea>
+          <span class="field-count" id={`${id}-${f.name}-count`} aria-live="off">0 / {limit(f)} characters</span>
+        </>
       ) : f.type === 'select' ? (
-        <select class="select" id={`${id}-${f.name}`} name={f.name} required={f.required}>
+        <select class="select" id={`${id}-${f.name}`} name={f.name} required={f.required} data-label={f.label}>
           <option value="">Choose one</option>
           {f.options?.map((o) => <option>{o}</option>)}
         </select>
       ) : (
-        <input class="input" id={`${id}-${f.name}`} name={f.name} type={f.type ?? 'text'} required={f.required} autocomplete={f.autocomplete} inputmode={f.type === 'tel' ? 'tel' : undefined} aria-describedby={f.hint ? `${id}-${f.name}-hint` : undefined} />
+        <input class="input" id={`${id}-${f.name}`} name={f.name} type={f.type ?? 'text'} required={f.required} maxlength={limit(f)} autocomplete={f.autocomplete} inputmode={f.type === 'tel' ? 'tel' : f.type === 'email' ? 'email' : undefined} data-label={f.label} aria-describedby={f.hint ? `${id}-${f.name}-hint` : undefined} />
       )}
       <span class="field-error" id={`${id}-${f.name}-err`} hidden></span>
     </div>
   ))}
-  <button class="btn" type="submit">{submitLabel}</button>
+  <div class="enquiry__trap" aria-hidden="true">
+    <label for={`${id}-website`}>Leave this empty</label>
+    <input id={`${id}-website`} name="website" type="text" tabindex="-1" autocomplete="off" />
+  </div>
+  <button class="btn" type="submit" data-label={submitLabel}>{submitLabel}</button>
   <div class="enquiry__result" role="status" aria-live="polite"></div>
 </form>
 <style is:global>
   .enquiry { max-width: 620px; }
   .enquiry > .notice { margin-bottom: var(--s-5); }
   .enquiry__result:not(:empty) { margin-top: var(--s-4); }
+  .enquiry__summary ul { margin: var(--s-2) 0 0; }
+  .enquiry__summary a { color: #8c1d18; font-weight: 600; }
+  .notice--error { border-color: #e7b4b0; background: #fdf1f0; color: #5c1410; }
+  .field-count { font-size: var(--fs-label); color: var(--slate); justify-self: end; font-variant-numeric: tabular-nums; }
+  .field-count[data-near] { color: #8a4d00; font-weight: 600; }
+  .enquiry__trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+  .enquiry .btn[aria-busy='true'] { opacity: 0.7; cursor: progress; }
+  .field input, .field textarea, .field select { overflow-wrap: anywhere; }
 </style>
 <script>
+  type Ctl = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
+  const TIMEOUT_MS = 15000;
+  const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));
+
   document.querySelectorAll<HTMLFormElement>('[data-enquiry]').forEach((form) => {
     const result = form.querySelector<HTMLElement>('.enquiry__result')!;
-    const validate = (el: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement) => {
-      const err = form.querySelector<HTMLElement>(`#${el.id}-err`)!;
-      let msg = '';
+    const summary = form.querySelector<HTMLElement>('.enquiry__summary')!;
+    const btn = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
+    const controls = Array.from(form.querySelectorAll<Ctl>('.field input, .field textarea, .field select'));
+    let sending = false;
+
+    const message = (el: Ctl): string => {
       const v = el.value.trim();
-      if (el.required && !v) msg = 'Please fill this in.';
-      else if (v && el.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) msg = 'Enter an email address like name@example.com.';
-      else if (v && el.type === 'tel' && !/^[+\d][\d\s-]{7,}$/.test(v)) msg = 'Enter a phone number with at least 8 digits.';
+      const label = (el.dataset.label ?? 'this field').toLowerCase();
+      if (el.required && !v) return el.tagName === 'SELECT' ? `Choose ${label}.` : `Enter ${label}.`;
+      if (!v) return '';
+      if (el.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return 'Enter an email address in the format name@example.com.';
+      if (el.type === 'tel') {
+        const digits = v.replace(/\D/g, '').replace(/^91(?=\d{10}$)/, '').replace(/^0(?=\d{10}$)/, '');
+        if (!/^[+\d][\d\s()-]*$/.test(v) || digits.length < 10 || digits.length > 13) return 'Enter a 10-digit mobile number, for example 98765 43210 or +91 98765 43210.';
+      }
+      if (el.tagName !== 'SELECT' && v.length < 2) return `Enter at least 2 characters for ${label}.`;
+      return '';
+    };
+    const validate = (el: Ctl) => {
+      const err = form.querySelector<HTMLElement>(`#${el.id}-err`)!;
+      const msg = message(el);
       err.textContent = msg; err.hidden = !msg;
       el.setAttribute('aria-invalid', msg ? 'true' : 'false');
       if (msg) el.setAttribute('aria-errormessage', err.id); else el.removeAttribute('aria-errormessage');
-      return !msg;
+      return msg;
     };
-    const controls = Array.from(form.querySelectorAll<HTMLInputElement>('input, textarea, select'));
+    const counter = (ta: HTMLTextAreaElement) => {
+      const out = form.querySelector<HTMLElement>(`#${ta.id}-count`);
+      if (!out) return;
+      const max = ta.maxLength, n = ta.value.length;
+      out.textContent = `${n} / ${max} characters`;
+      out.toggleAttribute('data-near', n > max * 0.9);
+    };
     controls.forEach((c) => {
-      c.addEventListener('blur', () => { if (c.value) validate(c); });
-      c.addEventListener('input', () => { if (c.getAttribute('aria-invalid') === 'true') validate(c); });
+      c.addEventListener('blur', () => { if (c.value.trim()) validate(c); });
+      c.addEventListener('input', () => { if (c.getAttribute('aria-invalid') === 'true') validate(c); if (c instanceof HTMLTextAreaElement) counter(c); });
       c.addEventListener('change', () => { if (c.getAttribute('aria-invalid') === 'true') validate(c); });
     });
+
+    const setBusy = (busy: boolean) => {
+      sending = busy;
+      btn.disabled = busy;
+      btn.setAttribute('aria-busy', String(busy));
+      btn.textContent = busy ? 'Sending…' : btn.dataset.label ?? 'Send';
+    };
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const bad = controls.filter((c) => !validate(c));
-      if (bad.length) { result.innerHTML = ''; bad[0].focus(); return; }
+      if (sending) return;
+      result.innerHTML = '';
+      const errors = controls.map((c) => [c, validate(c)] as const).filter(([, m]) => m);
+      if (errors.length) {
+        summary.innerHTML = `<strong>${errors.length === 1 ? 'There is 1 problem' : `There are ${errors.length} problems`} with this form.</strong><ul>${errors.map(([c, m]) => `<li><a href="#${c.id}">${esc(m)}</a></li>`).join('')}</ul>`;
+        summary.hidden = false;
+        if (errors.length > 1) summary.focus(); else errors[0][0].focus();
+        summary.querySelectorAll('a').forEach((a) => a.addEventListener('click', (ev) => { ev.preventDefault(); form.querySelector<HTMLElement>(a.getAttribute('href')!)?.focus(); }));
+        return;
+      }
+      summary.hidden = true; summary.innerHTML = '';
+
       const endpoint = form.dataset.endpoint;
       if (!endpoint) {
         result.innerHTML = '<p class="notice notice--warn">Your entries look complete, but <strong>this form is not connected to BECCI yet, so nothing was sent</strong>. Please keep your message and try again once online submissions open.</p>';
         return;
       }
-      const btn = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
-      btn.disabled = true; result.innerHTML = '<p class="notice">Sending…</p>';
+      if (!navigator.onLine) {
+        result.innerHTML = '<p class="notice notice--warn">You appear to be offline. Your entries are still here; send again when you are connected.</p>';
+        return;
+      }
+      setBusy(true);
+      result.innerHTML = '<p class="notice">Sending your message…</p>';
+      const ctrl = new AbortController();
+      const timer = window.setTimeout(() => ctrl.abort(), TIMEOUT_MS);
       try {
-        const data = new FormData(form); data.set('purpose', form.dataset.purpose ?? '');
-        const r = await fetch(endpoint, { method: 'POST', body: data, headers: { Accept: 'application/json' } });
+        const data = new FormData(form);
+        controls.forEach((c) => data.set(c.name, c.value.trim()));
+        data.set('purpose', form.dataset.purpose ?? '');
+        const r = await fetch(endpoint, { method: 'POST', body: data, headers: { Accept: 'application/json' }, signal: ctrl.signal });
+        if (r.status === 429) throw new Error('rate');
         if (!r.ok) throw new Error(String(r.status));
         result.innerHTML = '<p class="notice notice--ok">Thank you. Your message was sent to BECCI.</p>';
         form.reset();
-      } catch {
-        result.innerHTML = '<p class="notice notice--warn">Your message could not be sent. Please check your connection and try again.</p>';
-      } finally { btn.disabled = false; }
+        form.querySelectorAll<HTMLTextAreaElement>('textarea').forEach(counter);
+      } catch (err) {
+        const reason = (err as Error).name === 'AbortError' ? 'The connection timed out.' : (err as Error).message === 'rate' ? 'Too many messages were sent from this connection.' : 'Something went wrong on our side.';
+        result.innerHTML = `<p class="notice notice--warn">${reason} Your message was not sent and your entries are still here. Please try again in a moment.</p>`;
+      } finally {
+        window.clearTimeout(timer);
+        setBusy(false);
+      }
     });
   });
 </script>
