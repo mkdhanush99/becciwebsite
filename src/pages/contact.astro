@@ -14,7 +14,7 @@ const has = destinations.email || destinations.phone || destinations.address;
       {has ? (
         <dl>{destinations.email && <><dt>Email</dt><dd><a href={`mailto:${destinations.email}`}>{destinations.email}</a></dd></>}{destinations.phone && <><dt>Phone</dt><dd>{destinations.phone}</dd></>}{destinations.address && <><dt>Office</dt><dd>{destinations.address}</dd></>}</dl>
       ) : <Pending>BECCI's official email, office phone and address will be published here once confirmed.</Pending>}
-      <p class="small muted" style="margin-top:16px">For a specific scheme or tender, contact the issuing authority listed on that opportunity's page.</p>
+      <p class="small muted" style="margin-top:var(--s-4)">For a specific scheme or tender, contact the issuing authority listed on that opportunity's page.</p>
     </div>
     <div>
       <h2>Send an enquiry</h2>

@@ -15,10 +15,10 @@ const types = ['Business Networking Meetings', 'Conferences', 'Seminars', 'Works
     {upcoming.length ? (
       <ul class="ev">{upcoming.map((e) => <li class="card"><p class="small muted">{formatDate(e.date)} · {e.venue} · {e.type}</p><h3>{e.title}</h3><p>{e.summary}</p>{e.registerUrl && <a class="btn btn--sm" href={e.registerUrl}>Register</a>}</li>)}</ul>
     ) : <div class="empty"><h3>No upcoming events announced</h3><p class="muted">BECCI has not announced any events yet. Check back here, or follow the News Desk for announcements.</p></div>}
-    <h2 style="margin-top:56px">Past events</h2>
+    <h2 style="margin-top:var(--s-7)">Past events</h2>
     {past.length ? <ul class="ev">{past.map((e) => <li class="card"><p class="small muted">{formatDate(e.date)}</p><h3>{e.title}</h3></li>)}</ul> : <p class="muted">The archive of past events, with photographs, videos and reports, will build up here.</p>}
-    <h2 style="margin-top:56px">Types of events</h2>
+    <h2 style="margin-top:var(--s-7)">Types of events</h2>
     <ul class="tag-list">{types.map((t) => <li>{t}</li>)}</ul>
   </div></section>
 </Base>
-<style>.ev { list-style: none; padding: 0; display: grid; gap: 14px; }</style>
+<style>.ev { list-style: none; padding: 0; display: grid; gap: var(--s-4); }</style>

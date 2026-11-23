@@ -9,7 +9,7 @@ import { serviceCategories } from '../data/site';
   <PageHero eyebrow="Services" title="Help with the work of running a business" lede="Finance, compliance, advisory and mentorship through BECCI's network and institutional arrangements." crumbs={[{ label: 'Services' }]} />
   <section class="section"><div class="wrap">
     <h2>Service areas</h2>
-    <ul class="tag-list" style="margin-bottom:32px">{serviceCategories.map((s) => <li>{s}</li>)}</ul>
+    <ul class="tag-list" style="margin-bottom:var(--s-6)">{serviceCategories.map((s) => <li>{s}</li>)}</ul>
     <Pending label="Providers not yet confirmed">Where a service is delivered by an external provider, its page will name the provider and explain exactly what BECCI facilitates. No providers have been confirmed for publication yet, so no individual services are offered on this page.</Pending>
   </div></section>
   <section class="section section--white"><div class="wrap two-col">

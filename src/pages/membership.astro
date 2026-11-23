@@ -11,7 +11,7 @@ const tiers = [
 ---
 <Base title="Membership" description="Who can join BECCI, proposed membership categories and how to get involved.">
   <PageHero eyebrow="Membership / Join Us" title="Join a chamber built for you" lede="BECCI membership is for Bahujan entrepreneurs, professionals, students and first-generation founders. Here is who can join, what the categories are planned to offer, and where things stand today." crumbs={[{ label: 'Membership' }]}>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:24px"><a class="btn btn--accent" href="#join">Join as a Member</a><a class="btn btn--ghost" href="#member-login">Member Login</a></div>
+    <div style="display:flex;gap:var(--s-3);flex-wrap:wrap;margin-top:var(--s-5)"><a class="btn btn--accent" href="#join">Join as a Member</a><a class="btn btn--ghost" href="#member-login">Member Login</a></div>
   </PageHero>
 
   <section class="section"><div class="wrap two-col">
@@ -33,7 +33,7 @@ const tiers = [
         <div class="card tier"><h3>{t.name}</h3><ul>{t.points.map((p) => <li>{p}</li>)}</ul>{t.name !== 'Free Membership' && <p class="small muted">Fee: to be announced</p>}</div>
       ))}
     </div>
-    <p class="small muted" style="margin-top:20px">Biz Connect, BECCI's structured business networking programme, is planned as a separate membership with its own fee. <a href="/biz-connect">About Biz Connect</a>.</p>
+    <p class="small muted" style="margin-top:var(--s-5)">Biz Connect, BECCI's structured business networking programme, is planned as a separate membership with its own fee. <a href="/biz-connect">About Biz Connect</a>.</p>
   </div></section>
 
   <section class="section"><div class="wrap grid grid--2">
@@ -69,5 +69,5 @@ const tiers = [
 <style>
   .tier { display: flex; flex-direction: column; }
   .tier ul { padding-left: 1.1em; flex: 1; }
-  .tier li { margin-bottom: 6px; }
+  .tier li { margin-bottom: var(--s-2); }
 </style>

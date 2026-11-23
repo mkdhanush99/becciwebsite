@@ -31,8 +31,8 @@ const endpoint = destinations.formEndpoint;
 </form>
 <style is:global>
   .enquiry { max-width: 620px; }
-  .enquiry > .notice { margin-bottom: 20px; }
-  .enquiry__result:not(:empty) { margin-top: 16px; }
+  .enquiry > .notice { margin-bottom: var(--s-5); }
+  .enquiry__result:not(:empty) { margin-top: var(--s-4); }
 </style>
 <script>
   document.querySelectorAll<HTMLFormElement>('[data-enquiry]').forEach((form) => {

@@ -22,15 +22,15 @@ import { leadershipGroups } from '../data/site';
         ) : <Pending>Profiles for this group will be published once BECCI approves names, photographs and biographies. Each profile shows a photograph, name, designation, professional background, a short introduction and professional links. Personal phone numbers are never shown.</Pending>}
       </section>
     ))}
-    <p class="notice notice--info" style="margin-top:32px">To reach the leadership, please use BECCI's official contact routes on the <a href="/contact">Contact page</a>.</p>
+    <p class="notice notice--info" style="margin-top:var(--s-6)">To reach the leadership, please use BECCI's official contact routes on the <a href="/contact">Contact page</a>.</p>
   </div></section>
 </Base>
 <style>
-  .org { display: grid; gap: 16px; justify-items: center; margin-bottom: 56px; padding: 32px; background: var(--white); border: 1px solid var(--line-2); border-radius: var(--radius); }
-  .org__row { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; position: relative; }
-  .org__node { padding: 12px 18px; border-radius: 10px; border: 1.5px solid var(--blue-700); color: var(--blue-900); font-weight: 600; background: var(--paper); }
+  .org { display: grid; gap: var(--s-4); justify-items: center; margin-bottom: var(--s-7); padding: var(--s-6); background: var(--white); border: 1px solid var(--line-2); border-radius: var(--radius); }
+  .org__row { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-3); position: relative; }
+  .org__node { padding: var(--s-3) var(--s-4); border-radius: 10px; border: 1.5px solid var(--blue-700); color: var(--blue-900); font-weight: 600; background: var(--paper); }
   .org__node--top { background: var(--blue-900); color: #fff; border-color: var(--blue-900); }
-  .lead-group { padding-block: 28px; border-top: 1px solid var(--line); }
+  .lead-group { padding-block: var(--s-6); border-top: 1px solid var(--line); }
   .lead-group h2 { font-size: var(--step-2); }
-  .people { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+  .people { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--s-4); }
 </style>

@@ -34,9 +34,9 @@ const title = category ? CATEGORY_META[category].label : 'All opportunities';
 ---
 <div class="finder" data-finder data-category={category ?? 'all'}>
   <nav class="cat-tabs" aria-label="Opportunity categories">
-    <a href="/opportunities" aria-current={!category ? 'page' : undefined}>All</a>
+    <a href="/opportunities" aria-current={!category ? 'page' : undefined}>All <span class="cat-tabs__n">{opportunities.length}</span></a>
     {CATEGORY_ORDER.map((c) => (
-      <a href={CATEGORY_META[c].path} aria-current={category === c ? 'page' : undefined}>{CATEGORY_META[c].label}</a>
+      <a href={CATEGORY_META[c].path} aria-current={category === c ? 'page' : undefined}>{CATEGORY_META[c].label} <span class="cat-tabs__n">{opportunities.filter((o) => o.categories.includes(c)).length}</span></a>
     ))}
   </nav>
 
@@ -45,14 +45,6 @@ const title = category ? CATEGORY_META[category].label : 'All opportunities';
     <div class="finder-input">
       <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m14 14 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
       <input id="finder-q" class="input" type="search" name="q" autocomplete="off" placeholder="Search by name, authority or keyword" data-q />
-    </div>
-    <div class="finder-sort">
-      <label for="finder-sort" class="small muted">Sort</label>
-      <select id="finder-sort" class="select" data-sort>
-        <option value="closing">Closing soon first</option>
-        <option value="latest">Latest checked</option>
-        <option value="az">A to Z</option>
-      </select>
     </div>
     <button type="button" class="btn btn--ghost filter-open" data-filter-open aria-haspopup="dialog">
       <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M2 4h14M5 9h8M7.5 14h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
@@ -93,16 +85,25 @@ const title = category ? CATEGORY_META[category].label : 'All opportunities';
     </aside>
 
     <section class="finder-results" aria-labelledby="results-heading">
-      <div class="results-head">
-        <h2 id="results-heading" class="results-count" aria-live="polite" data-result-count>
-          {records.length} {records.length === 1 ? 'record' : 'records'}
-        </h2>
-        <p class="small muted">Checked against official sources. <a href="/opportunities/about-data">How we check</a></p>
-      </div>
-      <div class="active-filters" data-active hidden>
-        <span class="active-filters__label" data-active-label>Filtered by</span>
-        <ul class="chips" data-chips></ul>
-        <button type="button" class="link-btn" data-clear>Clear all</button>
+      <div class="results-toolbar">
+        <div class="results-head">
+          <h2 id="results-heading" class="results-count" aria-live="polite" data-result-count>
+            {records.length} {records.length === 1 ? 'record' : 'records'}
+          </h2>
+          <div class="finder-sort">
+            <label for="finder-sort" class="small muted">Sort</label>
+            <select id="finder-sort" class="select" data-sort>
+              <option value="closing">Closing soon first</option>
+              <option value="latest">Latest checked</option>
+              <option value="az">A to Z</option>
+            </select>
+          </div>
+        </div>
+        <div class="active-filters" data-active hidden>
+          <span class="active-filters__label" data-active-label>Filtered by</span>
+          <ul class="chips" data-chips></ul>
+          <button type="button" class="link-btn" data-clear>Clear all</button>
+        </div>
       </div>
 
       {feed && !feed.live && (category === 'tenders' || category === 'jobs') && (
@@ -133,18 +134,20 @@ const title = category ? CATEGORY_META[category].label : 'All opportunities';
                 data-fund={(o.fundingType ?? []).join('|')}
                 data-stage={(o.stage ?? []).join('|')}>
                 <article class="result__card">
-                  <div class="result__top">
+                  <div class="result__when">
                     <span class={`status status--${st}`} data-status-pill>{STATUS_LABEL[st]}</span>
-                    <span class={`scope scope--${o.obcScope}`}>{OBC_SCOPE_LABEL[o.obcScope]}</span>
-                    <span class="result__level">{o.level} · {o.geography.join(', ')}</span>
+                    <p class="result__deadline" data-deadline>{deadlineText(o, today)}</p>
                   </div>
-                  <h3 class="result__title"><a href={`/opportunities/${o.slug}`} data-result-link>{o.title}</a></h3>
-                  <p class="result__authority">{o.authority}</p>
-                  <p class="result__summary">{o.summary}</p>
+                  <div class="result__main">
+                    <h3 class="result__title"><a href={`/opportunities/${o.slug}`} data-result-link>{o.title}</a></h3>
+                    <p class="result__authority">{o.authority}</p>
+                    <p class="result__summary">{o.summary}</p>
+                    <p class="result__who"><span>Who can apply</span> {o.whoCanApply[0]}</p>
+                  </div>
                   <dl class="result__facts">
-                    <div><dt>Deadline</dt><dd data-deadline>{deadlineText(o, today)}</dd></div>
-                    <div><dt>Who can apply</dt><dd>{o.whoCanApply[0]}</dd></div>
-                    <div><dt>Official source</dt><dd>{host(o.sources[0].url)} · verified {formatDate(o.lastVerified)}</dd></div>
+                    <div><dt>Category rule</dt><dd><span class={`scope scope--${o.obcScope}`}>{OBC_SCOPE_LABEL[o.obcScope]}</span></dd></div>
+                    <div><dt>Where</dt><dd class="result__level">{o.level} · {o.geography.join(', ')}</dd></div>
+                    <div><dt>Official source</dt><dd>{host(o.sources[0].url)}<br /><span class="muted">Verified {formatDate(o.lastVerified)}</span></dd></div>
                   </dl>
                 </article>
               </li>
@@ -167,8 +170,8 @@ const title = category ? CATEGORY_META[category].label : 'All opportunities';
       )}
 
       {scopePortals.length > 0 && (
-        <section class="portals" aria-labelledby="portals-title">
-          <h2 id="portals-title" class="portals__title">Official portals{category ? ` for ${CATEGORY_META[category].plural}` : ''}</h2>
+        <details class="portals" open={records.length === 0}>
+          <summary class="portals__summary"><span class="portals__title">Official portals{category ? ` for ${CATEGORY_META[category].plural}` : ''}</span> <span class="portals__n">{scopePortals.length}</span></summary>
           <p class="small muted">These links go straight to government websites. BECCI does not run them and has no integration with them.</p>
           <ul class="portal-list">
             {scopePortals.map((p) => (
@@ -184,107 +187,129 @@ const title = category ? CATEGORY_META[category].label : 'All opportunities';
               </li>
             ))}
           </ul>
-        </section>
+        </details>
       )}
     </section>
   </div>
 </div>
 
 <style is:global>
-  .cat-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 16px; scrollbar-width: none; mask-image: linear-gradient(90deg, #000 88%, transparent); }
+  .cat-tabs { display: flex; gap: var(--s-1); overflow-x: auto; margin: 0 0 var(--s-5); border-bottom: var(--hair); scrollbar-width: none; }
   .cat-tabs::-webkit-scrollbar { display: none; }
-  .cat-tabs a { flex: none; padding: 9px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--white); color: var(--ink-2); text-decoration: none; font-weight: 600; font-size: 0.93rem; min-height: 44px; display: inline-flex; align-items: center; }
-  .cat-tabs a:hover { border-color: var(--blue-700); color: var(--blue-900); }
-  .cat-tabs a[aria-current='page'] { background: var(--blue-800); border-color: var(--blue-800); color: #fff; }
-  .finder-bar { display: grid; grid-template-columns: 1fr auto auto; gap: 12px; align-items: end; margin-bottom: 20px; }
-  .finder-input { position: relative; }
-  .finder-input svg { position: absolute; left: 14px; top: 50%; translate: 0 -50%; color: var(--muted); }
-  .finder-input .input { padding-left: 44px; min-height: 52px; border-radius: 12px; }
-  .finder-sort { display: grid; gap: 4px; }
-  .finder-sort .select { min-height: 52px; border-radius: 12px; }
-  .filter-open { min-height: 52px; display: none; }
-  .filter-count { background: var(--accent-500); color: var(--blue-950); border-radius: 999px; padding: 2px 8px; font-size: 0.8rem; }
-  .finder-layout { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 32px; align-items: start; }
+  .cat-tabs a { flex: none; display: inline-flex; align-items: center; gap: var(--s-2); min-height: 48px; padding: 0 var(--s-3); color: var(--slate); font-weight: 500; text-decoration: none; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color var(--dur), border-color var(--dur); }
+  .cat-tabs a:hover { color: var(--midnight); border-bottom-color: var(--silver-300); }
+  .cat-tabs a[aria-current='page'] { color: var(--midnight); font-weight: 600; border-bottom-color: var(--sapphire); }
+  .cat-tabs__n { font-size: var(--fs-label); font-weight: 600; min-width: 22px; padding: 2px 6px; border-radius: 4px; background: var(--silver-100); color: var(--slate); text-align: center; font-variant-numeric: tabular-nums; }
+  .cat-tabs a[aria-current='page'] .cat-tabs__n { background: var(--sapphire); color: #fff; }
+
+  .finder-bar { display: flex; gap: var(--s-3); margin-bottom: var(--s-6); }
+  .finder-input { position: relative; flex: 1; }
+  .finder-input svg { position: absolute; left: var(--s-4); top: 50%; translate: 0 -50%; color: var(--slate); }
+  .finder-input .input { padding-left: 48px; min-height: 56px; font-size: var(--fs-md); }
+  .filter-open { min-height: 56px; display: none; }
+  .filter-count { background: var(--sapphire); color: #fff; border-radius: 4px; padding: 2px 7px; font-size: var(--fs-label); }
+
+  .finder-layout { display: grid; grid-template-columns: 272px minmax(0, 1fr); gap: var(--s-6); align-items: start; }
   .filter-sheet { position: static; display: block; border: 0; padding: 0; margin: 0; background: transparent; width: auto; max-width: none; color: inherit; }
   .filter-sheet__head, .filter-sheet__foot { display: none; }
-  .finder-filters { position: sticky; top: 92px; max-height: calc(100vh - 110px); overflow: auto; padding-right: 4px; }
-  .filter-group { border: 0; padding: 0 0 18px; margin: 0 0 18px; border-bottom: 1px solid var(--line); }
-  .filter-group:last-child { border-bottom: 0; }
-  .filter-group legend { font: 600 0.78rem/1 var(--font-body); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 10px; padding: 0; }
-  .check { display: grid; grid-template-columns: 22px 1fr auto; align-items: center; gap: 10px; min-height: 40px; font-size: 0.95rem; }
+  .finder-filters { background: var(--white); border: var(--hair); border-radius: var(--radius); padding: var(--s-5); }
+  .filter-group { border: 0; padding: 0 0 var(--s-4); margin: 0 0 var(--s-4); border-bottom: var(--hair); }
+  .filter-group:last-child { border-bottom: 0; margin-bottom: 0; padding-bottom: 0; }
+  .filter-group legend { font: 600 var(--fs-label)/1 var(--font-body); letter-spacing: 0.05em; text-transform: uppercase; color: var(--slate); margin-bottom: var(--s-2); padding: 0; }
+  .check { display: grid; grid-template-columns: 20px 1fr auto; align-items: center; gap: var(--s-3); min-height: 40px; font-size: var(--fs-sm); color: var(--ink-2); }
   .check input { position: absolute; opacity: 0; width: 1px; height: 1px; }
-  .check__box { width: 20px; height: 20px; border: 1.5px solid #9aa1ae; border-radius: 5px; background: #fff; display: grid; place-items: center; transition: background 120ms, border-color 120ms; }
-  .check input:checked + .check__box { background: var(--blue-800); border-color: var(--blue-800); }
+  .check__box { width: 20px; height: 20px; border: 1.5px solid #8f9bb0; border-radius: 4px; background: #fff; display: grid; place-items: center; transition: background var(--dur), border-color var(--dur); }
+  .check:hover .check__box { border-color: var(--sapphire); }
+  .check input:checked + .check__box { background: var(--sapphire); border-color: var(--sapphire); }
   .check input:checked + .check__box::after { content: ''; width: 10px; height: 6px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(-45deg) translate(1px, -1px); }
-  .check input:checked ~ .check__label { font-weight: 600; color: var(--blue-900); }
-  .check input:focus-visible + .check__box { outline: 3px solid var(--accent-500); outline-offset: 2px; }
-  .check__count { font-size: 0.8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
-  .check[data-zero] { opacity: 0.5; }
-  .results-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 16px; margin-bottom: 10px; }
-  .results-count { font: 600 1.05rem var(--font-body); color: var(--ink); margin: 0; }
-  .results-head p { margin: 0; }
-  .active-filters { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; min-width: 0; }
+  .check input:checked ~ .check__label { font-weight: 600; color: var(--midnight); }
+  .check input:focus-visible + .check__box { outline: 3px solid var(--blue-500); outline-offset: 2px; }
+  .check__count { font-size: var(--fs-label); color: var(--slate); font-variant-numeric: tabular-nums; }
+  .check[data-zero] { opacity: 0.45; }
+
+  .results-toolbar { position: sticky; top: 64px; z-index: 5; background: var(--ivory); padding: var(--s-3) 0; margin-top: calc(-1 * var(--s-3)); border-bottom: var(--hair); margin-bottom: var(--s-4); }
+  .results-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--s-2) var(--s-4); }
+  .results-count { font: 600 var(--fs-md) var(--font-body); color: var(--midnight); margin: 0; }
+  .finder-sort { display: flex; align-items: center; gap: var(--s-2); }
+  .finder-sort .select { min-height: 40px; width: auto; padding-block: 0; font-size: var(--fs-sm); }
+  .active-filters { display: flex; align-items: center; gap: var(--s-3); margin-top: var(--s-3); min-width: 0; }
   .active-filters[hidden] { display: none; }
-  .active-filters__label { font-size: 0.85rem; color: var(--muted); flex: none; }
-  .chips { display: flex; gap: 8px; list-style: none; padding: 0; margin: 0; overflow-x: auto; scrollbar-width: none; min-width: 0; }
+  .active-filters__label { font-size: var(--fs-sm); color: var(--slate); flex: none; }
+  .chips { display: flex; gap: var(--s-2); list-style: none; padding: 0; margin: 0; overflow-x: auto; scrollbar-width: none; min-width: 0; }
   .chips::-webkit-scrollbar { display: none; }
-  .chip { flex: none; display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 6px 8px 6px 12px; border-radius: 999px; background: var(--blue-100); color: var(--blue-900); border: 0; font: 600 0.88rem var(--font-body); }
-  .chip:hover { background: #d3e0f5; }
-  .chip svg { opacity: 0.7; }
-  .link-btn { flex: none; background: none; border: 0; padding: 8px 4px; color: var(--blue-700); font: 600 0.9rem var(--font-body); text-decoration: underline; text-underline-offset: 3px; min-height: 36px; }
-  .feed-note { margin-bottom: 16px; }
-  .results { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+  .chip { flex: none; display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 var(--s-2) 0 var(--s-3); border-radius: 4px; background: var(--sapphire-soft); color: var(--sapphire-deep); border: 0; font: 600 var(--fs-sm) var(--font-body); transition: background var(--dur); }
+  .chip:hover { background: #cbd9f0; }
+  .feed-note { margin-bottom: var(--s-4); }
+
+  .results { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--midnight); }
   .result[hidden] { display: none; }
-  .result__card { position: relative; background: var(--white); border: 1px solid var(--line-2); border-radius: var(--radius); padding: clamp(18px, 2.4vw, 26px); transition: border-color 160ms, box-shadow 200ms; }
-  .result__card:hover { border-color: var(--accent-500); box-shadow: var(--shadow); }
-  .result__card:focus-within { border-color: var(--blue-700); }
-  .result__top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin-bottom: 12px; }
-  .result__level { font-size: 0.85rem; color: var(--muted); }
-  .result__title { font-size: var(--step-1); margin-bottom: 4px; }
-  .result__title a { color: var(--blue-900); text-decoration: none; }
-  .result__title a::after { content: ''; position: absolute; inset: 0; border-radius: var(--radius); }
-  .result__title a:hover { text-decoration: underline; }
+  .result__card { position: relative; display: grid; grid-template-columns: 160px minmax(0, 1fr) 200px; gap: var(--s-5); padding: var(--s-5) var(--s-2); border-bottom: var(--hair); transition: background var(--dur); }
+  .result__card:hover { background: var(--white); }
+  .result__when { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-2); }
+  .result__deadline { margin: 0; font-size: var(--fs-sm); font-weight: 600; color: var(--ink); line-height: 1.4; }
+  .result__title { font-size: var(--fs-lg); line-height: 1.25; margin-bottom: var(--s-1); }
+  .result__title a { color: var(--midnight); text-decoration: none; }
+  .result__title a::after { content: ''; position: absolute; inset: 0; }
+  .result__title a:hover { color: var(--sapphire); text-decoration: underline; }
   .result__title a:focus-visible { outline: none; }
-  .result__title a:focus-visible::after { outline: 3px solid var(--accent-500); outline-offset: 2px; }
-  .result__authority { font-size: 0.9rem; color: var(--muted); margin-bottom: 10px; }
-  .result__summary { margin-bottom: 14px; color: var(--ink-2); }
-  .result__facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 20px; margin: 0; padding-top: 14px; border-top: 1px solid var(--line-2); font-size: 0.9rem; }
-  .result__facts dt { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-bottom: 2px; }
+  .result__title a:focus-visible::after { outline: 3px solid var(--blue-500); outline-offset: -2px; border-radius: var(--radius-sm); }
+  .result__authority { font-size: var(--fs-sm); color: var(--slate); margin-bottom: var(--s-3); }
+  .result__summary { margin-bottom: var(--s-2); color: var(--ink-2); max-width: 64ch; }
+  .result__who { margin: 0; font-size: var(--fs-sm); color: var(--ink-2); max-width: 64ch; }
+  .result__who span { font-weight: 600; color: var(--midnight); margin-right: var(--s-1); }
+  .result__facts { margin: 0; display: grid; gap: var(--s-3); align-content: start; font-size: var(--fs-sm); }
+  .result__facts dt { font-size: var(--fs-label); letter-spacing: 0.05em; text-transform: uppercase; color: var(--slate); font-weight: 600; margin-bottom: 2px; }
   .result__facts dd { margin: 0; color: var(--ink-2); }
-  .empty { background: var(--white); border: 1px dashed var(--line); border-radius: var(--radius); padding: 28px; text-align: left; }
-  .empty p { color: var(--muted); max-width: 60ch; }
-  .portals { margin-top: 40px; }
-  .portals__title { font-size: var(--step-2); }
-  .portal-list { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 10px; }
-  .portal { display: flex; justify-content: space-between; gap: 16px; padding: 16px 18px; border: 1px solid var(--line-2); border-radius: 12px; background: var(--white); }
+
+  .empty { background: var(--white); border: var(--hair); border-radius: var(--radius); padding: var(--s-6); }
+  .empty p { color: var(--slate); max-width: 60ch; }
+  .portals { margin-top: var(--s-7); border-top: var(--hair); }
+  .portals__summary { display: flex; align-items: center; gap: var(--s-3); min-height: 64px; cursor: pointer; list-style: none; }
+  .portals__summary::-webkit-details-marker { display: none; }
+  .portals__summary::after { content: '+'; margin-left: auto; font-size: 1.5rem; color: var(--sapphire); }
+  .portals[open] .portals__summary::after { content: '–'; }
+  .portals__title { font: 600 var(--fs-xl)/1.2 var(--font-display); color: var(--midnight); letter-spacing: -0.01em; }
+  .portals__n { font-size: var(--fs-label); font-weight: 600; padding: 2px 8px; border-radius: 4px; background: var(--silver-100); color: var(--slate); }
+  .portal-list { list-style: none; padding: 0; margin: var(--s-4) 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); }
+  .portal { display: flex; justify-content: space-between; gap: var(--s-4); padding: var(--s-4) var(--s-5); border: var(--hair); border-radius: var(--radius-sm); background: var(--white); }
   .portal__name { font-weight: 600; }
-  .portal__meta { display: block; font-size: 0.85rem; color: var(--muted); }
-  .portal__note { font-size: 0.9rem; margin: 6px 0 0; color: var(--ink-2); }
-  .reach { flex: none; align-self: start; font-size: 0.75rem; font-weight: 600; padding: 4px 8px; border-radius: 6px; white-space: nowrap; }
+  .portal__meta { display: block; font-size: var(--fs-sm); color: var(--slate); }
+  .portal__note { font-size: var(--fs-sm); margin: var(--s-2) 0 0; color: var(--ink-2); }
+  .reach { flex: none; align-self: start; font-size: var(--fs-label); font-weight: 600; padding: 4px 8px; border-radius: 4px; white-space: nowrap; }
   .reach--ok { background: var(--ok-bg); color: var(--ok); }
   .reach--no { background: var(--closed-bg); color: var(--closed); }
-  .icon-btn { width: 44px; height: 44px; display: inline-grid; place-items: center; border-radius: 999px; border: 1px solid var(--line); background: var(--white); color: var(--ink); }
 
-  @media (max-width: 900px) {
+  @media (max-width: 1180px) {
+    .result__card { grid-template-columns: 140px minmax(0, 1fr); }
+    .result__facts { grid-column: 2; grid-template-columns: repeat(3, auto); justify-content: start; column-gap: var(--s-6); }
+  }
+  @media (max-width: 960px) {
     .finder-layout { grid-template-columns: 1fr; }
-    .finder-filters { position: static; max-height: none; overflow: visible; padding: 0; }
-    .finder-bar { grid-template-columns: 1fr auto; }
-    .finder-input { grid-column: 1 / -1; }
-    .finder-sort { grid-template-columns: auto 1fr; align-items: center; gap: 8px; }
+    .finder-filters { position: static; max-height: none; overflow: visible; padding: 0; border: 0; background: none; }
     .filter-open { display: inline-flex; }
-    .filter-sheet { display: none; position: fixed; inset: auto 0 0 0; width: 100%; max-width: 100%; max-height: 88dvh; margin: 0; border-radius: 20px 20px 0 0; background: var(--paper); padding: 0; box-shadow: 0 -10px 40px rgb(0 0 0 / 20%); }
+    .finder-bar { position: sticky; top: 64px; z-index: 6; background: var(--ivory); padding-block: var(--s-2); margin-bottom: var(--s-4); }
+    .results-toolbar { position: static; margin-top: 0; }
+    .filter-sheet { display: none; position: fixed; inset: auto 0 0 0; width: 100%; max-width: 100%; max-height: 88dvh; margin: 0; border-radius: var(--radius) var(--radius) 0 0; background: var(--white); padding: 0; box-shadow: var(--shadow-overlay); }
     .filter-sheet[open] { display: flex; flex-direction: column; animation: sheet 260ms var(--ease); }
-    .filter-sheet::backdrop { background: rgb(8 24 51 / 45%); }
-    .filter-sheet__head { display: flex; justify-content: space-between; align-items: center; padding: 16px var(--gutter); border-bottom: 1px solid var(--line); }
-    .filter-sheet__head h2 { font-size: 1.3rem; margin: 0; }
-    .filter-groups { overflow: auto; padding: 20px var(--gutter); flex: 1; }
-    .filter-sheet__foot { display: grid; grid-template-columns: auto 1fr; gap: 10px; padding: 12px var(--gutter) calc(12px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: var(--white); }
-    .check { min-height: 48px; }
-    .result__facts { grid-template-columns: 1fr; gap: 10px; }
-    .portal { flex-direction: column; gap: 8px; }
+    .filter-sheet::backdrop { background: rgb(6 22 56 / 45%); }
+    .filter-sheet__head { display: flex; justify-content: space-between; align-items: center; padding: var(--s-4) var(--gutter); border-bottom: var(--hair); }
+    .filter-sheet__head h2 { font-size: var(--fs-lg); margin: 0; }
+    .filter-groups { overflow: auto; padding: var(--s-5) var(--gutter); flex: 1; }
+    .filter-sheet__foot { display: grid; grid-template-columns: auto 1fr; gap: var(--s-3); padding: var(--s-3) var(--gutter) calc(var(--s-3) + env(safe-area-inset-bottom)); border-top: var(--hair); background: var(--white); }
+    .check { min-height: 48px; font-size: var(--fs-base); }
+    .portal-list { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .result__card { grid-template-columns: 1fr; gap: var(--s-3); padding: var(--s-5) 0; }
+    .result__when { flex-direction: row; align-items: center; flex-wrap: wrap; }
+    .result__facts { grid-column: 1; grid-template-columns: 1fr 1fr; }
+    .result__facts > div:last-child { grid-column: 1 / -1; }
+    .portal { flex-direction: column; gap: var(--s-2); }
+    .finder-input .input { font-size: var(--fs-base); }
   }
   @keyframes sheet { from { transform: translateY(40px); opacity: 0.6; } }
 </style>
+
 
 <script>
   import { computeStatus, STATUS_LABEL, deadlineText, todayISO } from '../lib/status';

@@ -1,0 +1,18 @@
+---
+import { LOGO } from '../data/media';
+import { hasPublic } from '../lib/asset';
+import InfinityMark from './InfinityMark.astro';
+interface Props { tone?: 'dark' | 'light'; class?: string }
+const { tone = 'dark', class: cls = '' } = Astro.props;
+const lightFile = LOGO.full.replace('.svg', '-light.svg');
+const file = tone === 'light' && hasPublic(lightFile) ? lightFile : hasPublic(LOGO.full) ? LOGO.full : null;
+---
+{file ? (
+  <img class:list={['brand__logo', cls]} src={file} alt="BECCI — Bahujan Entrepreneurs Chamber for Commerce & Industry" width="140" height="34" />
+) : (
+  <span class:list={['brand__fallback', cls]}>
+    <InfinityMark class="brand__mark" tone={tone === 'light' ? 'light' : 'color'} />
+    <span class="brand__word">BECCI</span>
+  </span>
+)}
+<style is:global>.brand__fallback { display: inline-flex; align-items: center; gap: var(--s-3); }</style>

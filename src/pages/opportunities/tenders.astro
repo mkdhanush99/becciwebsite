@@ -1,11 +1,12 @@
 ---
 import Base from '../../layouts/Base.astro';
-import PageHero from '../../components/PageHero.astro';
+import PageHead from '../../components/PageHead.astro';
+import { opportunities, portals } from '../../data/opportunities';
 import Finder from '../../components/Finder.astro';
 import { CATEGORY_META } from '../../data/opportunities';
 const m = CATEGORY_META['tenders'];
 ---
 <Base title={m.label} description={m.blurb}>
-  <PageHero eyebrow="Opportunity finder" title={m.label} lede={m.blurb} crumbs={[{ label: 'Opportunities', href: '/opportunities' }, { label: m.label }]} />
-  <section class="section--tight"><div class="wrap"><Finder category="tenders" /></div></section>
+  <PageHead meta={`${opportunities.length} verified records · ${portals.length} official portals. Every record links to its source.`} title={m.label} lede={m.blurb} crumbs={[{ label: 'Opportunities', href: '/opportunities' }, { label: m.label }]} />
+  <section class="finder-page"><div class="wrap"><Finder category="tenders" /></div></section>
 </Base>

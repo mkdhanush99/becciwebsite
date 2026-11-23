@@ -1,16 +1,22 @@
 ---
 import { site, socials } from '../data/site';
-import InfinityMark from './InfinityMark.astro';
+import Logo from './Logo.astro';
 ---
 <footer class="site-footer on-dark">
   <div class="wrap">
+    <div class="footer-top">
+      <p class="footer-promise">Building Businesses <span aria-hidden="true">•</span> Building Bharat</p>
+      <div class="footer-cta">
+        <a class="btn btn--accent" href="/membership#join">Join as a Member</a>
+        <a class="btn btn--ghost" href="/partnerships">Partner with BECCI</a>
+      </div>
+    </div>
     <div class="footer-grid">
-      <div>
-        <InfinityMark tone="light" class="footer-mark" />
-        <p class="footer-promise">{site.promise}</p>
+      <div class="footer-id">
+        <Logo tone="light" />
         <p>{site.fullName}</p>
         {socials.length ? (
-          <ul class="tag-list">{socials.map((s) => <li><a href={s.url} rel="noopener">{s.label}</a></li>)}</ul>
+          <ul class="footer-social">{socials.map((s) => <li><a href={s.url} rel="noopener">{s.label}</a></li>)}</ul>
         ) : <p class="small">Official social media links will be added once BECCI confirms them.</p>}
       </div>
       <div><h2>Opportunities</h2><ul>
@@ -21,7 +27,7 @@ import InfinityMark from './InfinityMark.astro';
         <li><a href="/about">About Us</a></li><li><a href="/leadership">Leadership</a></li><li><a href="/wings">Wings &amp; Chapters</a></li>
         <li><a href="/wings/women">Women's Wing</a></li><li><a href="/wings/youth">Youth Wing</a></li><li><a href="/success-stories">Success Stories</a></li></ul></div>
       <div><h2>Get involved</h2><ul>
-        <li><a href="/membership">Membership</a></li><li><a href="/partnerships">Partner with BECCI</a></li><li><a href="/services">Services</a></li>
+        <li><a href="/membership">Membership</a></li><li><a href="/partnerships">Partnerships</a></li><li><a href="/services">Services</a></li>
         <li><a href="/biz-connect">Biz Connect</a></li><li><a href="/marketplace">Marketplace</a></li></ul></div>
       <div><h2>Updates</h2><ul>
         <li><a href="/events">Event Calendar</a></li><li><a href="/news">News Desk</a></li><li><a href="/knowledge">Knowledge Centre</a></li><li><a href="/contact">Contact</a></li></ul></div>
@@ -32,4 +38,10 @@ import InfinityMark from './InfinityMark.astro';
     </div>
   </div>
 </footer>
-<style is:global>.footer-mark { width: 88px; }</style>
+<style is:global>
+  .footer-cta { display: flex; flex-wrap: wrap; gap: var(--s-3); }
+  .footer-id p { margin: var(--s-4) 0 0; max-width: 30ch; }
+  .footer-id .brand__mark { width: 56px; }
+  .footer-id .brand__word { color: #fff; }
+  .footer-social { list-style: none; padding: 0; display: flex; gap: var(--s-4); margin-top: var(--s-4); }
+</style>

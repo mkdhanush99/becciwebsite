@@ -1,5 +1,23 @@
 # DESIGN — BECCI public website
 
+## Design system v2 (approved audit, Stage 1–2, 23 Nov 2026)
+- **Brand assets:** official logo kit R2 (Option A, navy). `public/brand/becci-logo.svg` (navy wordmark, header), `becci-logo-light.svg` (white, footer), `becci-symbol-navy.svg` / `becci-symbol-white.svg` (the two Cs: brand moments, page banners, the five-letter story), favicons, app icons, manifest and share image at the site root. The symbol is never recoloured or redrawn (kit rules); `InfinityMark.astro` now renders the official file.
+- **Colour tokens** (`src/styles/global.css`): Midnight `#061638` and Continuum Navy `#0A2352` (from the logo kit), Sapphire `#1B4FA8` / `#123A7E` for actions and links, silver-blue neutrals `#C9D5E6` / `#DDE5F0` / `#EDF1F7`, warm ivory `#F8F4EA`, ink `#121826`, slate `#566176`. **No gold** (client decision). Legacy `--blue-*` / `--accent-*` names alias the new tokens.
+- **Type:** New Black only. Scale 13 · 14 · 16 · 18 · 22 · 28 · 40 · 56 · 72 (`--fs-label` … `--fs-4xl`); all ad-hoc sizes were replaced with tokens.
+- **Space:** 4px base: 4 · 8 · 12 · 16 · 24 · 32 · 48 · 72 · 112 (`--s-1` … `--s-9`); ad-hoc values replaced.
+- **Layout:** max 1280, reading 720, wide 1040, 12-column splits (5/7, 4/8, 7/5). Breakpoints 520 / 640 / 760 / 960 / 1180.
+- **Buttons:** 48px, 8px radius; primary sapphire (white on dark), ghost outline; press scale 0.98.
+- **Header:** 80px, logo + five groups (Opportunities, Chamber, Membership, Updates, Contact) + Member Login + Join; shrinks to 64px with a hairline once scrolled.
+- **Surfaces:** ivory page, white panels with 1px silver-blue hairlines, midnight feature bands; shadow only on overlays. "Pending" content is one quiet line, not a box. Topic lists are plain inline lists, not pill tags.
+- **Photography slots:** `BrandMedia.astro` + `src/data/media.ts`. Drop approved photos at `public/images/home-hero.jpg`, `about-cover.jpg`, `about-story.jpg`, `founder.jpg` and they replace the graphic panel automatically (founder/story sections stay text-only until then).
+- **Motion:** one entrance on load (`data-enter`), 180ms hover feedback (2px lift, underline, press). No ambient animation; custom cursor removed. Reduced motion respected.
+- **Benchmark pages:** Home (finder-first hero, "I am…" paths, featured opportunity + register list, the story, editorial pillars, membership comparison, midnight close), About (editorial cover, essay with pull quote, statement band, four ways, whom we serve, approach path, structure tree, founder), Opportunity Finder (compact header, counted tabs, sticky toolbar, register rows, collapsible portals).
+- **Skills:** UI UX Pro Max (installed; design-system generator: Enterprise Gateway pattern, Accessible & Ethical style). Taste (`design-taste-frontend`, installed globally at the user's request): instructions read; adopted hero-with-action, equal edges, no image captions, one load entrance, hover layer, one moment per page; copy-lint 0 FAIL on Home/About/Finder; its "one section per screen" layout rule and dealt palettes/stock stand-ins deliberately not adopted (conflict with approved brand, real photography and an information-dense site). Impeccable, Scroll Craft, Lemo, Opuscar: not available.
+
+---
+
+## Earlier record (v1)
+
 ## Direction (selected: A)
 - **A. Finder-first split (chosen).** Deep institutional-blue hero: headline, supporting line and a search box with five category chips on the left; luminous infinity on the right. The first useful action (search or pick a category) sits above the fold, ahead of any institutional history.
 - B. Story-first full-bleed: the infinity animation fills the screen and the five letters follow, with search lower down. Rejected because opportunities were buried behind brand content.

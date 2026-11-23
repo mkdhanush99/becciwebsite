@@ -1,19 +1,8 @@
 ---
-// Brand motif: two facing Cs (Community, Commerce) joined into an infinity form.
-// This is an interim motif drawn for the site, NOT the approved BECCI logo (asset not supplied).
+// The official BECCI symbol: two facing Cs (Community and Commerce).
+// Never recoloured or redrawn (brand rules): navy on light grounds, white on dark.
 interface Props { class?: string; tone?: 'color' | 'light' | 'mono'; title?: string }
 const { class: cls = '', tone = 'color', title } = Astro.props;
-const a = tone === 'light' ? '#ffffff' : tone === 'mono' ? 'currentColor' : '#0f2b5b';
-const b = tone === 'mono' ? 'currentColor' : tone === 'light' ? '#a9c3f0' : '#4f7fd6';
-const id = 'g' + Math.random().toString(36).slice(2, 8);
+const src = tone === 'light' ? '/brand/becci-symbol-white.svg' : '/brand/becci-symbol-navy.svg';
 ---
-<svg class={cls} viewBox="0 0 200 100" fill="none" role={title ? 'img' : undefined} aria-hidden={title ? undefined : 'true'} aria-label={title}>
-  <defs>
-    <linearGradient id={id} x1="88" y1="0" x2="112" y2="0" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color={a} /><stop offset="1" stop-color={b} />
-    </linearGradient>
-  </defs>
-  <path d="M93 31 A27 27 0 1 0 93 69" stroke={a} stroke-width="9" stroke-linecap="round" />
-  <path d="M107 31 A27 27 0 1 1 107 69" stroke={b} stroke-width="9" stroke-linecap="round" />
-  <path d="M93 31 L107 69 M93 69 L107 31" stroke={`url(#${id})`} stroke-width="9" stroke-linecap="round" />
-</svg>
+<img class:list={['becci-symbol', cls]} src={src} alt={title ?? ''} aria-hidden={title ? undefined : 'true'} width="210" height="106" loading="lazy" decoding="async" />

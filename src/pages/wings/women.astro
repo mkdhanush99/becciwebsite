@@ -5,7 +5,7 @@ import Pending from '../../components/Pending.astro';
 ---
 <Base title="Women's Wing" description="A dedicated home for women entrepreneurs, professionals and aspiring founders within BECCI.">
   <PageHero eyebrow="Wings" title="Women's Wing" lede="A dedicated home for women entrepreneurs, professionals and aspiring founders within BECCI." crumbs={[{ label: 'Wings', href: '/wings' }, { label: "Women's Wing" }]}>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:24px"><a class="btn btn--accent" href="/membership#join">Join the Women's Wing</a><a class="btn btn--ghost" href="#invite">Invite someone</a></div>
+    <div style="display:flex;gap:var(--s-3);flex-wrap:wrap;margin-top:var(--s-5)"><a class="btn btn--accent" href="/membership#join">Join the Women's Wing</a><a class="btn btn--ghost" href="#invite">Invite someone</a></div>
   </PageHero>
   <section class="section"><div class="wrap grid grid--2">
     <div><h2>Introduction and objectives</h2><Pending>The Women's Wing's approved introduction and objectives will be published here.</Pending></div>
@@ -15,7 +15,7 @@ import Pending from '../../components/Pending.astro';
     <div><h2>Taking part</h2><p>The Women's Wing is part of BECCI membership. Read who can join and how on the <a href="/membership">Membership page</a>.</p></div>
     <div id="invite"><h2>Invite someone</h2><p>Know someone who should be part of the Women's Wing? Share this page with them.</p>
       <button class="btn btn--ghost btn--sm" type="button" data-share>Copy link to this page</button> <span class="small muted" role="status" data-share-status></span>
-      <p class="small muted" style="margin-top:12px">Personal invitation links with referral tracking are a member feature that is not available yet.</p></div>
+      <p class="small muted" style="margin-top:var(--s-3)">Personal invitation links with referral tracking are a member feature that is not available yet.</p></div>
   </div></section>
 </Base>
 <script>

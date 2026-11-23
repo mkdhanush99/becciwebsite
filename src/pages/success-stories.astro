@@ -8,7 +8,7 @@ const kinds = ['Bahujan entrepreneurs', 'MSME growth', 'First-generation entrepr
 <Base title="Success Stories" description="Entrepreneurs and enterprises that reached meaningful milestones.">
   <PageHero eyebrow="Success Stories" title="Proof that the journey works" lede="Real entrepreneurs, real milestones: the background, the challenges, what they achieved and what others can learn." crumbs={[{ label: 'Success Stories' }]} />
   <section class="section"><div class="wrap">
-    <ul class="tag-list" style="margin-bottom:28px">{kinds.map((k) => <li>{k}</li>)}</ul>
+    <ul class="tag-list" style="margin-bottom:var(--s-6)">{kinds.map((k) => <li>{k}</li>)}</ul>
     {stories.length ? null : <Pending>Stories will be published with the consent of each entrepreneur, including photographs, background, challenges, achievements and lessons.</Pending>}
   </div></section>
 </Base>

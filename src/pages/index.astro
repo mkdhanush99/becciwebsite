@@ -1,75 +1,72 @@
 ---
 import Base from '../layouts/Base.astro';
-import InfinityMark from '../components/InfinityMark.astro';
 import LetterStory from '../components/LetterStory.astro';
-import Pending from '../components/Pending.astro';
-import { site, audiences, advisors, testimonials, events, news, stats } from '../data/site';
+import BrandMedia from '../components/BrandMedia.astro';
+import { site, audiences, advisors, events, news, stats } from '../data/site';
+import { PHOTOS } from '../data/media';
 import { opportunities, CATEGORY_META, CATEGORY_ORDER, OBC_SCOPE_LABEL } from '../data/opportunities';
 import { computeStatus, STATUS_LABEL, deadlineText, todayISO } from '../lib/status';
 
 const today = todayISO();
-const highlight = opportunities
+const open = opportunities
   .map((o) => ({ o, st: computeStatus(o, today) }))
   .filter((x) => x.st !== 'closed' && x.st !== 'awaiting-notice')
-  .sort((a, b) => (a.o.closingDate ?? '9999').localeCompare(b.o.closingDate ?? '9999'))
-  .slice(0, 4);
-const areas = [
-  { title: 'Government Schemes', text: 'Central and State schemes, checked against the official page.', href: '/schemes' },
-  { title: 'Business Opportunities', text: 'Tenders, procurement, jobs and internships from official portals.', href: '/opportunities' },
-  { title: 'Services', text: 'Finance, compliance, advisory and mentorship through BECCI’s network.', href: '/services' },
-  { title: 'Franchise & Enterprise', text: 'Practical models for starting or growing a business.', href: '/franchise' },
-  { title: 'Biz Connect', text: 'A structured business networking and referral programme.', href: '/biz-connect', soon: true },
-  { title: 'Marketplace', text: 'Where members will buy, sell and request quotations.', href: '/marketplace', soon: true },
-  { title: 'Events', text: 'Networking meetings, workshops, conferences and training.', href: '/events' },
-  { title: 'Knowledge Centre', text: 'Guides, regulatory updates and learning for entrepreneurs.', href: '/knowledge' },
-  { title: 'Success Stories', text: 'Entrepreneurs and enterprises that reached real milestones.', href: '/success-stories' },
-  { title: 'Partnerships', text: 'Institutions that want to open doors for entrepreneurs.', href: '/partnerships' },
+  .sort((a, b) => (a.o.closingDate ?? '9999').localeCompare(b.o.closingDate ?? '9999'));
+const [featured, ...rest] = open;
+const pillars = [
+  { title: 'Open opportunities', text: 'Schemes, scholarships, loans, tenders and jobs, each checked against its official source.', href: '/opportunities', link: 'Find opportunities' },
+  { title: 'Connect entrepreneurs', text: 'Events, wings and sector committees that put business owners in the same room.', href: '/wings', link: 'Wings and sectors' },
+  { title: 'Build capability', text: 'Services, guidance and knowledge for starting and growing an enterprise.', href: '/services', link: 'Services' },
+  { title: 'Partner with institutions', text: 'Banks, departments, educational institutions and industry bodies that open doors at scale.', href: '/partnerships', link: 'Partnerships' },
+];
+const more = [
+  { label: 'Franchise & Enterprise', href: '/franchise' },
+  { label: 'Knowledge Centre', href: '/knowledge' },
+  { label: 'Success Stories', href: '/success-stories' },
+  { label: 'Biz Connect', href: '/biz-connect', note: 'Coming later' },
+  { label: 'Marketplace', href: '/marketplace', note: 'Coming later' },
+];
+const tiers = [
+  { name: 'Free', text: 'Basic platform access and manual scheme search for your home State and National schemes.' },
+  { name: 'Affiliate', text: 'Everything in Free, plus profile-based scheme suggestions and opportunity notifications.' },
+  { name: 'Associate', text: 'Everything in Affiliate, plus one complimentary Scheme Suggestion Report.' },
 ];
 ---
 <Base title="Home">
-  <section class="hero on-dark">
-    <div class="wrap hero__grid">
-      <div class="hero__copy">
+  <section class="h-hero on-dark" data-enter>
+    <div class="wrap h-hero__grid">
+      <div class="h-hero__copy">
         <span class="eyebrow">{site.fullName}</span>
-        <h1>{site.headline}</h1>
-        <p class="hero__lede">{site.supporting}</p>
-
-        <form class="hero-search" action="/opportunities" method="get" role="search">
-          <label for="hero-q" class="hero-search__label">What are you looking for?</label>
-          <div class="hero-search__row">
+        <h1>Where Community <span>Meets Commerce</span></h1>
+        <p class="h-hero__lede">{site.supporting}</p>
+        <form class="h-search" action="/opportunities" method="get" role="search">
+          <label for="hero-q" class="h-search__label">Find schemes, scholarships, loans, tenders and jobs</label>
+          <div class="h-search__row">
             <input id="hero-q" name="q" type="search" class="input" placeholder="Try “loan”, “scholarship” or “tender”" />
             <button class="btn btn--accent" type="submit">Search</button>
           </div>
-          <ul class="hero-cats" aria-label="Browse by category">
+          <ul class="h-cats" aria-label="Browse by category">
             {CATEGORY_ORDER.map((c) => <li><a href={CATEGORY_META[c].path}>{CATEGORY_META[c].label}</a></li>)}
           </ul>
         </form>
-
-        <div class="hero__actions">
+        <div class="h-hero__actions">
           <a class="btn btn--accent" href="/membership#join">Join as a Member</a>
           <a class="btn btn--ghost" href="/about">About the chamber</a>
         </div>
       </div>
-      <div class="hero__art">
-        <div class="hero-mark" aria-hidden="true">
-          <InfinityMark class="hero-mark__svg" tone="light" />
-          <span class="hero-mark__l">Community</span><span class="hero-mark__r">Commerce</span>
-        </div>
-        <p class="hero__caption">Two Cs, Community and Commerce, brought together as one continuous loop.</p>
+      <div class="h-hero__media">
+        <BrandMedia src={PHOTOS.homeHero.src} alt={PHOTOS.homeHero.alt} ratio="4 / 5" eager />
       </div>
     </div>
-    <div class="wrap"><p class="hero__promise">{site.promise}</p></div>
+    <div class="wrap h-promise"><p>{site.promise}</p></div>
   </section>
 
-  <section class="section--tight section--white" aria-labelledby="who-title">
+  <section class="h-paths" aria-labelledby="paths-title">
     <div class="wrap">
-      <div class="section-head">
-        <div><span class="eyebrow">Start here</span><h2 id="who-title">What can you find here?</h2></div>
-        <p>Choose the line that fits you. Each one leads straight to the right listings or page.</p>
-      </div>
-      <ul class="who">
+      <h2 id="paths-title" class="h-paths__title">I am…</h2>
+      <ul class="h-paths__list">
         {audiences.map((a) => (
-          <li><a class="who__item" href={a.href}><span class="who__who">{a.who}</span><span class="who__need">{a.need}</span><span class="who__go" aria-hidden="true">→</span></a></li>
+          <li><a href={a.href}><strong>{a.who}</strong><span>{a.need}</span></a></li>
         ))}
       </ul>
     </div>
@@ -78,155 +75,167 @@ const areas = [
   <section class="section" aria-labelledby="open-title">
     <div class="wrap">
       <div class="section-head">
-        <div><span class="eyebrow">Open now</span><h2 id="open-title">Closing soon and open year-round</h2></div>
-        <p>Every record is checked against its official source. We show the date we last checked it.</p>
+        <div><h2 id="open-title">Opportunities you can apply for</h2></div>
+        <a class="link-arrow" href="/opportunities">All opportunities and official portals</a>
       </div>
-      <ol class="hl">
-        {highlight.map(({ o, st }) => (
-          <li class="hl__item">
-            <span class={`status status--${st}`}>{STATUS_LABEL[st]}</span>
-            <h3><a href={`/opportunities/${o.slug}`}>{o.title}</a></h3>
-            <p class="small muted">{o.authority.split(',')[0]} · {o.geography.join(', ')}</p>
-            <p class="hl__deadline">{deadlineText(o, today)}</p>
-            <span class={`scope scope--${o.obcScope}`}>{OBC_SCOPE_LABEL[o.obcScope]}</span>
-          </li>
-        ))}
-      </ol>
-      <p style="margin-top:24px"><a class="link-arrow" href="/opportunities">See all opportunities and official portals</a></p>
+      <div class="h-open">
+        {featured && (
+          <article class="h-open__feature">
+            <span class={`status status--${featured.st}`}>{STATUS_LABEL[featured.st]}</span>
+            <h3><a href={`/opportunities/${featured.o.slug}`}>{featured.o.title}</a></h3>
+            <p class="muted small">{featured.o.authority}</p>
+            <p>{featured.o.summary}</p>
+            <p class="h-open__deadline">{deadlineText(featured.o, today)}</p>
+            <span class={`scope scope--${featured.o.obcScope}`}>{OBC_SCOPE_LABEL[featured.o.obcScope]}</span>
+          </article>
+        )}
+        <ol class="h-open__list">
+          {rest.map(({ o, st }) => (
+            <li>
+              <div class="h-open__meta"><span class={`status status--${st}`}>{STATUS_LABEL[st]}</span><span class={`scope scope--${o.obcScope}`}>{OBC_SCOPE_LABEL[o.obcScope]}</span></div>
+              <h3><a href={`/opportunities/${o.slug}`}>{o.title}</a></h3>
+              <p class="small muted">{o.authority.split(',')[0]} · {deadlineText(o, today)}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
     </div>
   </section>
 
   <LetterStory />
 
-  <section class="section" aria-labelledby="areas-title">
+  <section class="section" aria-labelledby="does-title">
+    <div class="wrap h-does">
+      <div class="h-does__intro">
+        
+        <h2 id="does-title">From a first idea to an established enterprise</h2>
+        <p class="lede">BECCI is a national chamber for OBC entrepreneurs. It began in Telangana and Andhra Pradesh and is building towards a national presence.</p>
+        <ul class="h-does__more" aria-label="More from BECCI">
+          {more.map((m) => <li><a href={m.href}>{m.label}</a>{m.note && <span class="nav-note">{m.note}</span>}</li>)}
+        </ul>
+      </div>
+      <ul class="h-does__list">
+        {pillars.map((p) => (
+          <li><h3>{p.title}</h3><p>{p.text}</p><a class="link-arrow" href={p.href}>{p.link}</a></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--white" aria-labelledby="join-title">
     <div class="wrap">
       <div class="section-head">
-        <div><span class="eyebrow">What BECCI does</span><h2 id="areas-title">One chamber, many ways in</h2></div>
-        <p>From a first idea to an established enterprise, these are the doors BECCI opens.</p>
+        <div><h2 id="join-title">Become part of the chamber</h2></div>
+        <p>For Bahujan entrepreneurs, professionals, students and first-generation founders whose community is in the Central OBC list for their State or a State BC/OBC list.</p>
       </div>
-      <div class="grid grid--3">
-        {areas.map((a) => (
-          <a class="card card--link" href={a.href}>
-            <h3>{a.title} {a.soon && <span class="nav-note">Coming later</span>}</h3>
-            <p>{a.text}</p>
-            <span class="link-arrow">{a.soon ? 'What to expect' : 'Explore'}</span>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <section class="section section--blue join-band" aria-labelledby="join-title">
-    <div class="wrap join-band__grid">
-      <div>
-        <span class="eyebrow">Membership</span>
-        <h2 id="join-title">Become part of the chamber</h2>
-        <p>BECCI is a chamber for Bahujan entrepreneurs — business owners, professionals, students and first-generation founders whose community appears in the Central OBC list for their State or in a State BC/OBC list.</p>
-      </div>
-      <div class="join-band__actions">
+      <ol class="h-tiers">
+        {tiers.map((t) => <li><h3>{t.name} Membership</h3><p>{t.text}</p></li>)}
+      </ol>
+      <div class="h-member__foot">
         <a class="btn btn--accent" href="/membership#join">Join as a Member</a>
-        <a class="btn btn--ghost" href="/membership">Membership categories and benefits</a>
+        <p class="small muted">Categories are proposed. Fees and final benefits will be confirmed before applications open.</p>
       </div>
     </div>
   </section>
 
-  <section class="section section--white" aria-labelledby="people-title">
-    <div class="wrap grid grid--2">
+  <section class="section section--midnight h-close" aria-labelledby="close-title">
+    <div class="wrap h-close__grid">
       <div>
-        <span class="eyebrow">Advisors</span>
-        <h2 id="people-title">The people guiding BECCI</h2>
-        {advisors.length ? null : <Pending>Advisor photographs, names, designations and affiliations will appear here as a scrolling gallery once BECCI approves them for publication.</Pending>}
+        
+        <h2 id="close-title">Open doors for entrepreneurs at scale</h2>
+        <p>Government departments, banks, MSME bodies, educational institutions, incubators and corporates can create opportunities that ordinary networking cannot.</p>
+        <a class="btn btn--accent" href="/partnerships">Partner with BECCI</a>
       </div>
-      <div>
-        <span class="eyebrow">Testimonials</span>
-        <h2>In their words</h2>
-        {testimonials.length ? null : <Pending>Experiences from members, entrepreneurs and partners will be published here with their consent.</Pending>}
-      </div>
+      <ul class="h-close__links">
+        <li><a href="/events"><strong>Event calendar</strong><span>{events.length ? `${events.length} announced` : 'No events announced yet'}</span></a></li>
+        <li><a href="/news"><strong>News Desk</strong><span>{news.length ? `${news.length} announcements` : 'No announcements yet'}</span></a></li>
+        <li><a href="/knowledge"><strong>Knowledge Centre</strong><span>Guides and resources</span></a></li>
+        <li><a href="/leadership"><strong>Leadership</strong><span>{advisors.length ? `${advisors.length} advisors` : 'Profiles coming soon'}</span></a></li>
+      </ul>
     </div>
-  </section>
-
-  <section class="section" aria-labelledby="updates-title">
-    <div class="wrap">
-      <div class="section-head"><div><span class="eyebrow">Updates</span><h2 id="updates-title">Events and news</h2></div></div>
-      <div class="grid grid--3">
-        <div class="card"><h3>Upcoming events</h3>{events.length ? null : <p class="muted">No events have been announced yet.</p>}<a class="link-arrow" href="/events">Event calendar</a></div>
-        <div class="card"><h3>News Desk</h3>{news.length ? null : <p class="muted">No announcements have been published yet.</p>}<a class="link-arrow" href="/news">News Desk</a></div>
-        <div class="card"><h3>Wings and chapters</h3><p class="muted">Dedicated wings for women and youth, with chapters from national to city level.</p><a class="link-arrow" href="/wings">Wings, sectors &amp; chapters</a></div>
-      </div>
-      {stats.length > 0 && (
-        <ul class="stats">{stats.map((s) => <li><strong>{s.value}</strong><span>{s.label}</span><small>{s.period} · {s.basis}</small></li>)}</ul>
-      )}
-    </div>
-  </section>
-
-  <section class="section--tight section--white partner-cta" aria-labelledby="partner-title">
-    <div class="wrap partner-cta__inner">
-      <div><span class="eyebrow">For institutions</span><h2 id="partner-title">Open doors for entrepreneurs at scale</h2>
-        <p class="muted">Government departments, banks, MSME bodies, educational institutions, incubators and corporates.</p></div>
-      <a class="btn" href="/partnerships">Partner with BECCI</a>
-    </div>
+    {stats.length > 0 && <ul class="wrap h-stats">{stats.map((s) => <li><strong>{s.value}</strong><span>{s.label}</span><small>{s.period} · {s.basis}</small></li>)}</ul>}
   </section>
 </Base>
 
 <style>
-  .hero { background: radial-gradient(120% 90% at 85% 40%, #173c7a 0%, var(--blue-900) 45%, var(--blue-950) 100%); color: #d6deee; padding-block: clamp(40px, 6vw, 80px) 0; overflow: hidden; }
-  .hero__grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 56px); align-items: center; }
-  .hero h1 { color: #fff; font-size: clamp(2.5rem, 1.6rem + 3.8vw, 4.6rem); max-width: 12ch; margin-bottom: 0.35em; }
-  .hero .eyebrow { color: var(--accent-300); }
-  .hero__lede { font-size: var(--step-1); color: #c6d1e6; max-width: 44ch; }
-  .hero-search { margin: 28px 0 24px; background: rgb(255 255 255 / 6%); border: 1px solid rgb(255 255 255 / 14%); border-radius: 18px; padding: 16px; }
-  .hero-search__label { display: block; font-weight: 600; color: #fff; margin-bottom: 10px; }
-  .hero-search__row { display: flex; gap: 8px; }
-  .hero-search .input { border-color: transparent; min-height: 52px; }
-  .hero-search .btn { min-height: 52px; }
-  .hero-cats { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 14px 0 0; }
-  .hero-cats a { display: inline-flex; align-items: center; min-height: 40px; padding: 8px 14px; border-radius: 999px; background: rgb(255 255 255 / 9%); color: #fff; text-decoration: none; font-weight: 600; font-size: 0.92rem; border: 1px solid rgb(255 255 255 / 10%); transition: background 160ms, border-color 160ms; }
-  .hero-cats a:hover { background: #fff; color: var(--blue-900); border-color: #fff; }
-  .hero__actions { display: flex; flex-wrap: wrap; gap: 10px; }
-  .hero-mark { position: relative; width: 100%; padding-bottom: 36px; }
-  .hero-mark :global(.hero-mark__svg) { width: 100%; height: auto; }
-  .hero-mark__l, .hero-mark__r { position: absolute; bottom: 0; translate: -50% 0; font: 600 0.78rem/1 var(--font-body); letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-300); }
-  .hero-mark__l { left: 33%; } .hero-mark__r { left: 67%; }
-  @media (max-width: 520px) { .hero-mark__l, .hero-mark__r { font-size: 0.62rem; letter-spacing: 0.08em; } }
-  .hero__caption { text-align: center; font-size: 0.88rem; color: #9fb0cc; margin-top: 8px; }
-  .hero__promise { margin: clamp(32px, 5vw, 56px) 0 0; padding: 18px 0; border-top: 1px solid rgb(255 255 255 / 12%); font: 500 clamp(1rem, 0.9rem + 0.6vw, 1.35rem) var(--font-display); letter-spacing: 0.06em; color: var(--accent-300); text-align: center; }
-  @media (max-width: 900px) {
-    .hero__grid { grid-template-columns: 1fr; }
-    .hero__art { order: -1; max-width: 520px; width: 100%; margin-inline: auto; }
-    .hero-mark { position: relative; width: 100%; padding-bottom: 36px; }
-  .hero-mark :global(.hero-mark__svg) { width: 100%; height: auto; }
-  .hero-mark__l, .hero-mark__r { position: absolute; bottom: 0; translate: -50% 0; font: 600 0.78rem/1 var(--font-body); letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-300); }
-  .hero-mark__l { left: 33%; } .hero-mark__r { left: 67%; }
-  @media (max-width: 520px) { .hero-mark__l, .hero-mark__r { font-size: 0.62rem; letter-spacing: 0.08em; } }
-  .hero__caption { display: none; }
-  }
-  @media (max-width: 480px) { .hero-search__row { flex-direction: column; } }
+  .h-hero { background: var(--midnight); color: var(--on-dark-2); padding-top: clamp(var(--s-6), 5vw, var(--s-8)); overflow: hidden; display: flex; flex-direction: column; justify-content: center; }
+  @media (min-width: 961px) and (min-height: 700px) { .h-hero { min-height: calc(100svh - var(--header-h)); } }
+  .h-hero__grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(var(--s-6), 5vw, var(--s-8)); align-items: center; }
+  .h-hero h1 { color: #fff; font-size: var(--fs-4xl); font-weight: 600; line-height: 1.02; letter-spacing: -0.025em; margin-bottom: var(--s-5); }
+  .h-hero h1 span { display: block; color: var(--accent-300); }
+  .h-hero__lede { font-size: var(--fs-md); color: var(--on-dark); max-width: 46ch; margin-bottom: var(--s-6); }
+  .h-search { border-top: 1px solid rgb(255 255 255 / 14%); padding-top: var(--s-5); margin-bottom: var(--s-6); }
+  .h-search__label { display: block; font-size: var(--fs-sm); font-weight: 500; color: var(--on-dark-2); margin-bottom: var(--s-3); }
+  .h-search__row { display: flex; gap: var(--s-2); }
+  .h-search .input { border-color: transparent; min-height: 56px; font-size: var(--fs-md); }
+  .h-search .btn { min-height: 56px; padding: 0 var(--s-6); }
+  .h-cats { display: flex; flex-wrap: wrap; gap: 0 var(--s-5); list-style: none; padding: 0; margin: var(--s-3) 0 0; }
+  .h-cats a { display: inline-flex; align-items: center; min-height: 44px; color: #fff; font-weight: 500; text-decoration: underline; text-decoration-color: rgb(255 255 255 / 35%); text-underline-offset: 6px; }
+  .h-cats a:hover { color: #fff; text-decoration-color: #fff; }
+  .h-hero__actions { display: flex; flex-wrap: wrap; gap: var(--s-3); }
+  .h-promise p { margin: clamp(var(--s-6), 5vw, var(--s-7)) 0 0; padding: var(--s-5) 0; border-top: 1px solid rgb(255 255 255 / 12%); font: 500 var(--fs-md)/1 var(--font-display); letter-spacing: 0.04em; color: var(--on-dark); }
+  @media (max-width: 960px) { .h-hero__grid { grid-template-columns: 1fr; } .h-hero__media { display: none; } }
+  @media (max-width: 520px) { .h-search__row { flex-direction: column; } .h-search .btn { width: 100%; } .h-hero .eyebrow { display: none; } .h-hero__lede { margin-bottom: var(--s-5); } .h-search { padding-top: var(--s-4); margin-bottom: var(--s-5); } .h-hero__actions .btn--ghost { display: none; } .h-promise p { margin-top: var(--s-5); } }
 
-  .who { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr)); border-top: 1px solid var(--line); }
-  .who li { border-bottom: 1px solid var(--line); }
-  .who__item { display: grid; grid-template-columns: minmax(9ch, 0.8fr) 1.6fr auto; gap: 16px; align-items: baseline; padding: 20px 8px; text-decoration: none; color: var(--ink-2); transition: background 160ms; }
-  .who__item:hover { background: var(--paper); color: var(--ink); text-decoration: none; }
-  .who__who { font: 600 1.2rem/1.2 var(--font-display); color: var(--blue-900); }
-  .who__go { color: var(--accent-700); font-size: 1.2rem; transition: transform 160ms var(--ease); }
-  .who__item:hover .who__go { transform: translateX(4px); }
-  @media (min-width: 760px) { .who li:nth-child(odd) { border-right: 1px solid var(--line); } }
-  @media (max-width: 520px) { .who__item { grid-template-columns: 1fr auto; } .who__need { grid-column: 1; } .who__go { grid-row: 1; grid-column: 2; } }
+  .h-paths { background: var(--white); border-bottom: var(--hair); }
+  .h-paths .wrap { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 10fr); gap: var(--s-6); padding-block: var(--s-7); align-items: start; }
+  .h-paths__title { font-size: var(--fs-xl); margin: var(--s-4) 0 0; }
+  .h-paths__list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--s-6); border-top: var(--hair); }
+  .h-paths__list li { border-bottom: var(--hair); }
+  .h-paths__list a { display: flex; flex-direction: column; gap: var(--s-1); height: 100%; padding: var(--s-5) 0; color: var(--slate); text-decoration: none; font-size: var(--fs-sm); }
+  .h-paths__list strong { font-size: var(--fs-lg); font-weight: 600; color: var(--midnight); letter-spacing: -0.01em; display: flex; justify-content: space-between; gap: var(--s-2); transition: color var(--dur); }
+  .h-paths__list strong::after { content: '→'; color: var(--sapphire); transition: transform var(--dur) var(--ease); }
+  .h-paths__list a:hover strong { color: var(--sapphire); }
+  .h-paths__list a:hover strong::after { transform: translateX(4px); }
+  @media (max-width: 960px) { .h-paths .wrap { grid-template-columns: 1fr; gap: var(--s-3); } .h-paths__list { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .h-paths__list { grid-template-columns: 1fr; } .h-paths__list a { padding: var(--s-4) 0; } }
 
-  .hl { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 16px; }
-  .hl__item { position: relative; background: var(--white); border: 1px solid var(--line-2); border-radius: var(--radius); padding: 22px; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; transition: border-color 160ms, transform 200ms var(--ease); }
-  .hl__item:hover { border-color: var(--accent-500); transform: translateY(-2px); }
-  .hl__item h3 { margin: 4px 0 0; font-size: 1.12rem; }
-  .hl__item h3 a { color: var(--blue-900); text-decoration: none; }
-  .hl__item h3 a::after { content: ''; position: absolute; inset: 0; }
-  .hl__item p { margin: 0; }
-  .hl__deadline { font-weight: 600; font-size: 0.92rem; margin-top: auto !important; }
+  .h-open { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--s-6); align-items: start; }
+  .h-open__feature { position: relative; background: var(--white); border: var(--hair); border-radius: var(--radius); padding: var(--s-6); display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-3); transition: border-color var(--dur); }
+  .h-open__feature:hover { border-color: var(--sapphire); }
+  .h-open__feature h3 { font-size: var(--fs-xl); line-height: 1.2; margin: 0; }
+  .h-open__feature p { margin: 0; }
+  .h-open h3 a { color: var(--midnight); text-decoration: none; }
+  .h-open h3 a::after { content: ''; position: absolute; inset: 0; }
+  .h-open h3 a:hover { color: var(--sapphire); }
+  .h-open__deadline { font-weight: 600; color: var(--ink); }
+  .h-open__list { list-style: none; padding: 0; margin: 0; border-top: var(--hair); }
+  .h-open__list li { position: relative; padding: var(--s-5) 0; border-bottom: var(--hair); }
+  .h-open__list h3 { margin: var(--s-3) 0 var(--s-1); font-size: var(--fs-md); }
+  .h-open__list p { margin: 0; }
+  .h-open__meta { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+  @media (max-width: 960px) { .h-open { grid-template-columns: 1fr; } }
 
-  .join-band__grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 32px; align-items: center; }
-  .join-band p { color: #c9d4e8; max-width: 58ch; }
-  .join-band__actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end; }
-  @media (max-width: 860px) { .join-band__grid { grid-template-columns: 1fr; } .join-band__actions { justify-content: flex-start; } }
-  .partner-cta__inner { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px; }
-  .partner-cta h2 { margin-bottom: 0.2em; }
-  .partner-cta p { margin: 0; }
-  .stats { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; padding: 0; margin: 32px 0 0; }
+  .h-does { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(var(--s-6), 6vw, var(--s-9)); }
+  .h-does__more { list-style: none; padding: 0; margin: var(--s-6) 0 0; display: grid; gap: var(--s-2); }
+  .h-does__more li { display: flex; align-items: center; gap: var(--s-3); min-height: 32px; }
+  .h-does__more a { font-weight: 500; }
+  .h-does__list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; border-top: 2px solid var(--midnight); }
+  .h-does__list li { padding: var(--s-5) var(--s-5) var(--s-6) 0; border-bottom: var(--hair); display: flex; flex-direction: column; }
+  .h-does__list li:nth-child(odd) { border-right: var(--hair); }
+  .h-does__list li:nth-child(even) { padding-left: var(--s-5); }
+  .h-does__list h3 { font-size: var(--fs-lg); }
+  .h-does__list p { color: var(--slate); flex: 1; }
+  @media (max-width: 960px) { .h-does { grid-template-columns: 1fr; } }
+  @media (max-width: 600px) { .h-does__list { grid-template-columns: 1fr; } .h-does__list li, .h-does__list li:nth-child(even) { padding: var(--s-5) 0; border-right: 0; } }
+
+  .h-tiers { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: var(--hair); border-radius: var(--radius); overflow: hidden; }
+  .h-tiers li { padding: var(--s-6); }
+  .h-tiers li + li { border-left: var(--hair); }
+  .h-tiers h3 { font-size: var(--fs-lg); }
+  .h-tiers p { color: var(--slate); margin: 0; }
+  .h-member__foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-4) var(--s-5); margin-top: var(--s-6); }
+  .h-member__foot p { margin: 0; }
+  @media (max-width: 760px) { .h-tiers { grid-template-columns: 1fr; } .h-tiers li + li { border-left: 0; border-top: var(--hair); } }
+
+  .h-close__grid { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: clamp(var(--s-6), 6vw, var(--s-9)); align-items: start; }
+  .h-close p { color: var(--on-dark-2); max-width: 48ch; margin-bottom: var(--s-5); }
+  .h-close__links { list-style: none; padding: 0; margin: 0; border-top: 1px solid rgb(255 255 255 / 16%); }
+  .h-close__links li { border-bottom: 1px solid rgb(255 255 255 / 16%); }
+  .h-close__links a { display: flex; justify-content: space-between; align-items: center; gap: var(--s-4); min-height: 64px; color: #fff; text-decoration: none; }
+  .h-close__links strong { font-size: var(--fs-md); font-weight: 600; }
+  .h-close__links span { color: var(--on-dark-2); font-size: var(--fs-sm); text-align: right; }
+  .h-close__links a:hover strong { text-decoration: underline; }
+  @media (max-width: 860px) { .h-close__grid { grid-template-columns: 1fr; } }
+  .h-stats { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--s-4); padding: 0; margin-top: var(--s-7); }
 </style>

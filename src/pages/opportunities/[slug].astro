@@ -104,24 +104,24 @@ const notStated = 'Not stated by the official source.';
 <style>
   .detail-top { border-bottom: 1px solid var(--line-2); background: var(--white); }
   .back { display: inline-flex; align-items: center; min-height: 48px; font-weight: 600; text-decoration: none; }
-  .detail { padding-block: clamp(28px, 5vw, 56px) clamp(56px, 8vw, 96px); }
-  .detail__tags { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 16px; }
-  .detail__cat { font-size: 0.85rem; font-weight: 600; }
+  .detail { padding-block: clamp(var(--s-6), 5vw, var(--s-7)) clamp(var(--s-7), 8vw, var(--s-9)); }
+  .detail__tags { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2); margin-bottom: var(--s-4); }
+  .detail__cat { font-size: var(--fs-sm); font-weight: 600; }
   .detail h1 { font-size: var(--step-3); max-width: 28ch; }
   .detail__authority { color: var(--muted); }
-  .detail__grid { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: clamp(24px, 4vw, 56px); margin-top: 32px; align-items: start; }
-  .detail__main section { padding-block: 22px; border-top: 1px solid var(--line); }
+  .detail__grid { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: clamp(var(--s-5), 4vw, var(--s-7)); margin-top: var(--s-6); align-items: start; }
+  .detail__main section { padding-block: var(--s-5); border-top: 1px solid var(--line); }
   .detail__main h2 { font-size: var(--step-1); }
   .detail__main li { margin-bottom: 0.4em; }
-  .detail__main .notice { margin-bottom: 16px; }
-  .decide { position: sticky; top: 92px; display: grid; gap: 14px; }
-  .decide__card { background: var(--white); border: 1px solid var(--line-2); border-radius: var(--radius); padding: 20px; }
-  .decide__facts { margin: 0 0 16px; display: grid; gap: 12px; }
-  .decide__facts dt { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+  .detail__main .notice { margin-bottom: var(--s-4); }
+  .decide { position: sticky; top: 92px; display: grid; gap: var(--s-4); }
+  .decide__card { background: var(--white); border: 1px solid var(--line-2); border-radius: var(--radius); padding: var(--s-5); }
+  .decide__facts { margin: 0 0 var(--s-4); display: grid; gap: var(--s-3); }
+  .decide__facts dt { font-size: var(--fs-label); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
   .decide__facts dd { margin: 0; font-weight: 500; }
   .decide__apply { width: 100%; white-space: normal; text-align: center; }
-  .decide__leave { margin: 10px 0 0; }
-  .decide__h { font: 600 0.78rem/1 var(--font-body); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 12px; }
-  .decide__sources { padding: 0; list-style: none; margin: 0; display: grid; gap: 8px; font-size: 0.95rem; }
+  .decide__leave { margin: var(--s-3) 0 0; }
+  .decide__h { font: 600 var(--fs-label)/1 var(--font-body); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); margin-bottom: var(--s-3); }
+  .decide__sources { padding: 0; list-style: none; margin: 0; display: grid; gap: var(--s-2); font-size: var(--fs-base); }
   @media (max-width: 900px) { .detail__grid { display: flex; flex-direction: column; } .decide { display: contents; } .decide__card { order: 1; } .decide__card:first-child { order: -1; } .detail__main { order: 0; } }
 </style>

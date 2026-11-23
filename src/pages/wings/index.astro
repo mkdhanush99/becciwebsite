@@ -8,13 +8,13 @@ import { sectors, chapters } from '../../data/site';
   <PageHero eyebrow="Organisation" title="Wings, sectors and chapters" lede="How BECCI is organised: wings for particular communities of entrepreneurs, sectors for industries, and chapters for places." crumbs={[{ label: 'Wings, Sectors & Chapters' }]} />
   <section class="section"><div class="wrap">
     <h2>Wings</h2>
-    <div class="grid grid--2" style="margin-bottom:56px">
+    <div class="grid grid--2" style="margin-bottom:var(--s-7)">
       <a class="card card--link" href="/wings/women"><h3>Women's Wing</h3><p>For women entrepreneurs, professionals and aspiring founders.</p><span class="link-arrow">Visit the Women's Wing</span></a>
       <a class="card card--link" href="/wings/youth"><h3>Youth Wing</h3><p>For students, young professionals and first-time founders.</p><span class="link-arrow">Visit the Youth Wing</span></a>
     </div>
     <h2>Sectors</h2>
     <p class="muted">Sector committees bring together businesses in the same industry.</p>
-    <ul class="tag-list" style="margin-bottom:56px">{sectors.map((s) => <li>{s}</li>)}</ul>
+    <ul class="tag-list" style="margin-bottom:var(--s-7)">{sectors.map((s) => <li>{s}</li>)}</ul>
     <h2>Chapters</h2>
     <p class="muted">Chapters follow a National → State → District → City structure.</p>
     {chapters.length ? <ul>{chapters.map((c) => <li>{c.level}: {c.name}</li>)}</ul> : <Pending>Confirmed chapters and their official contact details will be listed here. BECCI's initial operations are in Telangana and Andhra Pradesh.</Pending>}

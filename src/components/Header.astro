@@ -1,17 +1,13 @@
 ---
 import { nav } from '../data/site';
+import Logo from './Logo.astro';
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const isCurrent = (href: string) => (href === '/' ? path === '/' : path === href || path.startsWith(href + '/'));
 const chevron = '<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
 ---
-<header class="site-header">
+<header class="site-header" data-header>
   <div class="wrap site-header__bar">
-    <a class="brand" href="/" aria-label="BECCI home">
-      <span>
-        <span class="brand__word">BECCI</span>
-        <span class="brand__sub">Bahujan Entrepreneurs Chamber for Commerce &amp; Industry</span>
-      </span>
-    </a>
+    <a class="brand" href="/" aria-label="BECCI home"><Logo /></a>
     <nav class="primary-nav" aria-label="Main">
       <ul>
         {nav.map((g, i) => g.children ? (
@@ -43,7 +39,7 @@ const chevron = '<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="tr
   <dialog class="mobile-nav" aria-label="Menu" data-menu>
     <div class="mobile-nav__inner">
       <div class="mobile-nav__top">
-        <span class="brand__word" style="color:var(--blue-900)">BECCI</span>
+        <Logo />
         <button class="menu-toggle" style="display:inline-flex" type="button" aria-label="Close menu" data-menu-close>
           <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 4l12 12M16 4 4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
         </button>
@@ -63,6 +59,9 @@ const chevron = '<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="tr
   </dialog>
 </header>
 <script>
+  const header = document.querySelector('[data-header]');
+  const onScroll = () => header?.toggleAttribute('data-scrolled', window.scrollY > 8);
+  onScroll(); window.addEventListener('scroll', onScroll, { passive: true });
   const triggers = document.querySelectorAll<HTMLButtonElement>('.nav-trigger');
   const closeAll = (except?: HTMLButtonElement) => triggers.forEach((t) => {
     if (t === except) return;

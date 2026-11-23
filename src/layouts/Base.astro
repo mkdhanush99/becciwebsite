@@ -11,12 +11,20 @@ const fullTitle = title === 'Home' ? 'BECCI — Where Community Meets Commerce' 
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#0b1f44" />
+    <meta name="theme-color" content="#0A2352" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="preload" href="/fonts/NewBlackTypeface-Regular.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/NewBlackTypeface-SemiBold.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content="/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>

@@ -33,6 +33,7 @@ export const nav: NavGroup[] = [
       { label: 'Scholarships', href: '/opportunities/scholarships' },
       { label: 'Loans & Funding', href: '/opportunities/finance' },
       { label: 'Franchise & Enterprise', href: '/franchise' },
+      { label: 'Services', href: '/services' },
     ],
   },
   {
@@ -46,11 +47,11 @@ export const nav: NavGroup[] = [
     ],
   },
   {
-    label: 'Business', href: '/services', children: [
-      { label: 'Services', href: '/services' },
+    label: 'Membership', href: '/membership', children: [
+      { label: 'Membership', href: '/membership' },
+      { label: 'Partner with BECCI', href: '/partnerships' },
       { label: 'Biz Connect', href: '/biz-connect', note: 'Coming later' },
       { label: 'Marketplace', href: '/marketplace', note: 'Coming later' },
-      { label: 'Partner with BECCI', href: '/partnerships' },
     ],
   },
   {
@@ -60,7 +61,6 @@ export const nav: NavGroup[] = [
       { label: 'Knowledge Centre', href: '/knowledge' },
     ],
   },
-  { label: 'Membership', href: '/membership' },
   { label: 'Contact', href: '/contact' },
 ];
 

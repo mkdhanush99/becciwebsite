@@ -8,7 +8,7 @@ const kinds = ['Franchise opportunities', 'Ready-to-start business models', 'Sma
   <PageHero eyebrow="Franchise & Enterprise" title="Practical paths to owning a business" lede="Business models and ownership opportunities for aspiring entrepreneurs and existing business owners." crumbs={[{ label: 'Opportunities', href: '/opportunities' }, { label: 'Franchise & Enterprise' }]} />
   <section class="section"><div class="wrap">
     <h2>What will be listed</h2>
-    <ul class="tag-list" style="margin-bottom:24px">{kinds.map((k) => <li>{k}</li>)}</ul>
+    <ul class="tag-list" style="margin-bottom:var(--s-5)">{kinds.map((k) => <li>{k}</li>)}</ul>
     <p>Each listing will set out the business model, investment requirements, operational requirements, the capabilities expected and who to contact.</p>
     <Pending label="No verified listings yet">BECCI has not yet published any franchise or enterprise opportunities. Listings will appear only after BECCI has reviewed them. For finance to start a business, see <a href="/opportunities/finance">Loans &amp; Funding</a>.</Pending>
   </div></section>

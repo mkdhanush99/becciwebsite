@@ -1,12 +1,13 @@
 ---
 import Base from '../layouts/Base.astro';
-import PageHero from '../components/PageHero.astro';
+import PageHead from '../components/PageHead.astro';
+import { opportunities, portals } from '../data/opportunities';
 import Finder from '../components/Finder.astro';
 ---
 <Base title="Government Schemes" description="Browse and filter Central and State government schemes with official links and last verified dates.">
-  <PageHero eyebrow="Public scheme finder" title="Government Schemes" lede="Browse Central and State schemes, read what each offers and who can apply, then go to the official guidelines and application. No account needed." crumbs={[{ label: 'Opportunities', href: '/opportunities' }, { label: 'Government Schemes' }]} />
-  <section class="section--tight"><div class="wrap">
-    <p class="notice notice--info" style="margin-bottom:20px">Scheme eligibility is set by each scheme’s own rules. It is separate from BECCI membership, and a listing here is not a promise of eligibility or approval.</p>
+  <PageHead meta={`${opportunities.length} verified records · ${portals.length} official portals. Every record links to its source.`} title="Government Schemes" lede="Browse Central and State schemes, read what each offers and who can apply, then go to the official guidelines and application. No account needed." crumbs={[{ label: 'Opportunities', href: '/opportunities' }, { label: 'Government Schemes' }]} />
+  <section class="finder-page"><div class="wrap">
+    <p class="notice notice--info" style="margin-bottom:var(--s-5)">Scheme eligibility is set by each scheme’s own rules. It is separate from BECCI membership, and a listing here is not a promise of eligibility or approval.</p>
     <Finder category="schemes" />
   </div></section>
 </Base>

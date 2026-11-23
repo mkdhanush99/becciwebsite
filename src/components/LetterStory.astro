@@ -15,7 +15,7 @@ import InfinityMark from './InfinityMark.astro';
             <span class="letter__glyph" aria-hidden="true">{s.letter}</span>
             <span class="letter__name"><span class="visually-hidden">{s.letter} — </span>{s.name}</span>
             {(i === 2 || i === 3) && (
-              <span class="letter__pair" aria-hidden="true"><InfinityMark class="letter__inf" tone="color" /><span>{i === 2 ? 'Community' : 'Commerce'}</span></span>
+              <span class="letter__pair" aria-hidden="true"><InfinityMark class="letter__inf letter__inf--navy" tone="color" /><InfinityMark class="letter__inf letter__inf--white" tone="light" /><span>{i === 2 ? 'Community' : 'Commerce'}</span></span>
             )}
           </button>
           <div class="letter__panel" id={`letter-panel-${i}`} role="region" aria-labelledby={`letter-${i}`}>
@@ -28,15 +28,15 @@ import InfinityMark from './InfinityMark.astro';
   </div>
 </section>
 <style>
-  .letters { list-style: none; margin: 0; padding: 0; display: flex; gap: 10px; min-height: 380px; counter-reset: ch; }
+  .letters { list-style: none; margin: 0; padding: 0; display: flex; gap: var(--s-3); min-height: 380px; counter-reset: ch; }
   .letter { position: relative; flex: 1 1 0; min-width: 0; border-radius: var(--radius); background: var(--paper); border: 1px solid var(--line-2); transition: flex-grow 520ms var(--ease), background 300ms, border-color 300ms; overflow: hidden; }
   .letter[data-active] { flex-grow: 3.2; background: var(--blue-900); border-color: var(--blue-900); }
   .letter--c2[data-active] { background: var(--blue-700); border-color: var(--blue-700); }
-  .letter__btn { all: unset; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; width: 100%; height: 100%; min-height: 380px; padding: 22px 20px; position: absolute; inset: 0; }
+  .letter__btn { all: unset; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; gap: var(--s-3); width: 100%; height: 100%; min-height: 380px; padding: var(--s-5) var(--s-5); position: absolute; inset: 0; }
   .letter__btn:focus-visible { outline: 3px solid var(--accent-500); outline-offset: -3px; border-radius: var(--radius); }
   .letter__glyph { font: 600 clamp(4rem, 7vw, 6.5rem)/0.9 var(--font-display); color: var(--blue-800); transition: color 300ms; }
   .letter--c2 .letter__glyph { color: var(--accent-500); }
-  .letter__name { font: 600 0.88rem/1.3 var(--font-body); color: var(--muted); max-width: 16ch; }
+  .letter__name { font: 600 var(--fs-sm)/1.3 var(--font-body); color: var(--muted); max-width: 16ch; }
   .letter[data-active] .letter__glyph { color: var(--accent-300); }
   .letter[data-active] .letter__name { color: #c9d4e8; }
   .letter__panel { position: absolute; left: 20px; right: 20px; bottom: 24px; max-width: 34ch; opacity: 0; transform: translateY(8px); transition: opacity 300ms, transform 400ms var(--ease); pointer-events: none; }
@@ -44,20 +44,20 @@ import InfinityMark from './InfinityMark.astro';
   .letter[data-active] .letter__name { opacity: 0; }
   .letter__panel h3 { color: #fff; font-size: var(--step-2); }
   .letter__panel p { color: #dbe3f1; margin: 0; }
-  .letter__pair { position: static; display: inline-flex; align-items: center; gap: 6px; font: 600 0.66rem/1 var(--font-body); letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue-700); }
+  .letter__pair { position: static; display: inline-flex; align-items: center; gap: var(--s-2); font: 600 var(--fs-label)/1 var(--font-body); letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue-700); }
   .letter--c2 .letter__pair { color: var(--accent-700); }
   .letter[data-active] .letter__pair { color: var(--accent-300); position: absolute; top: 24px; right: 20px; }
   .letter__pair :global(.letter__inf) { width: 34px; height: auto; }
-  .letter--c1 .letter__pair :global(.letter__inf path:nth-child(3)) { opacity: 0.25; }
-  .letter--c2 .letter__pair :global(.letter__inf path:nth-child(2)) { opacity: 0.25; }
+  .letter__pair :global(.letter__inf--white), .letter[data-active] .letter__pair :global(.letter__inf--navy) { display: none; }
+  .letter[data-active] .letter__pair :global(.letter__inf--white) { display: block; }
   @media (max-width: 760px) {
     .letters { flex-direction: column; min-height: 0; }
     .letter { flex: none; }
-    .letter__btn { position: relative; inset: auto; min-height: 0; flex-direction: row; align-items: center; padding: 16px 18px; }
-    .letter__glyph { font-size: 2.6rem; width: 1.2em; }
+    .letter__btn { position: relative; inset: auto; min-height: 0; flex-direction: row; align-items: center; padding: var(--s-4) var(--s-4); }
+    .letter__glyph { font-size: var(--fs-2xl); width: 1.2em; }
     .letter__name { max-width: none; flex: 1; }
     .letter[data-active] .letter__name { opacity: 1; }
-    .letter__panel { position: static; display: none; padding: 0 18px 20px 18px; max-width: none; transform: none; }
+    .letter__panel { position: static; display: none; padding: 0 var(--s-4) var(--s-5) var(--s-4); max-width: none; transform: none; }
     .letter[data-active] .letter__panel { display: block; }
     .letter__pair, .letter[data-active] .letter__pair { position: static; margin-left: auto; }
   }

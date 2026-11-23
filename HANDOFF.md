@@ -1,42 +1,21 @@
 # HANDOFF
 
 **Branch:** `claude/zealous-lamport-mqyhzd`
-**State:** Public website built (Milestones 1–2 substantially done; Milestone 3 partly done with editorial records). Astro 5 static site.
+**Stage:** Visual transformation — Stage 1 (foundations) and Stage 2 (benchmark pages: Home, About, Opportunity Finder) done and **awaiting client review**. Do not start Stage 3 until approved.
 
-## Run
-```
-npm install
-npm run build      # static output in dist/
-npm run preview    # http://localhost:4321
-npm run check      # astro check (types)
-npm test           # status logic + data integrity
-npm run check-sources   # in cloud env: NODE_USE_ENV_PROXY=1 NODE_EXTRA_CA_CERTS=/root/.ccr/ca-bundle.crt npm run check-sources
-```
+## Done this session
+- Design-system v2 tokens, type/spacing scales, buttons, header (logo, 5 groups, shrink on scroll), footer, quiet pending state (see DESIGN.md).
+- Official logo kit installed (`public/brand/`, favicons, manifest, og image).
+- Home, About and Finder (hub, categories, schemes) rebuilt; detail pages inherit tokens.
+- Photo slots ready (`src/data/media.ts`); no photographs received yet.
 
-## What exists
-- 30 public routes plus a 404 page: Home, About, Leadership, Wings (+ Women, Youth), Membership (Join, Member Login, request a call), Opportunities hub, Schemes, Tenders, Jobs, Scholarships, Loans & Funding, 5 detail pages, How we check, Events, News, Knowledge, Services, Franchise, Success Stories, Partnerships, Biz Connect, Marketplace, Contact, Policies.
-- Finder (`src/components/Finder.astro`): search, OR-within/AND-across filters with live counts, chips with ×, Clear all, sort, URL state, mobile bottom sheet with "Show N results", scroll and filter restore on return, status recomputed in the browser using India time, empty state, no-feed notice, official portal directory.
-- Data: `src/data/opportunities.ts` (5 verified records, 17 portals); `src/data/site.ts` (content and destinations; empty = awaiting approval). Docs: `DESIGN.md`, `SOURCES.md`, `BECCI-BRIEF.md`.
+## Checks (23 Nov 2026)
+- `npm run build` OK · `astro check` 0 errors · `npm test` 15/15 · Playwright QA 33/33 (all 30 routes at 390 and 1366, finder journey, filters, chips, back-to-results, forms, keyboard, mobile sheet/menu).
+- Taste copy-lint: Home 0 FAIL (2 WARN: client headline, em dashes in official titles), About 0/0, Finder 0 FAIL (1 WARN false positive: filter counts).
+- Taste layout check: hero fits at 390 (756px); "one section per screen" findings not adopted by design.
 
-## Files touched this session
-package.json, astro.config.mjs, tsconfig.json, .gitignore, public/favicon.svg, src/** (layouts, components, data, lib, pages, styles), scripts/check-sources.mjs, tests/*.test.mjs, data/source-status.json, DESIGN.md, SOURCES.md, HANDOFF.md.
+## Missing inputs
+Approved photographs (said to be available; not yet uploaded) → `public/images/{home-hero,about-cover,about-story,founder}.jpg`. Plus all items in BECCI-BRIEF §7.
 
-## Verified (Playwright, local preview, 23 Nov 2026)
-- All 30 routes return 200 at 390px and 1366px, with one h1 each, no horizontal overflow and no console errors.
-- Hero search → finder with the query applied. A filter writes to the URL and narrows results. Removing a chip restores results and URL. Result → detail. The Apply link is the official URL with rel=noopener. "Back to results" returns to the same filtered URL with filters restored. The empty state appears when nothing matches.
-- Tenders show the no-feed notice and 4 official portals. Header Join and Member Login go to the membership anchors, which state that applications and the portal are not open.
-- Forms: empty submit flags the fields and invalid email is caught. A valid submit says that nothing was sent (no endpoint is configured).
-- Keyboard: the skip link comes first; story arrow keys work and the active state resets; focus outline is visible; the nav dropdown opens with Enter and closes with Escape.
-- Reduced motion shows the static infinity. Mobile: filter sheet opens, applies and shows a badge; the menu opens; tapping a story tile works.
-- `astro check`: 0 errors and 0 warnings. `npm test`: 15/15 pass. `check-sources`: 11/21 official URLs fetched.
-
-## Not verified / limitations
-- Real devices, Safari and Firefox are not tested (Chromium only). There is no Lighthouse run.
-- Push to GitHub has failed with 403 in this session. See the latest report for the current status.
-- Visual QA covered the home, scholarships listing, a detail page and membership; the other pages were checked by automation only.
-
-## Missing approved inputs
-Logo asset and the client's typeface (fallbacks in use); exact palette values; vision, mission, objectives, founder and history; all people (advisors, leadership, wing office bearers) with photos and consent; testimonials; success stories; events; news; knowledge resources; membership fees and final benefits; Join and Member Login URLs; form endpoint (`PUBLIC_FORM_ENDPOINT`); official email, phone and address; social URLs; Privacy Policy and Terms; service providers; franchise listings; chapter list; approved statistics with their period.
-
-## Next task
-Milestone 3: expand verified records. Check PMEGP, MUDRA, Stand-Up India, CGTMSE, PM Vishwakarma and AP Jnanabhumi once their hosts are reachable. Re-run `check-sources`, re-verify any page marked changed (Telangana ePASS for a 2026-27 notice; PM-USP after 30 Nov 2026), and look for an authorised tender or jobs feed.
+## Next task (after approval)
+Stage 3: roll the system to the remaining 24 routes (banner variants; distinct layouts for Leadership, Wings, Membership, Events/News/Knowledge, form pages). Then Stage 4 QA.
