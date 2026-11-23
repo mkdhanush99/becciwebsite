@@ -55,23 +55,27 @@ Scheme facts on /schemes and /schemes/[slug] come from these official pages, ren
 | PM Vishwakarma | https://www.myscheme.gov.in/schemes/pmv | No (pmvishwakarma.gov.in) |
 | PMFME | https://www.myscheme.gov.in/schemes/pmfmpe | No (pmfme.mofpi.gov.in) |
 | Startup India Seed Fund (closed 31 May 2026) | https://seedfund.startupindia.gov.in/ and /about | Yes; guidelines PDFs on port 3535 not reachable |
+| PM SVANidhi | https://www.myscheme.gov.in/schemes/pm-svanidhi | Not attempted (pmsvanidhi.mohua.gov.in not on the network allowlist) |
+| NAPS-2 | https://www.myscheme.gov.in/schemes/naps | No (apprenticeshipindia.gov.in refused the checker) |
+| PMKVY Short Term Training | https://www.myscheme.gov.in/schemes/pmkvy-stt | Not attempted (pmkvyofficial.org not on the network allowlist) |
 
-myScheme is the Government of India's scheme platform (National e-Governance Division, MeitY). Links to guidelines, notices and portals are copied exactly as those pages publish them; where our checker could not open a link, it is listed as published, not as independently opened. Status of PMEGP and PMFME is shown as "Status to confirm" because their approved periods on myScheme have passed without a stated extension.
+myScheme is the Government of India's scheme platform (National e-Governance Division, MeitY). Links to guidelines, notices and portals are copied exactly as those pages publish them; where our checker could not open a link, it is listed as published, not as independently opened. Status of PMEGP, PMFME and NAPS-2 is shown as "Status to confirm" because their approved periods on myScheme have passed without a stated extension. PM SVANidhi and PMKVY are also "Status to confirm": myScheme gives no end date for SVANidhi and describes the 7% figure two ways, and the PMKVY page still cites PMKVY 3.0 guidelines from 2021. PM SVANidhi, NAPS-2 and PMKVY were added on 23 Nov 2026 because the client's Government Assets pack listed them as gaps and their official logos are in the DBIM library.
 
 The "Compendium of Schemes for MSMEs" (Grant Thornton Bharat with SIDBI, v2.0) supplied by the client was used only to choose which schemes to research. No figure on the site is taken from it.
 
-**Official logos (added 23 Nov 2026 at the client's request).** Logos are shown only where found on a Government of India source, each labelled with what it represents (the scheme, its parent initiative, the administering ministry, the implementing agency, or the application portal), so no ministry or portal logo is presented as the scheme's own. Files are in `public/logos/schemes/`; the mapping, source and download date are in `src/data/scheme-logos.ts`. Each page states BECCI is not a government body and is not endorsed. The State Emblem is not used on its own anywhere; it appears only inside the Ministry of MSME and National Scholarship Portal logos as those bodies publish them.
+**Official logos (added 23 Nov 2026 at the client's request).** Logos come from Government of India sources and follow rule 8 of the BECCI Government Assets pack: a ministry or portal logo is never substituted for a scheme's own logo. A scheme shows its own logo, its parent initiative's (Startup India for SISFS), or the logo of the body that runs it as its own programme (NBCFDC loans, Telangana ePASS). Files are in `public/logos/schemes/`; the mapping, source and download date are in `src/data/scheme-logos.ts`. Each page states BECCI is not a government body and is not endorsed. The National Emblem is not used.
 
 | Scheme | Logo shown | What it is | Source |
 |---|---|---|---|
-| PM Mudra Yojana | PMMY logo | Scheme | DBIM toolkit (MeitY) Visual Components Library |
-| Stand-Up India | Stand-Up India logo | Scheme | DBIM toolkit |
-| Startup India Seed Fund | Startup India logo | Parent initiative | DBIM toolkit |
-| PMEGP, PM Vishwakarma | Ministry of MSME logo | Administering ministry | DBIM toolkit |
-| NBCFDC individual and group loans | NBCFDC logo | Implementing agency | nbcfdc.gov.in |
-| PM YASASVI, PM-USP | National Scholarship Portal logo | Application portal | scholarships.gov.in |
-| Telangana ePASS post-matric | Telangana ePASS logo | Application portal | telanganaepass.cgg.gov.in |
-| PMFME | None | Neither the scheme nor the Ministry of Food Processing Industries is in the DBIM library; pmfme.mofpi.gov.in unreachable from our checker | — |
+| PM Mudra Yojana | PMMY | Scheme | DBIM toolkit (MeitY) Visual Components Library |
+| Stand-Up India | Stand-Up India | Scheme | DBIM toolkit |
+| PM SVANidhi | PM SVANidhi | Scheme | DBIM toolkit |
+| NAPS-2 | NAPS | Scheme | DBIM toolkit |
+| PMKVY Short Term Training | PMKVY | Scheme | DBIM toolkit |
+| Startup India Seed Fund | Startup India | Parent initiative | DBIM toolkit |
+| NBCFDC individual and group loans | NBCFDC | Implementing corporation | nbcfdc.gov.in |
+| Telangana ePASS post-matric | ePASS | The scheme's own portal brand | telanganaepass.cgg.gov.in |
+| PMEGP, PM Vishwakarma, PMFME, PM YASASVI, PM-USP | None | Own logo not reachable (KVIC, pmvishwakarma, pmfme portals unreachable; not in DBIM library) | — |
 
 Reuse terms for these logos on a non-government website have not been confirmed in writing; the client should confirm before public launch.
 

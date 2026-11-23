@@ -72,7 +72,7 @@ export function formatDate(iso?: string): string {
 export function deadlineText(r: DatedRecord, today = todayISO()): string {
   if (r.closedBySource) return 'Marked closed by the official source';
   if (r.awaitingNotice) return 'No current notice published';
-  if (r.statusUnconfirmed && !r.closingDate) return 'Approved period has passed · confirm with the official source';
+  if (r.statusUnconfirmed && !r.closingDate) return 'Current status not confirmed · check the official source';
   if (!r.closingDate) return r.rolling ? 'No deadline published · applications accepted year-round' : 'No deadline published';
   const n = daysLeft(r.closingDate, today);
   if (n < 0) return `Closed on ${formatDate(r.closingDate)}`;
