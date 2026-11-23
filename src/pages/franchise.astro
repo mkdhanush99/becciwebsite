@@ -5,7 +5,7 @@ import Pending from '../components/Pending.astro';
 const kinds = ['Franchise opportunities', 'Ready-to-start business models', 'Small business ownership', 'Enterprise development models', 'Traditional business modernisation', 'Business expansion', 'Project-based enterprise'];
 ---
 <Base title="Franchise & Enterprise" description="Practical business models and enterprise ownership opportunities.">
-  <PageHero eyebrow="Franchise & Enterprise" title="Practical paths to owning a business" lede="Business models and ownership opportunities for aspiring entrepreneurs and existing business owners." crumbs={[{ label: 'Opportunities', href: '/opportunities' }, { label: 'Franchise & Enterprise' }]} />
+  <PageHero title="Practical paths to owning a business" lede="Business models and ownership opportunities for aspiring entrepreneurs and existing business owners." crumbs={[{ label: 'Opportunities', href: '/opportunities' }, { label: 'Franchise & Enterprise' }]} />
   <section class="section"><div class="wrap">
     <h2>What will be listed</h2>
     <ul class="tag-list" style="margin-bottom:var(--s-5)">{kinds.map((k) => <li>{k}</li>)}</ul>

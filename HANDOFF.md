@@ -1,7 +1,7 @@
 # HANDOFF
 
 **Branch:** `claude/zealous-lamport-mqyhzd`
-**Stage:** Visual transformation — Stage 1 (foundations) and Stage 2 (benchmark pages: Home, About, Opportunity Finder) done and **awaiting client review**. Do not start Stage 3 until approved.
+**Stage:** Visual transformation Stages 1–4 done (client asked to finish remaining work, 23 Nov 2026). Impeccable critique/quieter/polish/harden passes applied.
 
 ## Done this session
 - Design-system v2 tokens, type/spacing scales, buttons, header (logo, 5 groups, shrink on scroll), footer, quiet pending state (see DESIGN.md).
@@ -17,5 +17,14 @@
 ## Missing inputs
 Approved photographs (said to be available; not yet uploaded) → `public/images/{home-hero,about-cover,about-story,founder}.jpg`. Plus all items in BECCI-BRIEF §7.
 
-## Next task (after approval)
-Stage 3: roll the system to the remaining 24 routes (banner variants; distinct layouts for Leadership, Wings, Membership, Events/News/Knowledge, form pages). Then Stage 4 QA.
+## Stage 3–4 (done)
+- PageHero now has two variants: editorial (ivory, default) and feature (midnight: Membership, Partnerships, Women's and Youth Wing). No kicker labels anywhere.
+- Leadership: sticky structure panel + role descriptions per group. Wings: content column + sticky Taking part / Invite panels. Membership: join landing block under the banner (eligibility summary, status, call-request link, Member Login state), State/UT select.
+- Forms hardened (summary of errors, Indian mobile validation, limits, counters, offline/timeout/rate-limit handling, honeypot).
+- Checks: build OK, astro check 0 errors, npm test 15/15, Playwright QA 33/33; Impeccable detect over all 31 pages: remaining findings are cream-palette (approved ivory) and false positives (cramped-padding on padded .wrap sections; hover low-contrast not reproducible in Chromium).
+
+## Deployment
+Hostinger connector was unreachable from this session (mcp.hostinger.com blocked). A static zip (`npm run build`, then zip `dist/` contents) can be uploaded via hPanel File Manager to a `.hostingersite.com` temporary domain.
+
+## Next task
+Add approved photographs and contact channel (phone/WhatsApp/email or form endpoint `PUBLIC_FORM_ENDPOINT`), then expand verified opportunity records (Milestone 3).

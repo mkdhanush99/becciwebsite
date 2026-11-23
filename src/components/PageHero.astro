@@ -1,18 +1,22 @@
 ---
+// Page banner. Two variants share one structure:
+//  editorial (default) — ivory, large type, hairline; for reading and directory pages.
+//  feature — midnight band; for pages that ask the visitor to act (membership, partnerships, wings).
+// No kicker above the heading (design rule); `note` shows a status such as "Coming later".
 import InfinityMark from './InfinityMark.astro';
-interface Props { title: string; lede?: string; eyebrow?: string; crumbs?: { label: string; href?: string }[] }
-const { title, lede, eyebrow, crumbs = [] } = Astro.props;
+interface Props { title: string; lede?: string; eyebrow?: string; note?: string; variant?: 'editorial' | 'feature'; crumbs?: { label: string; href?: string }[] }
+const { title, lede, note, variant = 'editorial', crumbs = [] } = Astro.props;
+const feature = variant === 'feature';
 ---
-<header class="page-hero on-dark">
-  <InfinityMark class="page-hero__mark" tone="light" />
+<header class:list={['page-hero', `page-hero--${variant}`, feature && 'on-dark']} data-enter>
+  <InfinityMark class="page-hero__mark" tone={feature ? 'light' : 'color'} />
   <div class="wrap" style="position:relative">
     {crumbs.length > 0 && (
       <nav class="crumbs" aria-label="Breadcrumb">
-        <a href="/">Home</a>{crumbs.map((c) => <><span> / </span>{c.href ? <a href={c.href}>{c.label}</a> : <span aria-current="page">{c.label}</span>}</>)}
+        <a href="/">Home</a>{crumbs.map((c) => <><span aria-hidden="true"> / </span>{c.href ? <a href={c.href}>{c.label}</a> : <span aria-current="page">{c.label}</span>}</>)}
       </nav>
     )}
-    {eyebrow && <span class="eyebrow">{eyebrow}</span>}
-    <h1>{title}</h1>
+    <h1>{title}{note && <span class="page-hero__note">{note}</span>}</h1>
     {lede && <p class="lede">{lede}</p>}
     <slot />
   </div>

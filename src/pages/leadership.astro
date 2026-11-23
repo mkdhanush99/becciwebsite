@@ -3,34 +3,54 @@ import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import Pending from '../components/Pending.astro';
 import { leadershipGroups } from '../data/site';
+const roles: Record<string, string> = {
+  'Advisors': 'Guide BECCI with professional experience across business, finance and public service.',
+  'National Committee': 'Sets direction and is accountable for the chamber as a whole.',
+  'State Committees': 'Lead BECCI in each State, starting with Telangana and Andhra Pradesh.',
+  'Wing Presidents': "Lead the Women's Wing and Youth Wing.",
+  'Sector Committees': 'Bring businesses in the same industry together.',
+};
 ---
 <Base title="Leadership & Governance" description="BECCI's leadership structure, advisors and committees.">
-  <PageHero eyebrow="Leadership & Governance" title="The people accountable for BECCI" lede="BECCI's leadership is collective: advisors, a national committee, State committees, wing presidents and sector committees, each with a defined role." crumbs={[{ label: 'Leadership & Governance' }]} />
-  <section class="section"><div class="wrap">
-    <div class="org" aria-label="Leadership structure">
-      <div class="org__row"><span class="org__node org__node--top">National Committee</span></div>
-      <div class="org__row"><span class="org__node">Advisors</span><span class="org__node">State Committees</span><span class="org__node">Wing Presidents</span><span class="org__node">Sector Committees</span></div>
+  <PageHero title="The people accountable for BECCI" lede="BECCI's leadership is collective: advisors, a national committee, State committees, wing presidents and sector committees, each with a defined role." crumbs={[{ label: 'Leadership & Governance' }]} />
+  <section class="section"><div class="wrap l-grid">
+    <aside class="l-structure" aria-label="Leadership structure">
+      <h2>Structure</h2>
+      <ol class="l-tree">
+        <li class="l-tree__top">National Committee</li>
+        <li>Advisors</li><li>State Committees</li><li>Wing Presidents</li><li>Sector Committees</li>
+      </ol>
+      <p class="small muted">To reach the leadership, use BECCI's official contact routes on the <a href="/contact">Contact page</a>. Personal phone numbers are never published.</p>
+    </aside>
+    <div class="l-groups">
+      {leadershipGroups.map((g) => (
+        <section class="l-group" aria-labelledby={`g-${g.title.replace(/\W+/g, '-')}`}>
+          <div class="l-group__head">
+            <h2 id={`g-${g.title.replace(/\W+/g, '-')}`}>{g.title}</h2>
+            <p>{roles[g.title]}</p>
+          </div>
+          {g.people.length ? (
+            <ul class="l-people">{g.people.map((p) => (
+              <li><h3>{p.name}</h3><p class="muted">{p.role}{p.affiliation && ` · ${p.affiliation}`}</p>{p.intro && <p>{p.intro}</p>}
+                {p.links?.map((l) => <a class="ext" href={l.url} rel="noopener">{l.label}</a>)}</li>
+            ))}</ul>
+          ) : <Pending label="Profiles">Published once BECCI approves names, photographs and biographies.</Pending>}
+        </section>
+      ))}
     </div>
-    {leadershipGroups.map((g) => (
-      <section class="lead-group" aria-labelledby={`g-${g.title}`}>
-        <h2 id={`g-${g.title}`}>{g.title}</h2>
-        {g.people.length ? (
-          <ul class="people">{g.people.map((p) => (
-            <li class="person card"><h3>{p.name}</h3><p class="muted">{p.role}{p.affiliation && ` · ${p.affiliation}`}</p>{p.intro && <p>{p.intro}</p>}
-              {p.links?.map((l) => <a class="ext" href={l.url} rel="noopener">{l.label}</a>)}</li>
-          ))}</ul>
-        ) : <Pending>Profiles for this group will be published once BECCI approves names, photographs and biographies. Each profile shows a photograph, name, designation, professional background, a short introduction and professional links. Personal phone numbers are never shown.</Pending>}
-      </section>
-    ))}
-    <p class="notice notice--info" style="margin-top:var(--s-6)">To reach the leadership, please use BECCI's official contact routes on the <a href="/contact">Contact page</a>.</p>
   </div></section>
 </Base>
 <style>
-  .org { display: grid; gap: var(--s-4); justify-items: center; margin-bottom: var(--s-7); padding: var(--s-6); background: var(--white); border: 1px solid var(--line-2); border-radius: var(--radius); }
-  .org__row { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-3); position: relative; }
-  .org__node { padding: var(--s-3) var(--s-4); border-radius: 10px; border: 1.5px solid var(--blue-700); color: var(--blue-900); font-weight: 600; background: var(--paper); }
-  .org__node--top { background: var(--blue-900); color: #fff; border-color: var(--blue-900); }
-  .lead-group { padding-block: var(--s-6); border-top: 1px solid var(--line); }
-  .lead-group h2 { font-size: var(--step-2); }
-  .people { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--s-4); }
+  .l-grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(var(--s-6), 6vw, var(--s-9)); align-items: start; }
+  .l-structure { position: sticky; top: calc(64px + var(--s-5)); }
+  .l-structure h2 { font-size: var(--fs-lg); }
+  .l-tree { list-style: none; padding: 0; margin: 0 0 var(--s-5); display: grid; gap: var(--s-2); }
+  .l-tree li { padding: var(--s-3) var(--s-4); border: var(--hair); border-radius: var(--radius-sm); background: var(--white); font-weight: 500; color: var(--midnight); margin-left: var(--s-5); }
+  .l-tree .l-tree__top { margin-left: 0; background: var(--midnight-2); border-color: var(--midnight-2); color: #fff; }
+  .l-group { padding-block: var(--s-5) var(--s-4); border-top: var(--hair); }
+  .l-group:first-child { border-top: 0; padding-top: 0; }
+  .l-group__head h2 { font-size: var(--fs-xl); margin-bottom: var(--s-2); }
+  .l-group__head p { color: var(--slate); max-width: 56ch; }
+  .l-people { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--s-5); }
+  @media (max-width: 860px) { .l-grid { grid-template-columns: 1fr; } .l-structure { position: static; } }
 </style>

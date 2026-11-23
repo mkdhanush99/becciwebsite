@@ -13,7 +13,7 @@ const areas = [
 ];
 ---
 <Base title="Partner with BECCI" description="Institutional partnerships and collaborations with BECCI.">
-  <PageHero eyebrow="Partnerships & Institutional Collaborations" title="Partner with BECCI" lede="Institutions can create opportunities for entrepreneurs that ordinary networking cannot. BECCI welcomes collaboration." crumbs={[{ label: 'Partnerships' }]}>
+  <PageHero variant="feature" title="Partner with BECCI" lede="Institutions can create opportunities for entrepreneurs that ordinary networking cannot. BECCI welcomes collaboration." crumbs={[{ label: 'Partnerships' }]}>
     <a class="btn btn--accent" href="#proposal" style="margin-top:var(--s-5)">Send a partnership proposal</a>
   </PageHero>
   <section class="section"><div class="wrap">
@@ -23,7 +23,7 @@ const areas = [
     <div class="grid grid--3">{areas.map(([t, d]) => <div class="card"><h3>{t}</h3><p class="muted">{d}</p></div>)}</div>
   </div></section>
   <section class="section section--white" id="proposal"><div class="wrap two-col">
-    <div><span class="eyebrow">Proposal</span><h2>Tell us about your organisation</h2></div>
+    <div><h2>Tell us about your organisation</h2></div>
     <EnquiryForm id="partner" purpose="partnership" submitLabel="Send proposal" fields={[
       { name: 'org', label: 'Organisation name', required: true, autocomplete: 'organization' },
       { name: 'kind', label: 'Type of organisation', type: 'select', required: true, options: collaborators },

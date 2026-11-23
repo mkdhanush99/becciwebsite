@@ -9,7 +9,7 @@ const past = events.filter((e) => e.date < today).sort((a, b) => b.date.localeCo
 const types = ['Business Networking Meetings', 'Conferences', 'Seminars', 'Workshops', 'Training Programmes', 'Government Interaction Programmes', 'Investor Meetings', 'Industry-specific Events'];
 ---
 <Base title="Event Calendar" description="Upcoming and past BECCI events.">
-  <PageHero eyebrow="Event Calendar" title="Events" lede="Networking meetings, conferences, workshops and training. Open to everyone to browse; registration links appear with each event." crumbs={[{ label: 'Events' }]} />
+  <PageHero title="Events" lede="Networking meetings, conferences, workshops and training. Open to everyone to browse; registration links appear with each event." crumbs={[{ label: 'Events' }]} />
   <section class="section"><div class="wrap">
     <h2>Upcoming events</h2>
     {upcoming.length ? (
