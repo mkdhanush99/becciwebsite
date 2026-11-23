@@ -1,24 +1,43 @@
 ---
 import Base from '../layouts/Base.astro';
 import BrandMedia from '../components/BrandMedia.astro';
-import InfinityMark from '../components/InfinityMark.astro';
 import Kinetic from '../components/Kinetic.astro';
-import { audiences, site } from '../data/site';
+import Pending from '../components/Pending.astro';
+import { audiences, site, sectors } from '../data/site';
 import { PHOTOS } from '../data/media';
 import { hasPublic } from '../lib/asset';
-const hasStory = hasPublic(PHOTOS.aboutStory.src);
+const hasCover = hasPublic(PHOTOS.aboutCover.src);
 const hasFounder = hasPublic(PHOTOS.founder.src);
 const sections = [
-  ['why', 'Why BECCI exists'], ['what', 'What we do'], ['whom', 'Whom we serve'], ['approach', 'Our approach'], ['structure', 'Structure'], ['founder', 'Founder'],
+  ['why', 'Why BECCI exists'], ['purpose', 'Purpose, vision and mission'], ['what', 'What we do'], ['whom', 'Whom we serve'],
+  ['journey', 'The entrepreneur journey'], ['structure', 'Structure and reach'], ['partners', 'Partnerships'], ['founder', 'Founder'],
+];
+// What each word in the name means for the chamber's work.
+const name = [
+  ['Bahujan', 'The communities BECCI exists for: those on the Central OBC list for their State or on a State BC/OBC list.'],
+  ['Entrepreneurs', 'Everyone who builds an enterprise, from a student with a first idea to an established business owner.'],
+  ['Chamber', 'A membership institution that represents its members and connects them with one another.'],
+  ['Commerce', 'Trade, markets, referrals and the business relationships that members create together.'],
+  ['Industry', 'Manufacturing, services, agriculture and every other sector in which members work.'],
 ];
 const does = [
-  { t: 'Open opportunities', d: 'A public finder for government schemes, scholarships, loans, tenders and jobs, each linked to its official source.', href: '/opportunities' },
-  { t: 'Connect businesses', d: 'Events, wings and sector committees that put entrepreneurs in the same room.', href: '/wings' },
-  { t: 'Build capability', d: 'Knowledge, services and guidance for starting and growing an enterprise.', href: '/services' },
-  { t: 'Partner with institutions', d: 'Banks, government departments, educational institutions and industry bodies.', href: '/partnerships' },
+  { t: 'Opens access to opportunities', d: 'A public finder for government schemes, scholarships, loans, tenders, jobs and apprenticeships. Every listing is checked against its official source.', status: 'Available now', href: '/opportunities' },
+  { t: 'Connects entrepreneurs', d: 'Wings, sector committees, State chapters and events where entrepreneurs meet, share knowledge and do business with one another.', status: 'Being set up', href: '/wings' },
+  { t: 'Builds capability', d: 'Guidance on finance, registration, compliance and mentorship through service providers and institutions BECCI is arranging.', status: 'Being set up', href: '/services' },
+  { t: 'Works with institutions', d: 'Collaboration with government departments, banks, MSME bodies, educational institutions and industry associations.', status: 'Open to proposals', href: '/partnerships' },
+  { t: 'Structured business networking', d: 'Biz Connect: member profiles, sector groups, referrals and tracking of the business those referrals create.', status: 'Planned', href: '/biz-connect' },
+  { t: 'A place to trade', d: 'Marketplace: a verified business directory, business-to-business enquiries and buyer–seller connections for members.', status: 'Planned', href: '/marketplace' },
+];
+// Entrepreneur stages from the Project Requirements Document §14.3.
+const journey = [
+  { stage: 'Aspiring entrepreneur', need: 'An idea, a skill and questions about where to start.', help: 'Schemes and loans for first-time founders, and the documents they ask for.', href: '/opportunities/finance' },
+  { stage: 'New entrepreneur or startup', need: 'Registration, first customers and working capital.', help: 'Registration and compliance guidance, credit schemes and the Knowledge Centre.', href: '/knowledge' },
+  { stage: 'Existing micro enterprise', need: 'Steady orders, credit and formal recognition.', help: 'Tenders and supplier registration, loans and sector committees.', href: '/opportunities/tenders' },
+  { stage: 'Growing enterprise', need: 'New markets, partners and larger contracts.', help: 'Business networking, referrals and institutional partnerships.', href: '/partnerships' },
+  { stage: 'Established enterprise', need: 'A way to give back and open doors for others.', help: 'Mentoring newer members, leading wings and sector committees, and sharing success stories.', href: '/success-stories' },
 ];
 ---
-<Base title="About BECCI" description="Who BECCI is, why it exists, whom it serves and how it works.">
+<Base title="About BECCI" description="What BECCI stands for, why it exists, whom it serves, how it works and where it is going.">
   <header class="a-cover page-hero--editorial">
     <div class="lux" aria-hidden="true"><span class="lux__a"></span><span class="lux__b"></span></div>
     <div class="wrap a-cover__grid">
@@ -27,7 +46,11 @@ const does = [
         <h1 class="kinetic-title"><Kinetic text="A chamber built for Bahujan enterprise" /></h1>
         <p class="lede m-in" style="--i:7">The Bahujan Entrepreneurs Chamber for Commerce &amp; Industry is an OBC-exclusive national Chamber of Commerce. It strengthens entrepreneurship, facilitates business connections, promotes enterprise development and creates economic opportunities for Bahujan communities.</p>
       </div>
-      <BrandMedia class="a-cover__media" src={PHOTOS.aboutCover.src} alt={PHOTOS.aboutCover.alt} ratio="5 / 4" eager />
+      {hasCover ? <BrandMedia class="a-cover__media" src={PHOTOS.aboutCover.src} alt={PHOTOS.aboutCover.alt} ratio="5 / 4" eager /> : (
+        <dl class="a-name m-in" style="--i:8" aria-label="What the name BECCI stands for">
+          {name.map(([w, d]) => <div><dt><span aria-hidden="true">{w[0]}</span>{w.slice(1)}</dt><dd>{d}</dd></div>)}
+        </dl>
+      )}
     </div>
     <nav class="wrap a-jump" aria-label="On this page">
       {sections.map(([id, l]) => <a href={`#${id}`}>{l}</a>)}
@@ -37,32 +60,36 @@ const does = [
   <section class="section" id="why" aria-labelledby="why-title">
     <div class="wrap a-essay">
       <div>
-        
-        <h2 id="why-title">Community and commerce, brought together</h2>
+        <h2 id="why-title">Why BECCI exists</h2>
       </div>
       <div class="a-essay__body">
-        <p>Community and commerce are two halves of the same story, yet for many Bahujan entrepreneurs they have rarely met. Talent and ambition are plentiful; introductions, information and access are not.</p>
-        <p>BECCI was established to bring the two together, so that a first-generation founder has the same doors open to them as an established business family. It began its work in Telangana and Andhra Pradesh, and its ambition is national.</p>
-        <blockquote class="a-quote"><p>Every great business begins with a person, an idea and a dream.</p><cite>From the BECCI story</cite></blockquote>
+        <p>{site.philosophy}</p>
+        <p>For a first-generation founder, the hardest part of starting is often not the idea. It is knowing which scheme applies, which office to approach, who might buy from you and who has done it before. BECCI exists so that those answers come from a community that shares your starting point.</p>
+        <p>The chamber is organised around a simple belief: when entrepreneurs from the same communities know each other, trust each other and trade with each other, every business among them becomes stronger.</p>
+        <blockquote class="a-quote"><p>Where Community Meets Commerce.</p><cite>BECCI’s founding idea</cite></blockquote>
       </div>
     </div>
   </section>
 
-  <section class="section section--midnight a-statements" aria-label="Vision and mission">
+  <section class="section section--midnight a-statements" id="purpose" aria-labelledby="purpose-title">
     <div class="wrap a-statements__grid">
-      <InfinityMark class="a-statements__mark" tone="light" />
       <div>
-        <p class="a-promise">{site.promise}</p>
-        <p class="a-statements__note">BECCI's approved vision, mission and objectives will be published here.</p>
+        <h2 id="purpose-title" class="a-promise">{site.promise}</h2>
+        <p class="a-statements__purpose"><strong>Our purpose.</strong> {site.identity}</p>
       </div>
+      <dl class="a-vmo">
+        <div><dt>Vision</dt><dd>BECCI’s approved vision statement will be published here.</dd></div>
+        <div><dt>Mission</dt><dd>BECCI’s approved mission statement will be published here.</dd></div>
+        <div><dt>Objectives</dt><dd>The chamber’s formal objectives will be listed here once approved.</dd></div>
+      </dl>
     </div>
   </section>
 
   <section class="section" id="what" aria-labelledby="what-title">
     <div class="wrap">
-      <div class="section-head"><div><h2 id="what-title">Four ways BECCI works</h2></div></div>
+      <div class="section-head"><h2 id="what-title">What BECCI does</h2><p>Six areas of work. Each says honestly whether you can use it today or whether it is still being built.</p></div>
       <ul class="a-does">
-        {does.map((d) => <li><a href={d.href} class="lift"><h3>{d.t}</h3><p>{d.d}</p><span class="link-arrow">Read more</span></a></li>)}
+        {does.map((d) => <li><a href={d.href} class="lift"><span class="a-status">{d.status}</span><h3>{d.t}</h3><p>{d.d}</p><span class="link-arrow">Find out more</span></a></li>)}
       </ul>
     </div>
   </section>
@@ -70,59 +97,69 @@ const does = [
   <section class="section section--white" id="whom" aria-labelledby="whom-title">
     <div class="wrap a-whom">
       <div>
-        
-        <h2 id="whom-title">Six kinds of people, one chamber</h2>
-        <p class="muted">Membership is open to people whose caste or community is recognised in the Government of India's Central OBC list for their State, or in a State Government's BC/OBC list. Either list is enough; the two are separate classifications.</p>
-        <a class="link-arrow" href="/membership">Read about membership</a>
+        <h2 id="whom-title">Whom we serve</h2>
+        <p class="muted">BECCI serves individuals and businesses: existing and aspiring entrepreneurs, first-generation business owners, professionals, students and job seekers. Institutions take part as partners.</p>
+        <p class="muted">Membership is open to people whose caste or community is recognised in the Government of India’s Central OBC list for their State, or in a State Government’s BC/OBC list. Either list is enough. The two are separate classifications.</p>
+        <a class="link-arrow" href="/membership">Who can join and how</a>
       </div>
       <dl class="a-whom__list">
-        {audiences.map((a) => <div><dt>{a.who}</dt><dd>{a.need}</dd></div>)}
+        {audiences.map((a) => <div><dt><a href={a.href}>{a.who}</a></dt><dd>{a.need}</dd></div>)}
       </dl>
     </div>
   </section>
 
-  <section class="section" id="approach" aria-labelledby="approach-title">
-    <div class:list={["wrap a-split", !hasStory && "a-split--text"]}>
-      {hasStory && <BrandMedia src={PHOTOS.aboutStory.src} alt={PHOTOS.aboutStory.alt} ratio="4 / 5" />}
-      <div class="a-split__body">
-        
-        <h2 id="approach-title">From a first idea to lasting impact</h2>
-        <p>BECCI's approach follows an entrepreneur's journey: encourage the idea, connect the entrepreneur to a community, turn connections into commerce, and measure success by lasting impact.</p>
-        <ol class="a-path">
-          <li><strong>Beginning</strong> An idea and a dream</li>
-          <li><strong>Encouragement</strong> From ideas to enterprises</li>
-          <li><strong>Community</strong> Strength in collaboration</li>
-          <li><strong>Commerce</strong> Connections become business</li>
-          <li><strong>Impact</strong> Stronger communities, a prosperous Bharat</li>
-        </ol>
-        <p class="a-where"><span><strong>Where we are</strong> Telangana and Andhra Pradesh</span><span aria-hidden="true">→</span><span><strong>Where we are going</strong> A national presence</span></p>
-      </div>
+  <section class="section" id="journey" aria-labelledby="journey-title">
+    <div class="wrap">
+      <div class="section-head"><h2 id="journey-title">The entrepreneur development journey</h2><p>BECCI’s approach follows a business from the first idea to an established enterprise. What helps at each stage is different, so the chamber’s support is organised the same way.</p></div>
+      <ol class="a-journey">
+        {journey.map((j, i) => (
+          <li>
+            <span class="a-journey__n">Stage {i + 1}</span>
+            <h3>{j.stage}</h3>
+            <p><strong>What you need:</strong> {j.need}</p>
+            <p><strong>Where BECCI helps:</strong> {j.help}</p>
+            <a class="link-arrow" href={j.href}>Start here</a>
+          </li>
+        ))}
+      </ol>
     </div>
   </section>
 
   <section class="section section--white" id="structure" aria-labelledby="structure-title">
     <div class="wrap a-structure">
       <div>
-        
-        <h2 id="structure-title">Collective leadership, organised to grow</h2>
-        <p class="muted">A national leadership, State committees, dedicated wings and sector committees, with chapters planned from national to city level.</p>
-        <p><a class="link-arrow" href="/leadership">Leadership and governance</a></p>
-        <p><a class="link-arrow" href="/wings">Wings, sectors and chapters</a></p>
+        <h2 id="structure-title">From two States to a national chamber</h2>
+        <p>{site.origin} The chamber is organised so that it can grow without losing touch with members on the ground.</p>
+        <p><strong>Governance is collective.</strong> Advisors, a National Committee, State Committees, wing presidents and sector committees each carry a defined responsibility.</p>
+        <p><strong>Chapters follow geography.</strong> National, State, District and City chapters bring BECCI close to where members live and work.</p>
+        <p><strong>Sector committees follow industry.</strong> {sectors.length - 1} sectors are planned, from manufacturing and trading to healthcare, IT and hospitality.</p>
+        <p class="a-links"><a class="link-arrow" href="/leadership">Leadership and governance</a> <a class="link-arrow" href="/wings">Wings, sectors and chapters</a></p>
       </div>
-      <ol class="a-tree" aria-label="Chapter structure">
-        <li>National</li><li>State</li><li>District</li><li>City</li>
+      <ol class="a-tree" aria-label="Chapter structure, from national to city">
+        <li>National</li><li>State <small>Telangana and Andhra Pradesh first</small></li><li>District</li><li>City</li>
       </ol>
     </div>
   </section>
 
-  <section class="section" id="founder" aria-labelledby="founder-title">
+  <section class="section" id="partners" aria-labelledby="partners-title">
+    <div class="wrap a-essay">
+      <div><h2 id="partners-title">Why partnerships matter</h2></div>
+      <div class="a-essay__body">
+        <p>Some doors open only at an institutional level. A bank can design a credit line for first-time founders. A government department can run a supplier programme. A college can place students as interns. An industry body can open a market.</p>
+        <p>That is why BECCI works with institutions as well as individuals. Partnerships let the chamber create opportunities for members that ordinary business networking cannot.</p>
+        <p><a class="btn" href="/partnerships">Partner with BECCI</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--white" id="founder" aria-labelledby="founder-title">
     <div class:list={["wrap a-founder", !hasFounder && "a-founder--text"]}>
       {hasFounder && <BrandMedia src={PHOTOS.founder.src} alt={PHOTOS.founder.alt} ratio="4 / 5" />}
       <div>
-        
-        <h2 id="founder-title">The founding vision</h2>
-        <p class="muted">The founder's profile and founding vision will be published here once approved.</p>
-        <a class="btn btn--accent" href="/membership#join">Join as a Member</a>
+        <h2 id="founder-title">Founder and founding vision</h2>
+        <p>BECCI was founded on the idea that community and commerce belong together. The founder’s own account of why the chamber was started, and the responsibility it carries, will be published here in their words.</p>
+        <Pending label="Awaiting approved profile">Founder’s name, photograph, background and founding statement.</Pending>
+        <p style="margin-top:var(--s-5)"><a class="btn" href="/membership#join">Join as a Member</a></p>
       </div>
     </div>
   </section>
@@ -146,14 +183,14 @@ const does = [
   .a-quote cite { font-style: normal; font-size: var(--fs-sm); color: var(--slate); }
   @media (max-width: 860px) { .a-essay { grid-template-columns: 1fr; } }
 
-  .a-statements__grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--s-7); align-items: center; }
+  .a-statements__grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--s-7); align-items: center; }
   .a-statements__mark { width: 100%; max-width: 320px; opacity: 0.9; }
   .a-promise { font: 600 var(--fs-3xl)/1.05 var(--font-display); letter-spacing: -0.02em; color: #fff; margin-bottom: var(--s-5); }
   .a-statements__note { color: var(--on-dark-2); margin: 0; }
   @media (max-width: 760px) { .a-statements__grid { grid-template-columns: 1fr; } .a-statements__mark { max-width: 160px; } }
 
-  .a-does { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-4); }
-  .a-does a { display: flex; flex-direction: column; height: 100%; padding: var(--s-6) var(--s-5); border-top: 3px solid var(--sapphire); background: var(--white); color: inherit; text-decoration: none; border-radius: 0 0 var(--radius) var(--radius); }
+  .a-does { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-4); }
+  .a-does a { display: flex; flex-direction: column; height: 100%; padding: var(--s-6) var(--s-5); border: 1px solid var(--silver-200); background: var(--white); color: inherit; text-decoration: none; border-radius: 16px; }
   .a-does h3 { font-size: var(--fs-lg); }
   .a-does p { color: var(--slate); flex: 1; }
   .a-does .link-arrow { color: var(--sapphire); }
@@ -172,7 +209,7 @@ const does = [
   .a-split__body { max-width: 60ch; }
   .a-split--text { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
   .a-split--text .a-split__body { grid-column: 2; }
-  .a-founder--text { grid-template-columns: 1fr; max-width: var(--read); margin-inline: auto; text-align: left; }
+  .a-founder.a-founder--text { grid-template-columns: 1fr; max-width: var(--read); margin-inline: auto; text-align: left; }
   .a-path { list-style: none; padding: 0; margin: var(--s-5) 0; border-top: var(--hair); }
   .a-path li { display: grid; grid-template-columns: 9.5em 1fr; gap: var(--s-4); padding: var(--s-3) 0; border-bottom: var(--hair); color: var(--slate); }
   .a-path strong { color: var(--midnight); font-weight: 600; }
@@ -192,4 +229,30 @@ const does = [
   .a-founder { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(var(--s-6), 6vw, var(--s-9)); align-items: center; }
   .a-founder :global(.media) { max-width: 380px; }
   @media (max-width: 760px) { .a-founder { grid-template-columns: 1fr; } .a-founder :global(.media) { max-width: 240px; } }
+  .a-name { margin: 0 0 var(--s-7); display: grid; gap: 0; border-top: 2px solid var(--midnight); }
+  .a-name div { display: grid; grid-template-columns: 9.5rem 1fr; gap: var(--s-4); padding: var(--s-3) 0; border-bottom: var(--hair); }
+  .a-name dt { font: 600 var(--fs-md)/1.3 var(--font-display); color: var(--midnight); }
+  .a-name dt span { color: var(--royal); }
+  .a-name dd { margin: 0; font-size: var(--fs-sm); color: var(--slate); }
+  @media (max-width: 480px) { .a-name div { grid-template-columns: 1fr; gap: 2px; } }
+  .a-statements__purpose { color: #d5e0f3; font-size: var(--fs-md); max-width: 52ch; margin: 0; }
+  .a-statements__purpose strong { color: #fff; }
+  .a-vmo { margin: 0; display: grid; gap: var(--s-3); }
+  .a-vmo div { padding: var(--s-4) var(--s-5); border-radius: 12px; background: rgb(255 255 255 / 6%); border: 1px solid rgb(255 255 255 / 12%); }
+  .a-vmo dt { color: #fff; font-weight: 600; margin-bottom: 2px; }
+  .a-vmo dd { margin: 0; color: var(--on-dark-2); font-size: var(--fs-sm); }
+  .a-status { align-self: flex-start; font-size: var(--fs-label); font-weight: 600; padding: 4px 10px; border-radius: 999px; background: var(--sapphire-soft); color: var(--royal-deep); margin-bottom: var(--s-4); }
+  .a-journey { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--s-3); }
+  .a-journey li { display: flex; flex-direction: column; padding: var(--s-5); background: var(--white); border: 1px solid var(--silver-200); border-radius: 16px; }
+  .a-journey__n { font-size: var(--fs-label); font-weight: 600; color: var(--royal); margin-bottom: var(--s-3); }
+  .a-journey h3 { font-size: var(--fs-md); }
+  .a-journey p { font-size: var(--fs-sm); color: var(--slate); margin-bottom: var(--s-3); }
+  .a-journey p strong { color: var(--ink); font-weight: 600; }
+  .a-journey .link-arrow { margin-top: auto; color: var(--royal); font-size: var(--fs-sm); }
+  @media (max-width: 1100px) { .a-journey { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 700px) { .a-journey { grid-template-columns: 1fr; } }
+  .a-tree small { display: block; font: 500 var(--fs-sm) var(--font-body); color: var(--slate); margin-top: 2px; }
+  .a-links { display: flex; flex-wrap: wrap; gap: var(--s-3) var(--s-6); margin-top: var(--s-5); }
+  .a-whom__list dt a { color: var(--midnight); text-decoration: none; }
+  .a-whom__list dt a:hover { color: var(--royal); text-decoration: underline; }
 </style>

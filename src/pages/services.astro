@@ -4,16 +4,31 @@ import PageHero from '../components/PageHero.astro';
 import Pending from '../components/Pending.astro';
 import EnquiryForm from '../components/EnquiryForm.astro';
 import { serviceCategories } from '../data/site';
+const groups: [string, string, string[]][] = [
+  ['Finance', 'Opening accounts, borrowing and protecting the business.', ['Business Loans', 'Bank Accounts', 'Credit Cards', 'Insurance']],
+  ['Advice and mentorship', 'Someone experienced to think a decision through with.', ['Business Consultancy', 'Business Advisory', 'Mentorship']],
+  ['Registration and compliance', 'Getting registered and staying on the right side of the rules.', ['Business Registration Assistance', 'Tax Filing and Compliance', 'Legal and Regulatory Guidance']],
+  ['Accounts and planning', 'Books, reports and the paperwork lenders ask for.', ['Accounting and Financial Services', 'Project Report Preparation', 'Other Professional Services']],
+];
 ---
-<Base title="Services" description="Professional and business services available through BECCI's network.">
-  <PageHero title="Help with the work of running a business" lede="Finance, compliance, advisory and mentorship through BECCI's network and institutional arrangements." crumbs={[{ label: 'Services' }]} />
+<Base title="Services" description="Business services BECCI plans to offer through its network: finance, advice, compliance and mentorship, and how to ask for help.">
+  <PageHero title="Help with the work of running a business" lede="Finance, paperwork, compliance and advice are where many small businesses lose time. BECCI is arranging help in each of these areas through its network and partner institutions." crumbs={[{ label: 'Services' }]} />
   <section class="section"><div class="wrap">
-    <h2>Service areas</h2>
-    <ul class="tag-list" style="margin-bottom:var(--s-6)">{serviceCategories.map((s) => <li>{s}</li>)}</ul>
-    <Pending label="Providers not yet confirmed">Where a service is delivered by an external provider, its page will name the provider and explain exactly what BECCI facilitates. No providers have been confirmed for publication yet, so no individual services are offered on this page.</Pending>
+    <div class="section-head"><h2>Service areas</h2><p>The areas BECCI plans to cover. No individual provider has been confirmed yet, so nothing below is on offer today.</p></div>
+    <div class="grid grid--2">
+      {groups.map(([t, d, items]) => <div class="card"><h3>{t}</h3><p class="muted">{d}</p><ul class="tag-list">{items.map((i) => <li>{i}</li>)}</ul></div>)}
+    </div>
   </div></section>
   <section class="section section--white"><div class="wrap two-col">
-    <div><h2>Tell us what you need</h2></div>
+    <div><h2>How BECCI’s role will work</h2></div>
+    <div class="prose">
+      <p>Most services will be delivered by banks, insurers, chartered accountants, consultants and other professionals, not by BECCI itself. BECCI’s role is to connect members with suitable providers and to help them prepare.</p>
+      <p>Where a service is delivered by an external provider, its listing will name the provider and say exactly what BECCI does and does not do. Any fees are set by the provider.</p>
+      <Pending label="Providers not yet confirmed">Names of service providers and the terms of BECCI’s facilitation.</Pending>
+    </div>
+  </div></section>
+  <section class="section"><div class="wrap two-col">
+    <div><h2>Tell us what you need</h2><p class="muted">Describe the help you are looking for. It tells BECCI which services to arrange first.</p></div>
     <EnquiryForm id="service" purpose="service-request" submitLabel="Send request" fields={[
       { name: 'name', label: 'Your name', required: true, autocomplete: 'name' },
       { name: 'email', label: 'Email', type: 'email', required: true, autocomplete: 'email' },

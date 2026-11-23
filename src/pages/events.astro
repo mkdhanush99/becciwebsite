@@ -7,18 +7,32 @@ const today = todayISO();
 const upcoming = events.filter((e) => e.date >= today).sort((a, b) => a.date.localeCompare(b.date));
 const past = events.filter((e) => e.date < today).sort((a, b) => b.date.localeCompare(a.date));
 const types = ['Business Networking Meetings', 'Conferences', 'Seminars', 'Workshops', 'Training Programmes', 'Government Interaction Programmes', 'Investor Meetings', 'Industry-specific Events'];
+const typeNotes = [
+  ['Business networking meetings', 'Regular meetings to make introductions and pass on business.'],
+  ['Conferences and seminars', 'Talks and discussions on business, policy and the economy.'],
+  ['Workshops and training', 'Practical sessions on finance, registration, marketing and skills.'],
+  ['Government interaction programmes', 'Meetings with departments about schemes, procurement and policy.'],
+  ['Investor meetings', 'Introductions between founders and investors.'],
+  ['Industry-specific events', 'Gatherings for a single sector, run with sector committees.'],
+];
 ---
-<Base title="Event Calendar" description="Upcoming and past BECCI events.">
-  <PageHero title="Events" lede="Networking meetings, conferences, workshops and training. Open to everyone to browse; registration links appear with each event." crumbs={[{ label: 'Events' }]} />
+<Base title="Event Calendar" description="BECCI events: networking meetings, conferences, workshops and training, with dates, venues and registration.">
+  <PageHero title="Events" lede="Events are where BECCI members meet in person: to learn, to network and to do business. Anyone can browse the calendar, and registration links appear with each event." crumbs={[{ label: 'Events' }]} />
   <section class="section"><div class="wrap">
     <h2>Upcoming events</h2>
     {upcoming.length ? (
       <ul class="ev">{upcoming.map((e) => <li class="card"><p class="small muted">{formatDate(e.date)} · {e.venue} · {e.type}</p><h3>{e.title}</h3><p>{e.summary}</p>{e.registerUrl && <a class="btn btn--sm" href={e.registerUrl}>Register</a>}</li>)}</ul>
-    ) : <div class="empty"><h3>No upcoming events announced</h3><p class="muted">BECCI has not announced any events yet. Check back here, or follow the News Desk for announcements.</p></div>}
+    ) : <div class="empty"><h3>No upcoming events announced</h3><p class="muted">BECCI has not announced any events yet. New events will appear here first, with the date, time, venue, speakers and how to register.</p></div>}
     <h2 style="margin-top:var(--s-7)">Past events</h2>
-    {past.length ? <ul class="ev">{past.map((e) => <li class="card"><p class="small muted">{formatDate(e.date)}</p><h3>{e.title}</h3></li>)}</ul> : <p class="muted">The archive of past events, with photographs, videos and reports, will build up here.</p>}
-    <h2 style="margin-top:var(--s-7)">Types of events</h2>
-    <ul class="tag-list">{types.map((t) => <li>{t}</li>)}</ul>
+    {past.length ? <ul class="ev">{past.map((e) => <li class="card"><p class="small muted">{formatDate(e.date)}</p><h3>{e.title}</h3></li>)}</ul> : <p class="muted">Past events will be kept here with their photographs, videos and reports.</p>}
+  </div></section>
+  <section class="section section--white"><div class="wrap two-col">
+    <div><h2>The kinds of events BECCI holds</h2><p class="muted">Some events will be open to the public and some to members only. Members-only events may show a short public announcement here.</p></div>
+    <dl class="ev-types">{typeNotes.map(([t, d]) => <div><dt>{t}</dt><dd>{d}</dd></div>)}</dl>
   </div></section>
 </Base>
-<style>.ev { list-style: none; padding: 0; display: grid; gap: var(--s-4); }</style>
+<style>
+  .ev-types { margin: 0; display: grid; gap: 0; border-top: var(--hair); }
+  .ev-types div { padding: var(--s-3) 0; border-bottom: var(--hair); }
+  .ev-types dt { font-weight: 600; color: var(--midnight); }
+  .ev-types dd { margin: 0; color: var(--slate); font-size: var(--fs-sm); }.ev { list-style: none; padding: 0; display: grid; gap: var(--s-4); }</style>

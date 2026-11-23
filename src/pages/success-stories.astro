@@ -5,10 +5,18 @@ import Pending from '../components/Pending.astro';
 import { stories } from '../data/site';
 const kinds = ['Bahujan entrepreneurs', 'MSME growth', 'First-generation entrepreneurs', 'Women entrepreneurs', 'Youth entrepreneurs', 'Traditional businesses modernised', 'Growth through networking', 'Member stories'];
 ---
-<Base title="Success Stories" description="Entrepreneurs and enterprises that reached meaningful milestones.">
-  <PageHero title="Proof that the journey works" lede="Real entrepreneurs, real milestones: the background, the challenges, what they achieved and what others can learn." crumbs={[{ label: 'Success Stories' }]} />
-  <section class="section"><div class="wrap">
-    <ul class="tag-list" style="margin-bottom:var(--s-6)">{kinds.map((k) => <li>{k}</li>)}</ul>
-    {stories.length ? null : <Pending>Stories will be published with the consent of each entrepreneur, including photographs, background, challenges, achievements and lessons.</Pending>}
+<Base title="Success Stories" description="Real entrepreneurs and enterprises that reached meaningful milestones, published with their consent.">
+  <PageHero title="Proof that the journey works" lede="Success stories show what the BECCI journey looks like in real life: where an entrepreneur started, what stood in the way, what they achieved and what others can learn from it." crumbs={[{ label: 'Success Stories' }]} />
+  <section class="section"><div class="wrap two-col">
+    <div><h2>Stories we will tell</h2></div>
+    <div class="prose">
+      <ul class="tag-list">{kinds.map((k) => <li>{k}</li>)}</ul>
+      <p style="margin-top:var(--s-5)">Every story will include a photograph, the person’s background, the challenges they faced, what they achieved and the lessons they would pass on.</p>
+      {stories.length ? null : <Pending label="No stories published yet">Stories are published only with the entrepreneur’s written consent and after BECCI has checked the facts.</Pending>}
+    </div>
+  </div></section>
+  <section class="section section--white"><div class="wrap two-col">
+    <div><h2>Have a story to share?</h2></div>
+    <div class="prose"><p>If you are an OBC entrepreneur who has built something worth learning from, BECCI would like to hear from you.</p><p><a class="btn" href="/contact">Tell us your story</a></p></div>
   </div></section>
 </Base>

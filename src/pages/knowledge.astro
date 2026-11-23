@@ -4,12 +4,20 @@ import PageHero from '../components/PageHero.astro';
 import { resources } from '../data/site';
 const cats = ['Business News', 'MSME Updates', 'Startup News', 'New Laws and Regulatory Changes', 'Government Notifications', 'Industry Developments', 'Business Articles', 'Educational Resources', 'Video', 'Interviews and Discussions', 'Entrepreneurship Guidance', 'Reports and Guides'];
 ---
-<Base title="Knowledge Centre" description="Guides, resources, reports and learning for entrepreneurs.">
-  <PageHero title="Learn what you need to grow" lede="Practical guides, regulatory updates, reports and educational material for entrepreneurs and business owners." crumbs={[{ label: 'Knowledge Centre' }]} />
+<Base title="Knowledge Centre" description="Guides, regulatory updates, reports and learning for entrepreneurs and business owners.">
+  <PageHero title="Learn what you need to grow" lede="Practical guides, regulatory changes, government notifications, reports and videos for entrepreneurs, organised by topic and searchable. The Knowledge Centre is meant to be updated regularly, not read once." crumbs={[{ label: 'Knowledge Centre' }]} />
   <section class="section"><div class="wrap">
     <label class="visually-hidden" for="kq">Search the Knowledge Centre</label>
     <input id="kq" class="input" type="search" placeholder={resources.length ? "Search guides and resources" : "Search opens when resources are published"} disabled={resources.length === 0} style="max-width:560px;margin-bottom:var(--s-5)" data-kq />
     <ul class="tag-list" aria-label="Categories" style="margin-bottom:var(--s-6)">{cats.map((c) => <li>{c}</li>)}</ul>
-    <div data-kempty>{resources.length === 0 && <div class="empty"><h2 class="empty__title">No resources published yet</h2><p class="muted">Search will cover every guide, article, report and video once BECCI publishes them. The category structure above is ready for that content. Meanwhile, the <a href="/opportunities/about-data">opportunity data guide</a> explains how to read deadlines and eligibility.</p></div>}</div>
+    <div data-kempty>{resources.length === 0 && <div class="empty"><h2 class="empty__title">No resources published yet</h2><p class="muted">BECCI has not published any guides yet. Search will cover every guide, article, report and video once it does.</p></div>}</div>
+    <h2 style="margin-top:var(--s-7)">Useful today</h2>
+    <ul class="k-today">
+      <li><a href="/opportunities/about-data">How to read an opportunity listing</a>: what the statuses, dates and category rules mean.</li>
+      <li><a href="/schemes">Government schemes</a>: verified schemes with who can apply and the documents they ask for.</li>
+      <li><a href="/membership#eligibility">Central OBC and State BC/OBC lists</a>: how the two lists differ and why it matters.</li>
+    </ul>
   </div></section>
 </Base>
+
+<style>.k-today { display: grid; gap: var(--s-2); padding-left: 1.2em; max-width: 70ch; }</style>

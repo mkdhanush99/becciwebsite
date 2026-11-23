@@ -2,9 +2,10 @@
 import Base from '../../layouts/Base.astro';
 import PageHead from '../../components/PageHead.astro';
 import { opportunities, portals } from '../../data/opportunities';
+import ScopeLegend from '../../components/ScopeLegend.astro';
 import Finder from '../../components/Finder.astro';
 ---
 <Base title="Opportunities" description="Search public schemes, scholarships, loans, tenders and jobs, with official sources and deadlines.">
-  <PageHead meta={`${opportunities.length} verified records · ${portals.length} official portals. Every record links to its source.`} title="Find opportunities that fit you" lede="Schemes, scholarships, loans and funding, tenders and jobs. Every listing links to its official source and shows when we last checked it." crumbs={[{ label: 'Opportunities' }]} />
-  <section class="finder-page"><div class="wrap"><Finder /></div></section>
+  <PageHead meta={`${opportunities.length} verified records · ${portals.length} official portals. Every record links to its source.`} title="Find opportunities that fit you" lede="Government schemes, tenders and procurement, scholarships, loans and funding, jobs, internships and apprenticeships. Each listing gives the issuing authority, who can apply, the category rule, benefits, documents, deadline and official link, with the date BECCI last checked it." crumbs={[{ label: 'Opportunities' }]} />
+  <section class="finder-page"><div class="wrap"><ScopeLegend /><Finder /><p class="small muted" style="margin-top:var(--s-6)">Looking for a business to own rather than a scheme? See <a href="/franchise">Franchise &amp; Enterprise</a>. For how listings are checked, read <a href="/opportunities/about-data">How we check opportunities</a>.</p></div></section>
 </Base>

@@ -4,12 +4,31 @@ import PageHero from '../components/PageHero.astro';
 import Pending from '../components/Pending.astro';
 const kinds = ['Franchise opportunities', 'Ready-to-start business models', 'Small business ownership', 'Enterprise development models', 'Traditional business modernisation', 'Business expansion', 'Project-based enterprise'];
 ---
-<Base title="Franchise & Enterprise" description="Practical business models and enterprise ownership opportunities.">
-  <PageHero title="Practical paths to owning a business" lede="Business models and ownership opportunities for aspiring entrepreneurs and existing business owners." crumbs={[{ label: 'Opportunities', href: '/opportunities' }, { label: 'Franchise & Enterprise' }]} />
-  <section class="section"><div class="wrap">
-    <h2>What will be listed</h2>
-    <ul class="tag-list" style="margin-bottom:var(--s-5)">{kinds.map((k) => <li>{k}</li>)}</ul>
-    <p>Each listing will set out the business model, investment requirements, operational requirements, the capabilities expected and who to contact.</p>
-    <Pending label="No verified listings yet">BECCI has not yet published any franchise or enterprise opportunities. Listings will appear only after BECCI has reviewed them. For finance to start a business, see <a href="/opportunities/finance">Loans &amp; Funding</a>.</Pending>
+<Base title="Franchise & Enterprise" description="Franchise and enterprise ownership opportunities for aspiring entrepreneurs and business owners, and what each listing will include.">
+  <PageHero title="Practical paths to owning a business" lede="Not every entrepreneur starts from a new idea. A franchise, a proven business model or a project-based enterprise can be a faster and safer way in. This page will list such opportunities once BECCI has reviewed them." crumbs={[{ label: 'Opportunities', href: '/opportunities' }, { label: 'Franchise & Enterprise' }]} />
+  <section class="section"><div class="wrap two-col">
+    <div><h2>Who it is for</h2></div>
+    <div class="prose">
+      <p>Aspiring entrepreneurs looking for a ready-to-start model, and existing business owners who want to expand, add a line of business or modernise a traditional enterprise.</p>
+      <h3>Kinds of opportunity</h3>
+      <ul class="tag-list">{kinds.map((k) => <li>{k}</li>)}</ul>
+    </div>
+  </div></section>
+  <section class="section section--white"><div class="wrap two-col">
+    <div><h2>What every listing will tell you</h2></div>
+    <div class="prose">
+      <ul>
+        <li><strong>The business model</strong>: what the business does and how it earns.</li>
+        <li><strong>Investment</strong>: what it costs to start, as stated by the offering company.</li>
+        <li><strong>Operations</strong>: space, staff, equipment and time it needs.</li>
+        <li><strong>Capabilities expected</strong>: skills and experience the owner should bring.</li>
+        <li><strong>Contact</strong>: who to speak to, and what BECCI has and has not checked.</li>
+      </ul>
+      <Pending label="No listings yet">BECCI has not published any franchise or enterprise opportunities. Listings will appear only after review. To fund a business of your own, see <a href="/opportunities/finance">Loans &amp; Funding</a>.</Pending>
+    </div>
+  </div></section>
+  <section class="section"><div class="wrap two-col">
+    <div><h2>Offering an opportunity?</h2></div>
+    <div class="prose"><p>Franchisors and companies that want to reach OBC entrepreneurs can propose an opportunity for listing.</p><p><a class="btn" href="/partnerships#proposal">Propose an opportunity</a></p></div>
   </div></section>
 </Base>

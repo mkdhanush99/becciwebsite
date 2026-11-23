@@ -8,6 +8,12 @@ export const site = {
   promise: 'Building Businesses • Building Bharat',
   headline: 'Where Community Meets Commerce',
   supporting: 'Connecting Bahujan entrepreneurs, strengthening businesses and creating opportunities for inclusive economic growth.',
+  // Identity statement (Website Critique Review §1, client-approved wording)
+  identity: 'BECCI is an OBC-exclusive national Chamber of Commerce dedicated to strengthening entrepreneurship, facilitating business connections, promoting enterprise development and creating economic opportunities for Bahujan communities.',
+  // Founding philosophy (Critique Review §4.1 and §21)
+  philosophy: 'The two Cs in BECCI stand for Community and Commerce. Until now, these two essential elements have not been sufficiently connected. BECCI brings them together, creating a continuous ecosystem of opportunity, collaboration and economic growth.',
+  closing: 'Where connections turn into businesses, businesses turn into opportunities, and opportunities contribute to building Bharat.',
+  origin: 'BECCI began its work in Telangana and Andhra Pradesh and is building towards a national presence.',
 };
 
 // Approved external destinations. null = not yet supplied by BECCI.
@@ -64,12 +70,14 @@ export const nav: NavGroup[] = [
   { label: 'Contact', href: '/contact' },
 ];
 
+// Five-letter story: letter, name, tile title and statement are the client-approved text
+// (Critique Review, closing section). `link` says where each stage shows up on this website.
 export const story = [
-  { letter: 'B', name: 'Beginning of an Entrepreneurial Journey', title: 'The Beginning', text: 'Every great business begins with a person, an idea and a dream. The journey starts with the aspirations, skills and talents of our people.' },
-  { letter: 'E', name: 'Encouragement to New Enterprises', title: 'From Ideas to Enterprises', text: 'Every dream deserves encouragement. We help aspiring entrepreneurs turn their ideas, skills and ambitions into enterprises.' },
-  { letter: 'C', name: 'Community Collaboration', title: 'Strength in Collaboration', text: 'Entrepreneurs grow stronger when they come together. BECCI brings the community onto one platform to connect, collaborate, share knowledge and support one another.' },
-  { letter: 'C', name: 'Commerce', title: 'Connecting Community with Commerce', text: 'Collaboration creates opportunities. Connections turn into business referrals, partnerships, markets and meaningful commercial relationships.' },
-  { letter: 'I', name: 'Impact', title: 'Creating Lasting Impact', text: 'Every enterprise that grows and every opportunity created contributes to stronger communities, economic progress and a more prosperous Bharat.' },
+  { letter: 'B', name: 'Beginning of an Entrepreneurial Journey', title: 'The Beginning', text: 'Every great business begins with a person, an idea and a dream. The journey starts with the aspirations, skills and talents of our people.', link: { label: 'Scholarships, jobs and first steps', href: '/opportunities/scholarships' } },
+  { letter: 'E', name: 'Encouragement to New Enterprises', title: 'From Ideas to Enterprises', text: 'Every dream deserves encouragement. We help aspiring entrepreneurs turn their ideas, skills and ambitions into enterprises.', link: { label: 'Loans, schemes and services', href: '/opportunities/finance' } },
+  { letter: 'C', name: 'Community Collaboration', title: 'Strength in Collaboration', text: 'Entrepreneurs grow stronger when they come together. BECCI brings the community onto one platform to connect, collaborate, share knowledge and support one another.', link: { label: 'Wings, sectors and chapters', href: '/wings' } },
+  { letter: 'C', name: 'Commerce', title: 'Connecting Community with Commerce', text: 'Collaboration creates opportunities. Connections turn into business referrals, partnerships, markets and meaningful commercial relationships.', link: { label: 'Tenders, Biz Connect and Marketplace', href: '/opportunities/tenders' } },
+  { letter: 'I', name: 'Impact', title: 'Creating Lasting Impact', text: 'Every enterprise that grows and every opportunity created contributes to stronger communities, economic progress and a more prosperous Bharat.', link: { label: 'Success stories', href: '/success-stories' } },
 ];
 
 export interface Person { name: string; role: string; affiliation?: string; background?: string; intro?: string; photo?: string; links?: { label: string; url: string }[] }
@@ -107,11 +115,13 @@ export const collaborators = [
   'Educational Institutions', 'Incubators and Accelerators', 'Corporates', 'Export Promotion Organisations',
 ];
 
+// Visitor pathways (PRD §1: existing and aspiring entrepreneurs, professionals, students,
+// first-generation business owners; plus job seekers and institutions).
 export const audiences = [
-  { who: 'Students', need: 'Scholarships, internships, apprenticeships and early-career openings.', href: '/opportunities/scholarships' },
-  { who: 'Job seekers', need: 'Official job and internship portals, with clear qualifications.', href: '/opportunities/jobs' },
-  { who: 'Aspiring entrepreneurs', need: 'Schemes, finance and training to get a first business started.', href: '/opportunities/finance' },
-  { who: 'MSMEs and enterprises', need: 'Tenders, supplier registration, loans, grants and subsidies.', href: '/opportunities/tenders' },
-  { who: 'Institutions', need: 'Partnerships that open doors for entrepreneurs at scale.', href: '/partnerships' },
-  { who: 'Future members', need: 'What the chamber is, who it is for and how to get involved.', href: '/membership' },
+  { who: 'Aspiring entrepreneurs', need: 'Turn an idea into a first business: loans, schemes and the documents you will need.', href: '/opportunities/finance' },
+  { who: 'Business owners and MSMEs', need: 'Tenders, supplier registration, credit and support to grow an existing enterprise.', href: '/opportunities/tenders' },
+  { who: 'Students', need: 'Scholarships for school, college and higher studies, with the category rule spelt out.', href: '/opportunities/scholarships' },
+  { who: 'Job seekers', need: 'Official job, internship and apprenticeship portals, checked and linked.', href: '/opportunities/jobs' },
+  { who: 'Professionals', need: 'Join the chamber, its wings and sector committees, and put your experience to work.', href: '/wings' },
+  { who: 'Institutions and partners', need: 'Banks, departments, colleges and industry bodies working with BECCI.', href: '/partnerships' },
 ];

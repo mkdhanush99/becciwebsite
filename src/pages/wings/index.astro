@@ -2,21 +2,75 @@
 import Base from '../../layouts/Base.astro';
 import PageHero from '../../components/PageHero.astro';
 import Pending from '../../components/Pending.astro';
-import { sectors, chapters } from '../../data/site';
+import { chapters, site } from '../../data/site';
+// Sector list from the Project Requirements Document §5.5; the notes describe who belongs.
+const sectorNotes = [
+  ['Manufacturing', 'Units that make products, from small workshops to factories.'],
+  ['Trading and Distribution', 'Wholesalers, retailers, dealers and distributors.'],
+  ['Services', 'Businesses that sell a service rather than a product.'],
+  ['Healthcare', 'Clinics, pharmacies, diagnostics and health products.'],
+  ['Education and Training', 'Schools, coaching centres, skill training and edtech.'],
+  ['Agriculture and Allied Activities', 'Farming, dairy, fisheries, poultry and food processing.'],
+  ['IT and Technology', 'Software, digital services and technology products.'],
+  ['Construction and Infrastructure', 'Contractors, builders, materials and engineering.'],
+  ['Finance and Professional Services', 'Accountants, lawyers, consultants and financial advisers.'],
+  ['Hospitality and Tourism', 'Hotels, restaurants, catering, travel and tourism.'],
+  ['Other industries', 'Any sector not listed above.'],
+];
 ---
-<Base title="Wings, Sectors & Chapters" description="BECCI's wings, sector committees and chapter structure.">
-  <PageHero title="Wings, sectors and chapters" lede="How BECCI is organised: wings for particular communities of entrepreneurs, sectors for industries, and chapters for places." crumbs={[{ label: 'Wings, Sectors & Chapters' }]} />
+<Base title="Wings, Sectors & Chapters" description="How BECCI is organised: wings for groups of members, sector committees for industries and chapters for places.">
+  <PageHero title="Wings, sectors and chapters" lede="BECCI organises its members in three ways: wings bring together particular groups of members, sector committees bring together people in the same industry, and chapters bring the chamber close to where members live and work." crumbs={[{ label: 'Wings, Sectors & Chapters' }]} />
   <section class="section"><div class="wrap">
-    <h2>Wings</h2>
-    <div class="grid grid--2" style="margin-bottom:var(--s-7)">
-      <a class="card card--link" href="/wings/women"><h3>Women's Wing</h3><p>For women entrepreneurs, professionals and aspiring founders.</p><span class="link-arrow">Visit the Women's Wing</span></a>
-      <a class="card card--link" href="/wings/youth"><h3>Youth Wing</h3><p>For students, young professionals and first-time founders.</p><span class="link-arrow">Visit the Youth Wing</span></a>
+    <div class="section-head"><h2>Wings</h2><p>Each wing has its own office bearers, programmes and events, and every wing member is also a full BECCI member.</p></div>
+    <div class="grid grid--2">
+      <a class="card card--link" href="/wings/women"><h3>Women’s Wing</h3><p>For women entrepreneurs, women-led enterprises, professionals and women preparing to start a business.</p><span class="link-arrow">Visit the Women’s Wing</span></a>
+      <a class="card card--link" href="/wings/youth"><h3>Youth Wing</h3><p>For students, graduates, young professionals and first-time founders at the start of their journey.</p><span class="link-arrow">Visit the Youth Wing</span></a>
     </div>
-    <h2>Sectors</h2>
-    <p class="muted">Sector committees bring together businesses in the same industry.</p>
-    <ul class="tag-list" style="margin-bottom:var(--s-7)">{sectors.map((s) => <li>{s}</li>)}</ul>
-    <h2>Chapters</h2>
-    <p class="muted">Chapters follow a National → State → District → City structure.</p>
-    {chapters.length ? <ul>{chapters.map((c) => <li>{c.level}: {c.name}</li>)}</ul> : <Pending>Confirmed chapters and their official contact details will be listed here. BECCI's initial operations are in Telangana and Andhra Pradesh.</Pending>}
+    <p class="small muted" style="margin-top:var(--s-4)">More wings may be added as the chamber grows.</p>
+  </div></section>
+
+  <section class="section section--white"><div class="wrap two-col">
+    <div><h2>Sector committees</h2><p class="muted">A sector committee brings together members who work in the same industry, so that knowledge, contacts and opportunities in that sector are shared among them. When membership applications open, you will be asked for your sector.</p></div>
+    <dl class="sectors">
+      {sectorNotes.map(([n, d]) => <div><dt>{n}</dt><dd>{d}</dd></div>)}
+    </dl>
+  </div></section>
+
+  <section class="section"><div class="wrap two-col">
+    <div><h2>Chapters and regional presence</h2><p class="muted">{site.origin} Chapters follow a four-level structure so that the chamber can grow State by State without losing touch with members on the ground.</p></div>
+    <div>
+      <ol class="levels">
+        <li><strong>National</strong><span>Sets BECCI’s direction and speaks for the chamber as a whole.</span></li>
+        <li><strong>State</strong><span>Leads the chamber’s work in each State, beginning with Telangana and Andhra Pradesh.</span></li>
+        <li><strong>District</strong><span>Brings members in a district together and connects them with the State chapter.</span></li>
+        <li><strong>City</strong><span>Regular meetings and introductions close to where members do business.</span></li>
+      </ol>
+      {chapters.length ? <ul>{chapters.map((c) => <li>{c.level}: {c.name}</li>)}</ul> : <Pending label="Chapters not yet published">The list of confirmed chapters, with their official contact details, will appear here.</Pending>}
+    </div>
+  </div></section>
+
+  <section class="section section--white"><div class="wrap">
+    <div class="section-head"><h2>How to take part</h2></div>
+    <ol class="steps">
+      <li><strong>Become a member.</strong> Wings, sector committees and chapters are open to BECCI members. <a href="/membership">Who can join</a></li>
+      <li><strong>Tell us where you fit.</strong> Your wing, sector and district decide which groups you join.</li>
+      <li><strong>Show up.</strong> Meetings and events will be listed on the <a href="/events">event calendar</a> as each group announces them.</li>
+    </ol>
+    <p style="margin-top:var(--s-5)"><a class="btn" href="/membership#request-call">Ask the membership team to call you</a></p>
   </div></section>
 </Base>
+<style>
+  .sectors { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--s-5); border-top: var(--hair); }
+  .sectors div { padding: var(--s-3) 0; border-bottom: var(--hair); }
+  .sectors dt { font-weight: 600; color: var(--midnight); }
+  .sectors dd { margin: 0; font-size: var(--fs-sm); color: var(--slate); }
+  @media (max-width: 600px) { .sectors { grid-template-columns: 1fr; } }
+  .levels { list-style: none; padding: 0; margin: 0 0 var(--s-5); display: grid; gap: var(--s-2); }
+  .levels li { display: grid; grid-template-columns: 7rem 1fr; gap: var(--s-4); padding: var(--s-4); border-radius: 12px; background: var(--white); border: 1px solid var(--silver-200); }
+  .levels li:first-child { background: var(--midnight); border-color: var(--midnight); }
+  .levels li:first-child strong, .levels li:first-child span { color: #fff; }
+  .levels strong { color: var(--midnight); }
+  .levels span { color: var(--slate); font-size: var(--fs-sm); }
+  @media (max-width: 480px) { .levels li { grid-template-columns: 1fr; gap: 2px; } }
+  .steps { padding-left: 1.2em; display: grid; gap: var(--s-3); max-width: 70ch; }
+</style>

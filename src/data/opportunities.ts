@@ -50,25 +50,25 @@ export const CATEGORY_META: Record<Category, { label: string; plural: string; bl
   tenders: {
     label: 'Tenders & Procurement',
     plural: 'tenders',
-    blurb: 'Government tenders, bids and supplier registration.',
+    blurb: 'Central and State government tenders, bids and supplier registration for MSMEs. Most tenders are open to any eligible bidder; any procurement preference is stated on the listing.',
     path: '/opportunities/tenders',
   },
   jobs: {
     label: 'Jobs & Internships',
     plural: 'jobs and internships',
-    blurb: 'Openings, internships, apprenticeships and student programmes.',
+    blurb: 'Official portals for jobs, internships and apprenticeships, and programmes for students. Any reservation rule is set by each notice, not by BECCI.',
     path: '/opportunities/jobs',
   },
   scholarships: {
     label: 'Scholarships',
     plural: 'scholarships',
-    blurb: 'Education support for school, college and higher studies.',
+    blurb: 'Central and State scholarships for school, college and higher education, with who can apply, what each covers and the deadline.',
     path: '/opportunities/scholarships',
   },
   finance: {
     label: 'Loans & Funding',
     plural: 'loans, grants and subsidies',
-    blurb: 'Loans, grants, subsidies and credit support for enterprises.',
+    blurb: 'Loans, grants, subsidies and credit guarantees for starting or growing an enterprise, with who can apply and what each offers.',
     path: '/opportunities/finance',
   },
   schemes: {

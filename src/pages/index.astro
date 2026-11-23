@@ -13,16 +13,21 @@ const open = opportunities
 const [featured, ...rest] = open;
 const lastChecked = opportunities.map((o) => o.lastVerified).sort().at(-1);
 const register = open.slice(0, 3);
-const statement = 'Every record is checked against its official source. Every deadline is dated. Central OBC and State BC lists are never mixed.';
+const statement = 'Community and Commerce have not been sufficiently connected. BECCI brings them together, so connections turn into businesses and businesses turn into opportunities.';
 const words = (t: string) => t.split(' ');
-const pillars = [
-  { title: 'Open opportunities', text: 'Schemes, scholarships, loans, tenders and jobs, each checked against its official source.', href: '/opportunities', link: 'Find opportunities' },
-  { title: 'Connect entrepreneurs', text: 'Events, wings and sector committees that put business owners in the same room.', href: '/wings', link: 'Wings and sectors' },
-  { title: 'Build capability', text: 'Services, guidance and knowledge for starting and growing an enterprise.', href: '/services', link: 'Services' },
-  { title: 'Partner with institutions', text: 'Banks, departments, educational institutions and industry bodies that open doors at scale.', href: '/partnerships', link: 'Partnerships' },
+// The four questions every visitor should get an answer to (Critique Review §20),
+// each with what works today and what is still being set up.
+const answers = [
+  { q: 'What opportunities can I access?', a: 'Government schemes, scholarships, loans, tenders, jobs and apprenticeships, each checked against its official source and dated. No account is needed.', status: 'Available now', href: '/opportunities', link: 'Open the opportunity finder' },
+  { q: 'What can BECCI do for my business?', a: 'Connect you with finance, registration, compliance and mentorship through service providers and institutions BECCI is arranging. You can tell us what you need today.', status: 'Being set up', href: '/services', link: 'See service areas' },
+  { q: 'Whom can I connect with?', a: 'Other entrepreneurs through the Women’s Wing, Youth Wing, sector committees, State chapters and BECCI events.', status: 'Being set up', href: '/wings', link: 'Wings, sectors and chapters' },
+  { q: 'How can I become part of BECCI?', a: 'Join as a member if your community is on the Central OBC list for your State or a State BC/OBC list, or partner with BECCI as an institution.', status: 'Request a call', href: '/membership', link: 'Membership and joining' },
 ];
 const more = [
+  { label: 'Government Schemes', href: '/schemes' },
   { label: 'Franchise & Enterprise', href: '/franchise' },
+  { label: 'Services', href: '/services' },
+  { label: 'Event Calendar', href: '/events' },
   { label: 'Knowledge Centre', href: '/knowledge' },
   { label: 'Success Stories', href: '/success-stories' },
   { label: 'Biz Connect', href: '/biz-connect', note: 'Coming later' },
@@ -43,6 +48,7 @@ const tiers = [
         <span class="kinetic__line kinetic__line--lit" aria-hidden="true"><span class="kw" style="--i:2"><span>Meets</span></span> <span class="kw" style="--i:3"><span>Commerce</span></span></span>
       </h1>
       <p class="h-hero__lede h-in" style="--i:5">{site.supporting}</p>
+      <p class="h-hero__id h-in" style="--i:5">BECCI is the <strong>Bahujan Entrepreneurs Chamber for Commerce &amp; Industry</strong>, an OBC-exclusive national Chamber of Commerce. Use this website to find verified opportunities, learn about membership and connect with the chamber.</p>
       <form class="h-search h-in" style="--i:6" action="/opportunities" method="get" role="search">
         <label for="hero-q" class="visually-hidden">Find schemes, scholarships, loans, tenders and jobs</label>
         <div class="h-search__row">
@@ -81,15 +87,15 @@ const tiers = [
     </div>
   </section>
 
-  <section class="h-statement on-dark" aria-label="How BECCI handles opportunity data">
+  <section class="h-statement on-dark" aria-label="Why BECCI exists">
     <div class="wrap">
       <p class="h-statement__text" data-scrub>{words(statement).map((w, i) => <><span class="sw" style={`--w:${i}`}>{w}</span>{' '}</>)}</p>
       <div class="h-facts">
         <p class="h-promise">{site.promise}</p>
         <ul>
-          <li><strong>{opportunities.length}</strong> verified records</li>
-          <li><strong>{portals.length}</strong> official portals</li>
-          <li><a href="/opportunities/about-data">How we check</a></li>
+          <li>Began in Telangana and Andhra Pradesh</li>
+          <li>Building a national presence</li>
+          <li><a href="/about">About BECCI</a></li>
         </ul>
       </div>
     </div>
@@ -99,7 +105,7 @@ const tiers = [
     <div class="wrap">
       <div class="section-head" data-reveal>
         <h2 id="paths-title">I am…</h2>
-        <p>Pick the line that fits you. Each one opens the part of BECCI built for it.</p>
+        <p>Start from where you are today. Each path opens the part of the website that is most useful to you first.</p>
       </div>
       <ul class="h-paths__list" data-reveal-group>
         {audiences.map((a, i) => (
@@ -112,9 +118,17 @@ const tiers = [
   <section class="section section--white" aria-labelledby="open-title">
     <div class="wrap">
       <div class="section-head" data-reveal>
-        <h2 id="open-title">Opportunities you can apply for</h2>
-        <a class="link-arrow" href="/opportunities">All opportunities and official portals</a>
+        <div>
+          <h2 id="open-title">Opportunities you can apply for</h2>
+          <p class="h-open__intro">Every listing names the authority that issued it, who can apply, the deadline and the official link, and shows when BECCI last checked it.</p>
+        </div>
+        <a class="link-arrow" href="/opportunities">All {opportunities.length} records and {portals.length} official portals</a>
       </div>
+      <dl class="h-scope" data-reveal>
+        <div><dt><span class="scope scope--exclusive">{OBC_SCOPE_LABEL.exclusive}</span></dt><dd>Reserved for OBC/BC applicants under the scheme’s own rules.</dd></div>
+        <div><dt><span class="scope scope--preference">{OBC_SCOPE_LABEL.preference}</span></dt><dd>Open more widely, with a written preference or quota for OBC/BC applicants.</dd></div>
+        <div><dt><span class="scope scope--open">{OBC_SCOPE_LABEL.open}</span></dt><dd>Open to anyone who meets the eligibility rules. Not every listing is OBC-only.</dd></div>
+      </dl>
       <div class="h-open" data-reveal-group>
         {featured && (
           <article class="h-open__feature on-dark">
@@ -143,12 +157,12 @@ const tiers = [
   <section class="section" aria-labelledby="does-title">
     <div class="wrap">
       <div class="section-head" data-reveal>
-        <h2 id="does-title">From a first idea to an established enterprise</h2>
-        <p>BECCI is a national chamber for OBC entrepreneurs. It began in Telangana and Andhra Pradesh and is building towards a national presence.</p>
+        <h2 id="does-title">What BECCI can do for you</h2>
+        <p>Four questions every visitor asks, answered plainly, including what works today and what is still being set up.</p>
       </div>
       <ul class="h-does" data-reveal-group>
-        {pillars.map((p, i) => (
-          <li class:list={[i === 0 && 'h-does__lead on-dark']}><h3>{p.title}</h3><p>{p.text}</p><a class="link-arrow" href={p.href}>{p.link}</a></li>
+        {answers.map((p, i) => (
+          <li class:list={[i === 0 && 'h-does__lead on-dark']}><span class="h-does__status">{p.status}</span><h3>{p.q}</h3><p>{p.a}</p><a class="link-arrow" href={p.href}>{p.link}</a></li>
         ))}
       </ul>
       <ul class="h-more" aria-label="More from BECCI">
@@ -161,14 +175,14 @@ const tiers = [
     <div class="wrap">
       <div class="section-head" data-reveal>
         <h2 id="join-title">Become part of the chamber</h2>
-        <p>For Bahujan entrepreneurs, professionals, students and first-generation founders whose community is in the Central OBC list for their State or a State BC/OBC list.</p>
+        <p>Membership is for Bahujan entrepreneurs, business owners, professionals, students and first-generation founders whose community is on the Central OBC list for their State or on a State BC/OBC list. Either list is enough.</p>
       </div>
       <ol class="h-tiers" data-reveal-group>
         {tiers.map((t, i) => <li><span class="h-tiers__step">Level {i + 1}</span><h3>{t.name} Membership</h3><p>{t.text}</p></li>)}
       </ol>
       <div class="h-member__foot">
         <a class="btn" href="/membership#join">Join as a Member</a>
-        <p class="small muted">Categories are proposed. Fees and final benefits will be confirmed before applications open.</p>
+        <p class="small muted">These three categories are proposed. Fees and final benefits will be confirmed before online applications open. Until then, the membership team can explain them on a call.</p>
       </div>
     </div>
   </section>
@@ -178,7 +192,7 @@ const tiers = [
       <div class="h-close__panel on-dark" data-grow>
         <div>
           <h2 id="close-title">Open doors for entrepreneurs at scale</h2>
-          <p>Government departments, banks, MSME bodies, educational institutions, incubators and corporates can create opportunities that ordinary networking cannot.</p>
+          <p>Government departments, banks, MSME bodies, industry associations, educational institutions, incubators and corporates can create opportunities for entrepreneurs that ordinary networking cannot. BECCI welcomes proposals for collaboration.</p>
           <a class="btn btn--light" href="/partnerships">Partner with BECCI</a>
         </div>
         <ul class="h-close__links">
@@ -215,7 +229,16 @@ const tiers = [
   .kinetic__line--lit { color: #8fdcf7; }
   .kw { display: inline-block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; vertical-align: top; }
   .kw > span { display: inline-block; }
-  .h-hero__lede { font-size: var(--fs-md); color: #c3d1e8; max-width: 52ch; margin: 0 auto var(--s-6); }
+  .h-hero__lede { font-size: var(--fs-md); color: #c3d1e8; max-width: 52ch; margin: 0 auto var(--s-3); }
+  .h-hero__id { font-size: var(--fs-sm); color: #a9bad6; max-width: 60ch; margin: 0 auto var(--s-6); }
+  .h-hero__id strong { color: #fff; font-weight: 600; }
+  .h-open__intro { margin: var(--s-2) 0 0; color: var(--slate); max-width: 56ch; }
+  .h-scope { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-4); margin: 0 0 var(--s-6); padding: var(--s-4) var(--s-5); border-radius: 16px; background: var(--ivory); border: 1px solid var(--silver-200); }
+  .h-scope dt { margin-bottom: var(--s-2); }
+  .h-scope dd { margin: 0; font-size: var(--fs-sm); color: var(--slate); }
+  @media (max-width: 760px) { .h-scope { grid-template-columns: 1fr; } }
+  .h-does__status { display: inline-flex; align-self: flex-start; font-size: var(--fs-label); font-weight: 600; padding: 4px 10px; border-radius: 999px; background: var(--sapphire-soft); color: var(--royal-deep); margin-bottom: var(--s-4); }
+  .h-does__lead .h-does__status { background: rgb(143 220 247 / 16%); color: #8fdcf7; }
   @media (prefers-reduced-motion: no-preference) {
     :global(.js) .kw > span { transform: translateY(105%) rotate(4deg); animation: rise 900ms cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: calc(120ms + var(--i) * 90ms); }
     :global(.js) .h-in { opacity: 0; transform: translateY(16px); animation: fadeUp 700ms var(--ease) forwards; animation-delay: calc(var(--i) * 90ms); }
@@ -335,7 +358,7 @@ const tiers = [
   .h-does li:nth-child(4) { grid-column: 2 / 4; }
   .h-does__lead { grid-row: 1 / 3; border: 0 !important; justify-content: flex-end; min-height: 360px; color: #c3d1e8;
     background: radial-gradient(70% 60% at 100% 0%, rgb(34 184 230 / 35%), transparent 65%), linear-gradient(160deg, var(--midnight-2), var(--midnight)) !important; }
-  .h-does__lead h3 { color: #fff; font-size: var(--fs-2xl); max-width: 12ch; }
+  .h-does__lead h3 { color: #fff; font-size: var(--fs-2xl); max-width: 14ch; }
   .h-does__lead p { color: #c3d1e8; flex: 0; max-width: 36ch; }
   .h-does__lead .link-arrow { color: #8fdcf7; }
   .h-does__lead .link-arrow:hover { color: #fff; }

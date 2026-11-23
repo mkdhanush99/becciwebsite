@@ -3,21 +3,40 @@ import Base from '../../layouts/Base.astro';
 import PageHero from '../../components/PageHero.astro';
 import Pending from '../../components/Pending.astro';
 ---
-<Base title="Youth Wing" description="A dedicated home for students, young professionals and first-time founders within BECCI.">
-  <PageHero variant="feature" title="Youth Wing" lede="A dedicated home for students, young professionals and first-time founders within BECCI." crumbs={[{ label: 'Wings', href: '/wings' }, { label: "Youth Wing" }]}>
+<Base title="Youth Wing" description="The Youth Wing of BECCI: who it is for, what it offers students and young founders today, and how to take part.">
+  <PageHero variant="feature" title="Youth Wing" lede="The Youth Wing is for students, graduates, young professionals and first-time founders: the people at the very beginning of the BECCI story." crumbs={[{ label: 'Wings', href: '/wings' }, { label: "Youth Wing" }]}>
     <div style="display:flex;gap:var(--s-3);flex-wrap:wrap;margin-top:var(--s-5)"><a class="btn btn--accent" href="/membership#join">Join the Youth Wing</a><a class="btn btn--ghost" href="#invite">Invite someone</a></div>
   </PageHero>
   <section class="section"><div class="wrap w-grid">
     <div class="w-main">
-      <section class="w-block"><h2>Introduction and objectives</h2><Pending>The Youth Wing's approved introduction and objectives will be published here.</Pending></section>
-      <section class="w-block"><h2>Leadership and office bearers</h2><Pending>Office bearers will be listed once approved. Personal phone numbers are not published.</Pending></section>
-      <section class="w-block"><h2>Activities and programmes</h2><Pending>Programmes for young entrepreneurs and students will appear here as they are announced.</Pending></section>
-      <section class="w-block"><h2>Events and initiatives</h2><p class="muted">No Youth Wing events have been announced yet. <a href="/events">See the event calendar</a>.</p></section>
+      <section class="w-block"><h2>Who it is for</h2>
+        <ul class="w-list">
+          <li>Students in school, college and higher education who want support to keep studying.</li>
+          <li>Graduates and job seekers looking for internships, apprenticeships and a first job.</li>
+          <li>Young professionals building a career who may want to start a business later.</li>
+          <li>First-time founders with an idea, a skill or a small business just getting started.</li>
+        </ul>
+        <p>Like all of BECCI, the wing is for members whose community is on the Central OBC list for their State or on a State BC/OBC list. The minimum age for membership has not yet been fixed.</p>
+      </section>
+      <section class="w-block"><h2>Why start young</h2>
+        <p>The BECCI story begins with B for Beginning: a person, an idea and a dream. The earlier a young person meets entrepreneurs from their own community, the earlier enterprise becomes a real choice rather than a distant one. The Youth Wing connects students and young founders with the people and opportunities that make that first step possible.</p>
+      </section>
+      <section class="w-block"><h2>What you can use today</h2>
+        <ul class="w-links">
+          <li><a href="/opportunities/scholarships">Scholarships<span>Verified Central and State scholarships, including those reserved for OBC and BC students, with deadlines.</span></a></li>
+          <li><a href="/opportunities/jobs">Jobs, internships and apprenticeships<span>Official portals such as the PM Internship Scheme, Apprenticeship India and the National Career Service.</span></a></li>
+          <li><a href="/opportunities/finance">Funding a first business<span>Loan schemes for aspiring entrepreneurs, with who can apply and what they ask for.</span></a></li>
+        </ul>
+      </section>
+      <section class="w-block"><h2>Objectives, programmes and office bearers</h2>
+        <Pending label="Awaiting approved content">The wing’s approved objectives, its office bearers and its first programmes will be published here. Personal phone numbers are never published.</Pending>
+      </section>
+      <section class="w-block"><h2>Events and initiatives</h2><p class="muted">No Youth Wing events have been announced yet. When they are, they will appear here and on the <a href="/events">event calendar</a>.</p></section>
     </div>
     <aside class="w-side">
       <div class="panel w-panel">
         <h2>Taking part</h2>
-        <p>The Youth Wing is part of BECCI membership. Read who can join and how.</p>
+        <p>Become a BECCI member and tell the membership team you would like to join the Youth Wing. Online applications are not open yet, so start with a call.</p>
         <a class="btn btn--accent" href="/membership#join">Join the Youth Wing</a>
       </div>
       <div class="panel w-panel" id="invite">
@@ -42,6 +61,12 @@ import Pending from '../../components/Pending.astro';
   .w-block { padding-block: var(--s-5); border-top: var(--hair); }
   .w-block:first-child { border-top: 0; padding-top: 0; }
   .w-block h2 { font-size: var(--fs-xl); }
+  .w-list { padding-left: 1.2em; }
+  .w-list li { margin-bottom: var(--s-2); }
+  .w-links { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--s-2); }
+  .w-links a { display: flex; flex-direction: column; padding: var(--s-4); border-radius: 12px; border: 1px solid var(--silver-200); background: var(--white); text-decoration: none; color: var(--midnight); font-weight: 600; transition: border-color var(--dur); }
+  .w-links a:hover { border-color: var(--royal); }
+  .w-links span { font-weight: 400; font-size: var(--fs-sm); color: var(--slate); }
   .w-side { display: grid; gap: var(--s-4); position: sticky; top: calc(64px + var(--s-5)); }
   .w-panel { padding: var(--s-5); }
   .w-panel h2 { font-size: var(--fs-lg); }

@@ -7,14 +7,23 @@ import { destinations } from '../data/site';
 const has = destinations.email || destinations.phone || destinations.address;
 ---
 <Base title="Contact" description="How to contact BECCI.">
-  <PageHero title="Contact BECCI" lede="Questions about membership, partnerships, events or the opportunity finder." crumbs={[{ label: 'Contact' }]} />
-  <section class="section"><div class="wrap two-col">
+  <PageHero title="Contact BECCI" lede="Reach the right part of BECCI quickly. Use the guide below for the fastest route, or send a general enquiry." crumbs={[{ label: 'Contact' }]} />
+  <section class="section"><div class="wrap">
+    <h2>Who to contact for what</h2>
+    <ul class="c-routes">
+      <li><a href="/membership#request-call"><strong>Joining BECCI</strong><span>Ask the membership team to call you.</span></a></li>
+      <li><a href="/partnerships#proposal"><strong>Institutional partnership</strong><span>Send a partnership proposal.</span></a></li>
+      <li><a href="/services"><strong>Business services</strong><span>Tell us what help you need.</span></a></li>
+      <li><a href="/opportunities"><strong>A scheme, tender or job</strong><span>Contact the issuing authority named on the listing. BECCI cannot decide eligibility.</span></a></li>
+    </ul>
+  </div></section>
+  <section class="section section--white"><div class="wrap two-col">
     <div>
       <h2>Official contact details</h2>
       {has ? (
         <dl>{destinations.email && <><dt>Email</dt><dd><a href={`mailto:${destinations.email}`}>{destinations.email}</a></dd></>}{destinations.phone && <><dt>Phone</dt><dd>{destinations.phone}</dd></>}{destinations.address && <><dt>Office</dt><dd>{destinations.address}</dd></>}</dl>
       ) : <Pending>BECCI's official email, office phone and address will be published here once confirmed.</Pending>}
-      <p class="small muted" style="margin-top:var(--s-4)">For a specific scheme or tender, contact the issuing authority listed on that opportunity's page.</p>
+      <p class="small muted" style="margin-top:var(--s-4)">BECCI never publishes the personal phone numbers of its leadership. Please use these official routes.</p>
     </div>
     <div>
       <h2>Send an enquiry</h2>
@@ -27,3 +36,12 @@ const has = destinations.email || destinations.phone || destinations.address;
     </div>
   </div></section>
 </Base>
+
+<style>
+  .c-routes { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-3); }
+  .c-routes a { display: flex; flex-direction: column; gap: var(--s-1); height: 100%; padding: var(--s-5); border-radius: 16px; background: var(--white); border: 1px solid var(--silver-200); color: var(--slate); text-decoration: none; font-size: var(--fs-sm); transition: border-color var(--dur); }
+  .c-routes a:hover { border-color: var(--royal); color: var(--slate); }
+  .c-routes strong { color: var(--midnight); font-size: var(--fs-md); }
+  @media (max-width: 900px) { .c-routes { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px) { .c-routes { grid-template-columns: 1fr; } }
+</style>

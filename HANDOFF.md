@@ -35,3 +35,8 @@ Add approved photographs and contact channel (phone/WhatsApp/email or form endpo
 - The homepage was rebuilt around a kinetic hero, a register card that rises on scroll, a statement that lights up as you scroll, the pinned B-E-C-C-I story drum and a closing panel that grows into place.
 - The same motion language now runs on every page through PageHero, PageHead, Kinetic, Motion and global CSS. See DESIGN.md v3.
 - Checks: build, astro check (0 errors), npm test 15/15, browser QA 33/33 (story drum and reduced-motion checks added).
+
+## Update: content audit (23 Nov 2026)
+- Content rewritten on every page against the PRD and the Critique Review, with no invented facts. See `CONTENT-CHECKLIST.md` for the page-by-page record and the prioritised list of client inputs.
+- Shared copy lives in `src/data/site.ts`: `site.identity`, `site.philosophy`, `site.origin`, `audiences`, and `story[].link`.
+- New component `ScopeLegend.astro` explains the three OBC/BC category rules on every finder page.

@@ -5,11 +5,12 @@ import { news } from '../data/site';
 import { formatDate } from '../lib/status';
 const topics = ['BECCI announcements', 'Government announcements', 'Business and MSME updates', 'Scheme updates', 'Programme news'];
 ---
-<Base title="News Desk" description="BECCI announcements, scheme updates and business news.">
-  <PageHero title="News and announcements" lede="Announcements from BECCI, scheme updates and business news that matters to entrepreneurs." crumbs={[{ label: 'News Desk' }]} />
+<Base title="News Desk" description="BECCI announcements, government and scheme updates, and business news for OBC entrepreneurs.">
+  <PageHero title="News and announcements" lede="The News Desk is where BECCI publishes its own announcements, alongside government, scheme and MSME updates that affect its members." crumbs={[{ label: 'News Desk' }]} />
   <section class="section"><div class="wrap">
     <ul class="tag-list" aria-label="Topics covered" style="margin-bottom:var(--s-6)">{topics.map((t) => <li>{t}</li>)}</ul>
     {news.length ? <ul>{news.map((n) => <li><p class="small muted">{formatDate(n.date)}</p><h3>{n.title}</h3><p>{n.summary}</p></li>)}</ul>
-      : <div class="empty"><h2 class="empty__title">No announcements published yet</h2><p class="muted">The first BECCI announcements will appear here. For current scheme deadlines, see the <a href="/opportunities">opportunity finder</a>.</p></div>}
+      : <div class="empty"><h2 class="empty__title">No announcements published yet</h2><p class="muted">BECCI’s first announcements will appear here, each with its date. For deadlines that are open now, use the <a href="/opportunities">opportunity finder</a>.</p></div>}
+    <p class="small muted" style="margin-top:var(--s-6)">Looking for guides and explainers rather than news? See the <a href="/knowledge">Knowledge Centre</a>.</p>
   </div></section>
 </Base>
