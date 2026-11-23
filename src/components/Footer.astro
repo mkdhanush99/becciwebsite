@@ -1,40 +1,237 @@
 ---
-import { site, socials, nav } from '../data/site';
+// Site footer in two zones.
+// Zone A: institutional navigation (only pages that exist).
+// Zone B: the cinematic brand ending — the official BECCI infinity emblem, the brand promise and an
+// oversized dimensional BECCI wordmark rising out of a champagne-gold horizon.
+// Motion is scroll-triggered (IntersectionObserver), transform/opacity only, never traps scrolling.
+// The resting composition is the default: with no JS, or with reduced motion, everything is visible.
+import { site, socials } from '../data/site';
 import Logo from './Logo.astro';
-const groups = nav.filter((g) => g.children);
+
+const cols = [
+  { title: 'BECCI', links: [
+    { label: 'About BECCI', href: '/about' },
+    { label: 'Our Vision', href: '/about#purpose' },
+    { label: 'Leadership', href: '/leadership' },
+    { label: 'Governance', href: '/about#structure' },
+  ] },
+  { title: 'Explore', links: [
+    { label: 'Government Schemes', href: '/schemes' },
+    { label: 'Business Opportunities', href: '/franchise' },
+    { label: 'Tenders & Procurement', href: '/opportunities/tenders' },
+    { label: 'Jobs & Internships', href: '/opportunities/jobs' },
+    { label: 'Scholarships', href: '/opportunities/scholarships' },
+    { label: 'Loans & Funding', href: '/opportunities/finance' },
+  ] },
+  { title: 'Ecosystem', links: [
+    { label: 'Women’s Wing', href: '/wings/women' },
+    { label: 'Youth Wing', href: '/wings/youth' },
+    { label: 'Biz Connect', href: '/biz-connect' },
+    { label: 'Marketplace', href: '/marketplace' },
+    { label: 'Services', href: '/services' },
+    { label: 'Events', href: '/events' },
+    { label: 'Knowledge Centre', href: '/knowledge' },
+  ] },
+  { title: 'Connect', links: [
+    { label: 'Join as a Member', href: '/membership#join' },
+    { label: 'Partner with BECCI', href: '/partnerships' },
+    { label: 'Contact', href: '/contact' },
+    { label: 'Member Login', href: '/membership#member-login' },
+  ] },
+];
+
+// Deterministic particle field (no randomness at runtime, so every build renders the same).
+const particles = Array.from({ length: 34 }, (_, i) => {
+  const r = (n: number) => { const x = Math.sin((i + 1) * 9301 + n * 49297) * 233280; return x - Math.floor(x); };
+  return { x: (6 + r(1) * 88).toFixed(1), y: (38 + r(2) * 58).toFixed(1), s: (1.2 + r(3) * 2.4).toFixed(1), d: (7 + r(4) * 7).toFixed(1), t: (r(5) * 6).toFixed(2), o: (0.35 + r(6) * 0.55).toFixed(2) };
+});
+const letters = ['B', 'E', 'C', 'C', 'I'];
+const year = new Date().getFullYear();
 ---
-<footer class="site-footer on-dark">
-  <div class="wrap">
-    <div class="footer-top">
-      <p class="footer-promise">Building Businesses • Building Bharat</p>
-      <div class="footer-cta">
-        <a class="btn btn--light" href="/membership#join">Join BECCI</a>
-        <a class="btn btn--ghost" href="/partnerships">Partner with BECCI</a>
-      </div>
-    </div>
-    <div class="footer-grid">
-      <div class="footer-id">
+<footer class="site-footer cf">
+  <!-- Zone A: institutional navigation -->
+  <div class="wrap cf-nav" data-cf-links>
+    <div class="cf-grid">
+      <div class="cf-brand cf-in" style="--i:0">
         <Logo tone="light" />
-        <p>{site.identity}</p>
-        {socials.length ? (
-          <ul class="footer-social">{socials.map((s) => <li><a href={s.url} rel="noopener">{s.label}</a></li>)}</ul>
-        ) : <p class="small">Official social media links will be added once BECCI confirms them.</p>}
+        <p class="cf-brand__name">BECCI — {site.fullName}.</p>
+        <p class="cf-brand__close">Where Community Meets Commerce.</p>
+        {socials.length > 0 && (
+          <ul class="cf-social">{socials.map((s) => <li><a href={s.url} rel="noopener">{s.label}</a></li>)}</ul>
+        )}
       </div>
-      {groups.map((g) => (
-        <div><h2>{g.label}</h2><ul>{[...g.children!, ...(g.more ?? [])].map((c) => <li><a href={c.href}>{c.label}</a></li>)}</ul></div>
+      {cols.map((c, i) => (
+        <nav class="cf-col cf-in" style={`--i:${i + 1}`} aria-label={`Footer: ${c.title}`}>
+          <h2>{c.title}</h2>
+          <ul>{c.links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul>
+        </nav>
       ))}
     </div>
-    <div class="footer-base">
-      <span>© {new Date().getFullYear()} BECCI · {site.fullName}</span>
-      <span><a href="/membership">Membership</a> · <a href="/policies">Privacy Policy</a> · <a href="/policies#terms">Terms</a> · <a href="/opportunities/about-data">How we check opportunities</a></span>
+    <div class="cf-legal cf-in" style="--i:5">
+      <p>© {year} BECCI · {site.fullName}</p>
+      <p class="cf-legal__links"><a href="/policies#privacy">Privacy Policy</a><span aria-hidden="true"> · </span><a href="/policies#terms">Terms</a><span aria-hidden="true"> · </span><a href="/opportunities/about-data">How we check opportunities</a></p>
+      <p class="cf-credit">Government scheme logos belong to their issuing authorities and are shown only to identify each scheme. Typeface: Quicksand, SIL Open Font License.</p>
     </div>
   </div>
+
+  <!-- Zone B: cinematic brand ending -->
+  <div class="cf-stage" data-cf-stage>
+    <div class="cf-haze" aria-hidden="true"></div>
+    <div class="cf-glow" aria-hidden="true"></div>
+    <div class="cf-dust" aria-hidden="true">
+      {particles.map((p) => <i style={`--x:${p.x}%;--y:${p.y}%;--s:${p.s}px;--d:${p.d}s;--t:${p.t}s;--o:${p.o}`}></i>)}
+    </div>
+    <div class="cf-sign">
+      <img class="cf-emblem" src="/brand/becci-symbol-white.svg" alt="BECCI emblem: two Cs, for Community and Commerce, joined as an infinity symbol" width="207" height="105" loading="lazy" decoding="async" />
+      <p class="cf-promise">Building Businesses <span aria-hidden="true">•</span><span class="visually-hidden">,</span> Building Bharat</p>
+    </div>
+    <p class="cf-word" aria-hidden="true">
+      {letters.map((l, i) => (
+        <span class="cf-l" style={`--i:${i}`}><span class="cf-l__d">{l}</span><span class="cf-l__f">{l}</span><span class="cf-l__s">{l}</span></span>
+      ))}
+    </p>
+  </div>
 </footer>
+
+<script>
+  const root = document.querySelector<HTMLElement>('.cf');
+  const links = root?.querySelector<HTMLElement>('[data-cf-links]');
+  const stage = root?.querySelector<HTMLElement>('[data-cf-stage]');
+  if (root && links && stage) {
+    if (!('IntersectionObserver' in window)) {
+      root.dataset.links = ''; root.dataset.awake = ''; root.dataset.inview = '';
+    } else {
+      // 1. links appear as the footer approaches
+      const lo = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { root.dataset.links = ''; lo.disconnect(); } }, { rootMargin: '0px 0px -8% 0px' });
+      lo.observe(links);
+      // 2–8. the brand ending plays once when the stage comes into view; particles pause off-screen
+      const so = new IntersectionObserver((es) => {
+        for (const e of es) {
+          if (e.isIntersecting) { root.dataset.awake = ''; root.dataset.links = ''; root.dataset.inview = ''; }
+          else delete root.dataset.inview;
+        }
+      }, { threshold: 0.2 });
+      so.observe(stage);
+    }
+  }
+</script>
+
 <style is:global>
-  .site-footer { position: relative; overflow: hidden; isolation: isolate; background: var(--midnight); padding-top: clamp(var(--s-7), 7vw, 112px); }
-  .footer-cta { display: flex; flex-wrap: wrap; gap: var(--s-3); }
-  .footer-id p { margin: var(--s-4) 0 0; max-width: 34ch; }
-  .footer-social { list-style: none; padding: 0; display: flex; gap: var(--s-4); margin-top: var(--s-4); }
-  .footer-grid { grid-template-columns: 1.4fr repeat(4, 1fr) !important; }
-  @media (max-width: 900px) { .footer-grid { grid-template-columns: 1fr 1fr !important; } .site-footer { padding-top: var(--s-7); } }
+  .cf {
+    --cf-night: #081A30; --cf-gold: #C6A15B; --cf-gold-2: #A9874C; --cf-sapphire: #174A78; --cf-ivory: #F7F5EF;
+    position: relative; overflow: hidden; isolation: isolate; padding: 0;
+    background: var(--cf-night); color: rgb(247 245 239 / 72%); font-size: var(--fs-sm);
+  }
+  /* soft sapphire atmosphere where the page hands over to the footer */
+  .cf::before { content: ''; position: absolute; inset: 0 0 auto; height: 420px; z-index: -1; pointer-events: none;
+    background: radial-gradient(70% 100% at 50% 0%, rgb(23 74 120 / 42%), transparent 72%); }
+
+  /* ── Zone A ── */
+  .cf-nav { padding-top: clamp(72px, 8vw, 120px); }
+  .cf-grid { display: grid; grid-template-columns: minmax(0, 1.5fr) repeat(4, minmax(0, 1fr)); gap: var(--s-6) clamp(var(--s-5), 3vw, var(--s-7)); }
+  .cf-brand__name { margin: var(--s-4) 0 0; max-width: 30ch; color: rgb(247 245 239 / 78%); line-height: 1.55; }
+  .cf-brand__close { margin: var(--s-4) 0 0; font: 700 var(--fs-lg)/1.25 var(--font-display); color: var(--cf-ivory); letter-spacing: -0.01em; max-width: 18ch; }
+  .cf-social { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s-4); margin: var(--s-4) 0 0; }
+  .cf-col h2 { margin: 6px 0 var(--s-3); font: 700 var(--fs-label)/1 var(--font-body); letter-spacing: 0.12em; text-transform: uppercase; color: var(--cf-gold); }
+  .cf-col ul { list-style: none; margin: 0; padding: 0; display: grid; }
+  .cf a { color: rgb(247 245 239 / 84%); text-decoration: none; }
+  .cf-col a { position: relative; display: inline-flex; align-items: center; min-height: 40px; font-size: 0.9375rem; transition: color 200ms var(--ease); }
+  .cf-col a::after { content: ''; position: absolute; left: 0; right: 0; bottom: 9px; height: 1px; background: var(--cf-gold); transform: scaleX(0); transform-origin: right; transition: transform 260ms var(--ease); }
+  .cf-col a:hover { color: #fff; text-decoration: none; }
+  .cf-col a:hover::after { transform: scaleX(1); transform-origin: left; }
+  .cf a:focus-visible { outline: 2px solid var(--cf-gold); outline-offset: 3px; border-radius: 3px; }
+  .cf-legal { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0 var(--s-5); margin-top: clamp(var(--s-6), 5vw, var(--s-8)); padding-top: var(--s-4); border-top: 1px solid rgb(247 245 239 / 12%); color: rgb(247 245 239 / 62%); font-size: 0.8125rem; }
+  .cf-legal p { margin: 0; }
+  .cf-legal a { display: inline-flex; align-items: center; min-height: 44px; color: rgb(247 245 239 / 78%); }
+  .cf-legal a:hover { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+  .cf-credit { flex-basis: 100%; color: rgb(247 245 239 / 46%); font-size: 0.75rem; padding-bottom: 4px; }
+
+  /* ── Zone B ── */
+  .cf-stage { position: relative; margin-top: clamp(var(--s-6), 5vw, 72px); padding-top: clamp(32px, 4vw, 56px); text-align: center; overflow: hidden; }
+  .cf-haze { position: absolute; inset: 0; z-index: -2; background: linear-gradient(180deg, transparent 0%, rgb(23 74 120 / 18%) 45%, rgb(23 74 120 / 0%) 100%); }
+  .cf-glow { position: absolute; left: -25%; right: -25%; bottom: -62%; height: 140%; z-index: -1; pointer-events: none; transform-origin: 50% 100%;
+    background: radial-gradient(closest-side, rgb(250 240 214 / 95%) 0%, rgb(232 207 150 / 88%) 12%, rgb(198 161 91 / 78%) 27%, rgb(169 135 76 / 52%) 42%, rgb(23 74 120 / 30%) 62%, rgb(8 26 48 / 0%) 82%); }
+  .cf-glow::after { content: ''; position: absolute; inset: 30% 34% 38%; background: radial-gradient(closest-side, rgb(255 250 236 / 70%), rgb(255 246 222 / 0%)); }
+  .cf-dust { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+  .cf-dust i { position: absolute; left: var(--x); top: var(--y); width: var(--s); height: var(--s); border-radius: 50%; opacity: var(--o);
+    background: radial-gradient(circle, #FFF6DE 0%, rgb(232 207 150 / 80%) 45%, rgb(198 161 91 / 0%) 100%); box-shadow: 0 0 6px rgb(232 207 150 / 55%); }
+
+  .cf-sign { position: relative; display: grid; justify-items: center; gap: clamp(12px, 1.6vw, 20px); padding-inline: var(--gutter); }
+  .cf-emblem { display: block; width: clamp(76px, 8.5vw, 132px); height: auto; aspect-ratio: 207 / 104.5; filter: drop-shadow(0 0 18px rgb(198 161 91 / 45%)); }
+  .cf-promise { margin: 0; font: 700 clamp(0.75rem, 0.62rem + 0.5vw, 1.0625rem)/1.3 var(--font-display); letter-spacing: 0.32em; text-transform: uppercase; color: var(--cf-ivory); text-shadow: 0 0 24px rgb(198 161 91 / 45%); }
+  .cf-promise > span[aria-hidden] { color: var(--cf-gold); margin: 0 0.35em 0 0.1em; }
+
+  .cf-word { position: relative; display: flex; justify-content: center; margin: clamp(4px, 1vw, 16px) 0 -0.09em; white-space: nowrap; user-select: none; pointer-events: none;
+    font: 700 clamp(5.5rem, 34vw, 40rem)/0.86 var(--font-display); letter-spacing: -0.035em; }
+  .cf-l { position: relative; display: inline-block; }
+  .cf-l > span { display: block; }
+  /* depth: a bronze extrusion beneath the face */
+  .cf-l__d { color: #2B2214; text-shadow: 0 0.006em 0 #3A2E18, 0 0.012em 0 #46381D, 0 0.018em 0 #524222, 0 0.024em 0 #5E4B27, 0 0.03em 0 #6B552B, 0 0.05em 0.06em rgb(8 26 48 / 60%); }
+  /* face: warm ivory falling into champagne gold */
+  .cf-l__f, .cf-l__s { position: absolute; inset: 0; -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
+  .cf-l__f { transform: translateY(-0.03em);
+    background-image: linear-gradient(180deg, #FFFDF7 0%, var(--cf-ivory) 30%, #EFE3C6 50%, #DCC28C 66%, var(--cf-gold) 82%, var(--cf-gold-2) 100%); }
+  /* sheen: one restrained band of light, used by the motion pass */
+  .cf-l__s { transform: translateY(-0.03em); opacity: 0;
+    background-image: linear-gradient(105deg, transparent 38%, rgb(255 252 240 / 95%) 50%, transparent 62%); background-size: 320% 100%; background-position: 120% 0; }
+
+  /* ── Motion (only with JS and no reduced-motion preference; the resting state above is the default) ── */
+  @media (prefers-reduced-motion: no-preference) {
+    html.js .cf:not([data-links]) .cf-in { opacity: 0; transform: translateY(18px); }
+    html.js .cf .cf-in { transition: opacity 900ms var(--ease), transform 900ms var(--ease); transition-delay: calc(var(--i) * 90ms); }
+
+    html.js .cf:not([data-awake]) .cf-glow { opacity: 0; transform: scale(0.55, 0.35); }
+    html.js .cf:not([data-awake]) .cf-haze { opacity: 0; }
+    html.js .cf:not([data-awake]) .cf-dust { opacity: 0; }
+    html.js .cf:not([data-awake]) .cf-l { opacity: 0; transform: translateY(26%); }
+    html.js .cf:not([data-awake]) .cf-l__f { opacity: 0; }
+    html.js .cf:not([data-awake]) .cf-emblem { opacity: 0; transform: translateY(10px) scale(0.92); }
+    html.js .cf:not([data-awake]) .cf-promise { opacity: 0; transform: translateY(8px); }
+
+    html.js .cf .cf-haze { transition: opacity 2400ms ease; }
+    html.js .cf .cf-glow { transition: opacity 2200ms cubic-bezier(.22,.61,.36,1) 200ms, transform 2600ms cubic-bezier(.22,.61,.36,1) 200ms; }
+    html.js .cf .cf-dust { transition: opacity 2400ms ease 900ms; }
+    html.js .cf .cf-l { transition: opacity 1600ms cubic-bezier(.22,.61,.36,1), transform 1800ms cubic-bezier(.16,1,.3,1); transition-delay: calc(1200ms + var(--i) * 140ms); }
+    html.js .cf .cf-l__f { transition: opacity 1600ms ease; transition-delay: calc(2500ms + var(--i) * 110ms); }
+    html.js .cf .cf-emblem { transition: opacity 1400ms ease 3200ms, transform 1600ms cubic-bezier(.16,1,.3,1) 3200ms; }
+    html.js .cf .cf-promise { transition: opacity 1400ms ease 4700ms, transform 1400ms cubic-bezier(.16,1,.3,1) 4700ms; }
+
+    /* 7. the light travels once across the wordmark */
+    html.js .cf[data-awake] .cf-l__s { animation: cfSheen 2000ms cubic-bezier(.45,0,.25,1) both; animation-delay: calc(3700ms + var(--i) * 150ms); }
+    @keyframes cfSheen { 0% { opacity: 0; background-position: 120% 0; } 25% { opacity: 1; } 75% { opacity: 1; } 100% { opacity: 0; background-position: -20% 0; } }
+
+    /* 3. fine particles drift slowly upward; paused when the stage is off-screen */
+    html.js .cf[data-awake] .cf-dust i { animation: cfDrift var(--d) ease-in-out var(--t) infinite; animation-play-state: paused; }
+    html.js .cf[data-awake][data-inview] .cf-dust i { animation-play-state: running; }
+    @keyframes cfDrift { 0% { transform: translate3d(0, 0, 0); opacity: 0; } 20% { opacity: var(--o); } 80% { opacity: calc(var(--o) * 0.8); } 100% { transform: translate3d(6px, -54px, 0); opacity: 0; } }
+    /* the glow breathes very slightly */
+    html.js .cf[data-awake][data-inview] .cf-glow::after { animation: cfBreathe 9s ease-in-out 3s infinite alternate; }
+    @keyframes cfBreathe { from { opacity: 0.75; transform: scale(1); } to { opacity: 1; transform: scale(1.08); } }
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 1100px) {
+    .cf-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .cf-brand { grid-column: 1 / -1; display: grid; grid-template-columns: auto 1fr; gap: var(--s-2) var(--s-6); align-items: start; }
+    .cf-brand .cf-brand__name { margin-top: 0; }
+    .cf-brand__close { grid-column: 1 / -1; margin-top: var(--s-2); }
+    .cf-dust i:nth-child(n + 23) { display: none; }
+  }
+  @media (max-width: 760px) {
+    .cf-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-5) var(--s-5); }
+    .cf-brand { display: block; }
+    .cf-brand .cf-brand__name { margin-top: var(--s-4); }
+    .cf-legal { flex-direction: column; align-items: flex-start; }
+    .cf-dust i:nth-child(n + 13) { display: none; }
+    .cf-promise { letter-spacing: 0.2em; }
+    .cf-glow { bottom: -48%; height: 120%; left: -70%; right: -70%; }
+  }
+  @media (max-width: 760px) and (prefers-reduced-motion: no-preference) {
+    /* lighter sequence on phones: no sheen, quicker reveal */
+    html.js .cf[data-awake] .cf-l__s { animation: none; }
+    html.js .cf .cf-l { transition-delay: calc(600ms + var(--i) * 100ms); }
+    html.js .cf .cf-l__f { transition-delay: calc(1500ms + var(--i) * 80ms); }
+    html.js .cf .cf-emblem { transition-delay: 2000ms, 2000ms; }
+    html.js .cf .cf-promise { transition-delay: 2600ms, 2600ms; }
+  }
 </style>
