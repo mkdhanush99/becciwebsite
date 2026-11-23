@@ -1,4 +1,5 @@
 ---
+import Icon from '../components/Icon.astro';
 import Base from '../layouts/Base.astro';
 import BrandMedia from '../components/BrandMedia.astro';
 import Kinetic from '../components/Kinetic.astro';
@@ -21,12 +22,12 @@ const name = [
   ['Industry', 'Manufacturing, services, agriculture and every other sector in which members work.'],
 ];
 const does = [
-  { t: 'Opens access to opportunities', d: 'A public finder for government schemes, scholarships, loans, tenders, jobs and apprenticeships. Every listing is checked against its official source.', status: 'Available now', href: '/opportunities' },
-  { t: 'Connects entrepreneurs', d: 'Wings, sector committees, State chapters and events where entrepreneurs meet, share knowledge and do business with one another.', status: 'Being set up', href: '/wings' },
-  { t: 'Builds capability', d: 'Guidance on finance, registration, compliance and mentorship through service providers and institutions BECCI is arranging.', status: 'Being set up', href: '/services' },
-  { t: 'Works with institutions', d: 'Collaboration with government departments, banks, MSME bodies, educational institutions and industry associations.', status: 'Open to proposals', href: '/partnerships' },
-  { t: 'Structured business networking', d: 'Biz Connect: member profiles, sector groups, referrals and tracking of the business those referrals create.', status: 'Planned', href: '/biz-connect' },
-  { t: 'A place to trade', d: 'Marketplace: a verified business directory, business-to-business enquiries and buyer–seller connections for members.', status: 'Planned', href: '/marketplace' },
+  { icon: 'search', t: 'Opens access to opportunities', d: 'A public finder for government schemes, scholarships, loans, tenders, jobs and apprenticeships. Every listing is checked against its official source.', status: 'Available now', href: '/opportunities' },
+  { icon: 'community', t: 'Connects entrepreneurs', d: 'Wings, sector committees, State chapters and events where entrepreneurs meet, share knowledge and do business with one another.', status: 'Being set up', href: '/wings' },
+  { icon: 'services', t: 'Builds capability', d: 'Guidance on finance, registration, compliance and mentorship through service providers and institutions BECCI is arranging.', status: 'Being set up', href: '/services' },
+  { icon: 'partnership', t: 'Works with institutions', d: 'Collaboration with government departments, banks, MSME bodies, educational institutions and industry associations.', status: 'Open to proposals', href: '/partnerships' },
+  { icon: 'commerce', t: 'Structured business networking', d: 'Biz Connect: member profiles, sector groups, referrals and tracking of the business those referrals create.', status: 'Planned', href: '/biz-connect' },
+  { icon: 'sectors', t: 'A place to trade', d: 'Marketplace: a verified business directory, business-to-business enquiries and buyer–seller connections for members.', status: 'Planned', href: '/marketplace' },
 ];
 // Entrepreneur stages from the Project Requirements Document §14.3.
 const journey = [
@@ -88,8 +89,8 @@ const journey = [
   <section class="section" id="what" aria-labelledby="what-title">
     <div class="wrap">
       <div class="section-head"><h2 id="what-title">What BECCI does</h2><p>Six areas of work. Each says honestly whether you can use it today or whether it is still being built.</p></div>
-      <ul class="a-does">
-        {does.map((d) => <li><a href={d.href} class="lift"><span class="a-status">{d.status}</span><h3>{d.t}</h3><p>{d.d}</p><span class="link-arrow">Find out more</span></a></li>)}
+      <ul class="a-does bento">
+        {does.map((d) => <li class="tile-li"><a href={d.href} class="tile"><span class="a-top"><span class="ibadge"><Icon name={d.icon} /></span><span class="a-status">{d.status}</span></span><h3>{d.t}</h3><p>{d.d}</p><span class="link-arrow">Find out more</span></a></li>)}
       </ul>
     </div>
   </section>
@@ -166,6 +167,11 @@ const journey = [
 </Base>
 
 <style>
+  .a-does { list-style: none; padding: 0; }
+  .a-does .tile { height: 100%; }
+  .a-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--s-3); }
+  .a-does .a-status { margin: 0; }
+  .tile-li { display: flex; }
   .a-cover { position: relative; isolation: isolate; overflow: hidden; background: var(--ivory); padding-top: clamp(72px, 8vw, 120px); border-bottom: var(--hair); }
   .a-cover__grid { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: clamp(var(--s-6), 5vw, var(--s-8)); align-items: end; }
   .a-cover h1 { font-size: clamp(2.6rem, 1rem + 5vw, 5.75rem); font-weight: 600; line-height: 0.98; letter-spacing: -0.04em; max-width: 12ch; }
@@ -190,7 +196,6 @@ const journey = [
   @media (max-width: 760px) { .a-statements__grid { grid-template-columns: 1fr; } .a-statements__mark { max-width: 160px; } }
 
   .a-does { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-4); }
-  .a-does a { display: flex; flex-direction: column; height: 100%; padding: var(--s-6) var(--s-5); border: 1px solid var(--silver-200); background: var(--white); color: inherit; text-decoration: none; border-radius: 16px; }
   .a-does h3 { font-size: var(--fs-lg); }
   .a-does p { color: var(--slate); flex: 1; }
   .a-does .link-arrow { color: var(--sapphire); }

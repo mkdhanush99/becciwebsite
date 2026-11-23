@@ -1,4 +1,6 @@
 ---
+import Icon from './Icon.astro';
+const CAT_ICON: Record<string, string> = { schemes: 'schemes', tenders: 'tenders', jobs: 'jobs', scholarships: 'scholarship', finance: 'funding' };
 import { opportunities, portals, CATEGORY_META, CATEGORY_ORDER, OBC_SCOPE_LABEL, FEED_STATUS, type Category } from '../data/opportunities';
 import { computeStatus, STATUS_LABEL, deadlineText, formatDate, todayISO, type Status } from '../lib/status';
 
@@ -34,9 +36,9 @@ const title = category ? CATEGORY_META[category].label : 'All opportunities';
 ---
 <div class="finder" data-finder data-category={category ?? 'all'}>
   <nav class="cat-tabs" aria-label="Opportunity categories">
-    <a href="/opportunities" aria-current={!category ? 'page' : undefined}>All <span class="cat-tabs__n">{opportunities.length}</span></a>
+    <a href="/opportunities" aria-current={!category ? 'page' : undefined}><Icon name="search" size={18} />All <span class="cat-tabs__n">{opportunities.length}</span></a>
     {CATEGORY_ORDER.map((c) => (
-      <a href={CATEGORY_META[c].path} aria-current={category === c ? 'page' : undefined}>{CATEGORY_META[c].label} <span class="cat-tabs__n">{opportunities.filter((o) => o.categories.includes(c)).length}</span></a>
+      <a href={CATEGORY_META[c].path} aria-current={category === c ? 'page' : undefined}><Icon name={CAT_ICON[c] as any} size={18} />{CATEGORY_META[c].label} <span class="cat-tabs__n">{opportunities.filter((o) => o.categories.includes(c)).length}</span></a>
     ))}
   </nav>
 
@@ -199,7 +201,8 @@ const title = category ? CATEGORY_META[category].label : 'All opportunities';
   .cat-tabs::-webkit-scrollbar { display: none; }
   .cat-tabs a { flex: none; display: inline-flex; align-items: center; gap: var(--s-2); min-height: 48px; padding: 0 var(--s-3); color: var(--slate); font-weight: 500; text-decoration: none; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color var(--dur), border-color var(--dur); }
   .cat-tabs a:hover { color: var(--midnight); border-bottom-color: var(--silver-300); }
-  .cat-tabs a[aria-current='page'] { color: var(--midnight); font-weight: 600; border-bottom-color: var(--sapphire); }
+  .cat-tabs a[aria-current='page'] { color: var(--midnight); font-weight: 600; border-bottom-color: var(--royal); }
+  .cat-tabs .icon { color: var(--royal); }
   .cat-tabs__n { font-size: var(--fs-label); font-weight: 600; min-width: 22px; padding: 2px 6px; border-radius: 4px; background: var(--silver-100); color: var(--slate); text-align: center; font-variant-numeric: tabular-nums; }
   .cat-tabs a[aria-current='page'] .cat-tabs__n { background: var(--sapphire); color: #fff; }
 

@@ -1,4 +1,5 @@
 ---
+import Icon from '../components/Icon.astro';
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import Pending from '../components/Pending.astro';
@@ -12,11 +13,11 @@ const groups: [string, string, string[]][] = [
 ];
 ---
 <Base title="Services" description="Business services BECCI plans to offer through its network: finance, advice, compliance and mentorship, and how to ask for help.">
-  <PageHero title="Help with the work of running a business" lede="Finance, paperwork, compliance and advice are where many small businesses lose time. BECCI is arranging help in each of these areas through its network and partner institutions." crumbs={[{ label: 'Services' }]} />
+  <PageHero tone="cyan" icon="services" title="Help with the work of running a business" lede="Finance, paperwork, compliance and advice are where many small businesses lose time. BECCI is arranging help in each of these areas through its network and partner institutions." crumbs={[{ label: 'Services' }]} />
   <section class="section"><div class="wrap">
     <div class="section-head"><h2>Service areas</h2><p>The areas BECCI plans to cover. No individual provider has been confirmed yet, so nothing below is on offer today.</p></div>
-    <div class="grid grid--2">
-      {groups.map(([t, d, items]) => <div class="card"><h3>{t}</h3><p class="muted">{d}</p><ul class="tag-list">{items.map((i) => <li>{i}</li>)}</ul></div>)}
+    <div class="bento svc">
+      {groups.map(([t, d, items], n) => <div class="tile"><span class="ibadge"><Icon name={["funding","support","tenders","knowledge"][n]} /></span><h3>{t}</h3><p>{d}</p><ul class="chips chips--sm">{items.map((i) => <li>{i}</li>)}</ul></div>)}
     </div>
   </div></section>
   <section class="section section--white"><div class="wrap two-col">
@@ -29,7 +30,7 @@ const groups: [string, string, string[]][] = [
   </div></section>
   <section class="section"><div class="wrap two-col">
     <div><h2>Tell us what you need</h2><p class="muted">Describe the help you are looking for. It tells BECCI which services to arrange first.</p></div>
-    <EnquiryForm id="service" purpose="service-request" submitLabel="Send request" fields={[
+    <EnquiryForm id="service" purpose="service-request" submitLabel="Send request" assurance="Your request tells BECCI which services to arrange first. We reply by email; no marketing." fields={[
       { name: 'name', label: 'Your name', required: true, autocomplete: 'name' },
       { name: 'email', label: 'Email', type: 'email', required: true, autocomplete: 'email' },
       { name: 'phone', label: 'Mobile number', type: 'tel', autocomplete: 'tel' },

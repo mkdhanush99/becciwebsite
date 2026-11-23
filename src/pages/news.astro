@@ -6,7 +6,7 @@ import { formatDate } from '../lib/status';
 const topics = ['BECCI announcements', 'Government announcements', 'Business and MSME updates', 'Scheme updates', 'Programme news'];
 ---
 <Base title="News Desk" description="BECCI announcements, government and scheme updates, and business news for OBC entrepreneurs.">
-  <PageHero title="News and announcements" lede="The News Desk is where BECCI publishes its own announcements, alongside government, scheme and MSME updates that affect its members." crumbs={[{ label: 'News Desk' }]} />
+  <PageHero tone="ivory" icon="news" title="News and announcements" lede="The News Desk is where BECCI publishes its own announcements, alongside government, scheme and MSME updates that affect its members." crumbs={[{ label: 'News Desk' }]} />
   <section class="section"><div class="wrap">
     <ul class="tag-list" aria-label="Topics covered" style="margin-bottom:var(--s-6)">{topics.map((t) => <li>{t}</li>)}</ul>
     {news.length ? <ul>{news.map((n) => <li><p class="small muted">{formatDate(n.date)}</p><h3>{n.title}</h3><p>{n.summary}</p></li>)}</ul>

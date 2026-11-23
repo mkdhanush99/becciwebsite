@@ -32,19 +32,19 @@ const word = (name: string) => name.split(' ')[0];
 <style>
   .story { position: relative; background: var(--midnight); color: var(--on-dark-2); }
   .story__stage { position: relative; overflow: hidden; padding-block: var(--s-8); }
-  .story__stage::before { content: ''; position: absolute; inset: auto -10% -40% -10%; height: 90%; background: radial-gradient(50% 60% at 50% 100%, rgb(61 123 255 / 55%), rgb(34 184 230 / 18%) 45%, transparent 70%); pointer-events: none; }
+  .story__stage::before { content: ''; position: absolute; inset: auto -10% -40% -10%; height: 90%; background: radial-gradient(50% 60% at 50% 100%, rgb(40 105 232 / 55%), rgb(66 200 216 / 18%) 45%, transparent 70%); pointer-events: none; }
   .story__head { position: relative; display: flex; justify-content: space-between; align-items: baseline; gap: var(--s-4); }
   .story__head h2 { color: #fff; font-size: var(--fs-xl); margin: 0; }
   .story__count { margin: 0; font-size: var(--fs-sm); font-variant-numeric: tabular-nums; color: var(--on-dark-2); }
-  .story__count span { color: #8fdcf7; font-weight: 600; }
+  .story__count span { color: var(--sky); font-weight: 600; }
   .story__list { position: relative; list-style: none; padding: 0; margin-block: var(--s-6) 0; display: grid; gap: var(--s-6); }
-  .story__letter { display: block; font: 600 clamp(5rem, 14vw, 11rem)/0.85 var(--font-display); letter-spacing: -0.04em; color: transparent; -webkit-text-stroke: 1.5px rgb(143 220 247 / 60%); }
+  .story__letter { display: block; font: 600 clamp(5rem, 14vw, 11rem)/0.85 var(--font-display); letter-spacing: -0.04em; color: transparent; -webkit-text-stroke: 1.5px rgb(101 185 242 / 60%); }
   .story__word { font: 600 clamp(2rem, 1rem + 4vw, 4.5rem)/1 var(--font-display); letter-spacing: -0.03em; color: #fff; margin: var(--s-3) 0; }
   .story__text strong { display: block; color: #fff; font-size: var(--fs-md); margin-bottom: var(--s-2); }
   .story__text p { margin: 0; max-width: 42ch; color: #c3d1e8; }
   .story__intro { margin: var(--s-2) 0 0; max-width: 60ch; font-size: var(--fs-sm); color: var(--on-dark-2); }
-  .story__name { display: block; font-size: var(--fs-label); font-weight: 600; letter-spacing: 0.02em; color: #8fdcf7; margin-bottom: var(--s-2); }
-  .story__link { display: inline-flex; align-items: center; min-height: 44px; margin-top: var(--s-2); color: #fff; font-weight: 600; font-size: var(--fs-sm); text-decoration: underline; text-decoration-color: rgb(143 220 247 / 50%); text-underline-offset: 5px; }
+  .story__name { display: block; font-size: var(--fs-label); font-weight: 600; letter-spacing: 0.02em; color: var(--sky); margin-bottom: var(--s-2); }
+  .story__link { display: inline-flex; align-items: center; min-height: 44px; margin-top: var(--s-2); color: #fff; font-weight: 600; font-size: var(--fs-sm); text-decoration: underline; text-decoration-color: rgb(101 185 242 / 50%); text-underline-offset: 5px; }
   .story__link::after { content: ' →'; white-space: pre; }
   .story__rail { display: none; }
 
@@ -56,7 +56,7 @@ const word = (name: string) => name.split(' ')[0];
     :global(.js) .story__item { position: static; }
     :global(.js) .story__word { position: absolute; left: 50%; top: 50%; width: max-content; max-width: 90vw; margin: 0; text-align: center; transform-origin: 50% 50%;
       transform: translate(-50%, -50%) translateY(calc(var(--o, 0) * 1.25em)) scale(calc(1 - min(var(--d, 0), 3) * 0.16)); opacity: calc(1 - min(var(--d, 0), 2.6) * 0.36); color: rgb(195 209 232 / 70%); transition: color 300ms; will-change: transform, opacity; }
-    :global(.js) .story__item[data-active] .story__word { color: #fff; text-shadow: 0 0 40px rgb(61 123 255 / 85%), 0 0 90px rgb(34 184 230 / 45%); }
+    :global(.js) .story__item[data-active] .story__word { color: #fff; text-shadow: 0 0 40px rgb(40 105 232 / 85%), 0 0 90px rgb(66 200 216 / 45%); }
     :global(.js) .story__letter { position: absolute; left: 0; top: 50%; transform: translateY(-50%) scale(0.9); opacity: 0; transition: opacity 400ms, transform 600ms var(--ease); font-size: clamp(8rem, 22vw, 20rem); }
     :global(.js) .story__item[data-active] .story__letter { opacity: 1; transform: translateY(-50%) scale(1); }
     :global(.js) .story__text { position: absolute; right: 0; top: 50%; width: min(32ch, 28vw); transform: translateY(-40%); opacity: 0; visibility: hidden; transition: opacity 300ms, transform 500ms var(--ease), visibility 0s 300ms; }

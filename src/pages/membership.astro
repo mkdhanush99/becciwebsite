@@ -1,4 +1,5 @@
 ---
+import Icon from '../components/Icon.astro';
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import EnquiryForm from '../components/EnquiryForm.astro';
@@ -10,7 +11,7 @@ const tiers = [
 ];
 ---
 <Base title="Membership" description="Why join BECCI, who can join, the proposed membership categories, what is available today and how joining works.">
-  <PageHero variant="feature" title="Join a chamber built for you" lede="Membership makes you part of a national chamber of OBC entrepreneurs, business owners, professionals and students: people who share your starting point and want to build businesses together. Here is who can join, what membership offers, and where things stand today." crumbs={[{ label: 'Membership' }]}>
+  <PageHero tone="midnight" icon="membership" variant="feature" title="Join a chamber built for you" lede="Membership makes you part of a national chamber of OBC entrepreneurs, business owners, professionals and students: people who share your starting point and want to build businesses together. Here is who can join, what membership offers, and where things stand today." crumbs={[{ label: 'Membership' }]}>
     <div style="display:flex;gap:var(--s-3);flex-wrap:wrap;margin-top:var(--s-5)"><a class="btn btn--accent" href="#join">Join as a Member</a><a class="btn btn--ghost" href="#member-login">Member Login</a></div>
   </PageHero>
 
@@ -45,13 +46,13 @@ const tiers = [
     </div>
   </div></section>
 
-  <section class="section section--white" aria-labelledby="why-title"><div class="wrap">
+  <section class="section section--white" id="benefits" aria-labelledby="why-title"><div class="wrap">
     <div class="section-head"><h2 id="why-title">Why become a member</h2><p>Membership is how you move from using BECCI’s public information to being part of the chamber itself.</p></div>
-    <ul class="m-why">
-      <li><h3>A network that shares your starting point</h3><p>Meet other OBC entrepreneurs and professionals through wings, sector committees, chapters and events, and do business with people you can trust.</p></li>
-      <li><h3>Opportunities matched to you</h3><p>Planned member features include scheme suggestions based on your profile and alerts when relevant opportunities open.</p></li>
-      <li><h3>A voice in your sector and State</h3><p>Members can take part in sector committees and State and district chapters as they are formed.</p></li>
-      <li><h3>Help when you need it</h3><p>The membership team explains categories and eligibility today. Guidance on schemes and services will follow as BECCI’s service network is set up.</p></li>
+    <ul class="m-why bento">
+      <li class="tile"><span class="ibadge"><Icon name="community" /></span><h3>A network that shares your starting point</h3><p>Meet other OBC entrepreneurs and professionals through wings, sector committees, chapters and events, and do business with people you can trust.</p></li>
+      <li class="tile"><span class="ibadge"><Icon name="search" /></span><h3>Opportunities matched to you</h3><p>Planned member features include scheme suggestions based on your profile and alerts when relevant opportunities open.</p></li>
+      <li class="tile"><span class="ibadge"><Icon name="leadership" /></span><h3>A voice in your sector and State</h3><p>Members can take part in sector committees and State and district chapters as they are formed.</p></li>
+      <li class="tile"><span class="ibadge"><Icon name="support" /></span><h3>Help when you need it</h3><p>The membership team explains categories and eligibility today. Guidance on schemes and services will follow as BECCI’s service network is set up.</p></li>
     </ul>
   </div></section>
 
@@ -83,9 +84,9 @@ const tiers = [
   <section class="section section--white"><div class="wrap">
     <div class="section-head"><div><h2>Proposed membership categories</h2></div>
       <p>Three categories are proposed. Each builds on the one before it. <strong>Fees, renewal periods and final benefits have not been decided yet</strong> and will be confirmed before applications open.</p></div>
-    <div class="grid grid--3">
-      {tiers.map((t) => (
-        <div class="card tier"><h3>{t.name}</h3><ul>{t.points.map((p) => <li>{p}</li>)}</ul>{t.name !== 'Free Membership' && <p class="small muted">Fee: to be announced</p>}</div>
+    <div class="m-tiers">
+      {tiers.map((t, i) => (
+        <div class:list={['tile tier', i === 0 && 'tile--ice', i === 1 && 'tile--sky', i === 2 && 'tile--royal']}><span class="tier__n">Level {i + 1}</span><h3>{t.name}</h3><ul>{t.points.map((p) => <li>{p}</li>)}</ul>{t.name !== 'Free Membership' && <p class="small muted">Fee: to be announced</p>}</div>
       ))}
     </div>
     <p class="small muted" style="margin-top:var(--s-5)">Biz Connect, BECCI's structured business networking programme, is planned as a separate membership with its own fee. <a href="/biz-connect">About Biz Connect</a>.</p>
@@ -105,7 +106,7 @@ const tiers = [
 
   <section class="section section--white" id="request-call"><div class="wrap two-col">
     <div><h2>Request a call</h2><p class="muted">BECCI’s membership team explains the categories, eligibility and arrangements personally. Tell us how to reach you and what you are interested in.</p></div>
-    <EnquiryForm id="call" purpose="membership-call" submitLabel="Request a call" fields={[
+    <EnquiryForm id="call" purpose="membership-call" submitLabel="Request a call" assurance="The membership team will call you to explain categories. We use your number only for this call." fields={[
       { name: 'name', label: 'Your name', required: true, autocomplete: 'name' },
       { name: 'phone', label: 'Mobile number', type: 'tel', required: true, autocomplete: 'tel', hint: '10 digits, for example 98765 43210' },
       { name: 'email', label: 'Email', type: 'email', autocomplete: 'email' },
@@ -116,8 +117,14 @@ const tiers = [
   </div></section>
 </Base>
 <style>
+  .m-tiers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-4); }
+  .tier__n { font-size: var(--fs-label); font-weight: 600; color: var(--royal-deep); }
+  .tile--royal .tier__n { color: var(--sky); }
+  .tier ul { padding-left: 1.1em; margin: 0; display: grid; gap: var(--s-2); }
+  .tile--royal.tier li { color: #d5e0f3; }
+  .tile--royal .muted { color: #c8d6ee; }
+  @media (max-width: 900px) { .m-tiers { grid-template-columns: 1fr; } }
   .m-why { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-4); }
-  .m-why li { padding: var(--s-5); border-radius: 16px; background: var(--ivory); border: 1px solid var(--silver-200); }
   .m-why h3 { font-size: var(--fs-md); }
   .m-why p { margin: 0; color: var(--slate); font-size: var(--fs-sm); }
   @media (max-width: 1000px) { .m-why { grid-template-columns: 1fr 1fr; } }

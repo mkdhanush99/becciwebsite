@@ -108,7 +108,7 @@ const src = { label: `${S.short} statement`, url: S.url };
 </section>
 
 <style>
-  .st { --ice: #e6f2fb; --cyan-tint: #dcf3fb; background: var(--ivory); padding-block: clamp(var(--s-8), 9vw, 136px); border-top: 1px solid var(--silver-200); }
+  .st { --ice: #eaf3fc; --cyan-tint: #dcf4f7; background: var(--ivory); padding-block: clamp(var(--s-8), 9vw, 136px); border-top: 1px solid var(--silver-200); }
   .st-head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(var(--s-6), 6vw, var(--s-9)); align-items: end; margin-bottom: clamp(var(--s-6), 5vw, var(--s-8)); }
   .st-head h2 { font-size: clamp(2.5rem, 1rem + 4.6vw, 5.25rem); font-weight: 600; line-height: 0.98; letter-spacing: -0.04em; margin: 0; max-width: 12ch; }
   .st-head__side p { color: var(--ink-2); margin: 0 0 var(--s-4); }
@@ -124,14 +124,14 @@ const src = { label: `${S.short} statement`, url: S.url };
 
   .st-card { position: relative; overflow: hidden; isolation: isolate; display: flex; flex-direction: column; gap: var(--s-3); padding: clamp(var(--s-5), 3vw, var(--s-7)); border-radius: 24px; border: 1px solid transparent; }
   .st-card--midnight { background: var(--midnight); color: #c3d1e8; }
-  .st-card--midnight::before { content: ''; position: absolute; inset: auto -20% -60% 30%; height: 120%; z-index: -1; background: radial-gradient(closest-side, rgb(61 123 255 / 55%), rgb(34 184 230 / 18%) 55%, transparent); }
+  .st-card--midnight::before { content: ''; position: absolute; inset: auto -20% -60% 30%; height: 120%; z-index: -1; background: radial-gradient(closest-side, rgb(40 105 232 / 55%), rgb(66 200 216 / 18%) 55%, transparent); }
   .st-card--royal { background: linear-gradient(150deg, var(--royal) 0%, var(--sapphire-deep) 100%); color: #d5e0f3; }
-  .st-card--ice { background: var(--ice); border-color: #cfe4f4; color: var(--ink-2); }
-  .st-card--cyan { background: var(--cyan-tint); border-color: #bfe8f6; color: var(--ink-2); }
+  .st-card--ice { background: var(--ice); border-color: #d3e4f5; color: var(--ink-2); }
+  .st-card--cyan { background: var(--cyan-tint); border-color: #bfe7ed; color: var(--ink-2); }
   .st-card--ivory { background: var(--white); border-color: var(--silver-200); color: var(--ink-2); }
 
   .st-label { margin: 0; font-size: var(--fs-sm); font-weight: 600; letter-spacing: 0.01em; }
-  .st-card--midnight .st-label, .st-card--royal .st-label { color: #8fdcf7; }
+  .st-card--midnight .st-label, .st-card--royal .st-label { color: var(--sky); }
   .st-card--ice .st-label, .st-card--cyan .st-label, .st-card--ivory .st-label { color: var(--royal-deep); }
   .st-num { margin: 0; font-weight: 600; letter-spacing: -0.045em; line-height: 0.92; font-variant-numeric: tabular-nums; color: var(--midnight); }
   .st-card--midnight .st-num { color: #fff; }
@@ -147,12 +147,12 @@ const src = { label: `${S.short} statement`, url: S.url };
   .st-meta div { display: flex; gap: 6px; }
   .st-meta dt { font-weight: 600; color: var(--slate); }
   .st-meta dd { margin: 0; }
-  .st-card--midnight .st-meta dt, .st-card--royal .st-meta dt { color: #8fdcf7; }
+  .st-card--midnight .st-meta dt, .st-card--royal .st-meta dt { color: var(--sky); }
   .st-meta a { color: inherit; text-underline-offset: 3px; }
 
   .st-bars { list-style: none; margin: var(--s-3) 0 0; padding: 0; height: 220px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--s-3); align-items: end; }
   .st-bars li { display: flex; flex-direction: column; align-items: stretch; gap: var(--s-2); height: 100%; justify-content: flex-end; }
-  .st-bars__bar { display: block; height: calc(var(--h) * 150px); min-height: 6px; border-radius: 10px 10px 4px 4px; background: linear-gradient(180deg, #8fdcf7, rgb(143 220 247 / 35%)); transform-origin: bottom; }
+  .st-bars__bar { display: block; height: calc(var(--h) * 150px); min-height: 6px; border-radius: 10px 10px 4px 4px; background: linear-gradient(180deg, var(--sky), rgb(101 185 242 / 35%)); transform-origin: bottom; }
   .st-bars__v { font-size: var(--fs-sm); font-weight: 600; color: #fff; font-variant-numeric: tabular-nums; }
   .st-bars__y { font-size: var(--fs-label); color: #c3d1e8; }
 

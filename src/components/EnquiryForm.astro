@@ -1,8 +1,8 @@
 ---
 import { destinations } from '../data/site';
 interface Field { name: string; label: string; type?: 'text' | 'email' | 'tel' | 'textarea' | 'select'; required?: boolean; options?: string[]; hint?: string; autocomplete?: string; max?: number }
-interface Props { id: string; purpose: string; fields: Field[]; submitLabel: string }
-const { id, purpose, fields, submitLabel } = Astro.props;
+interface Props { id: string; purpose: string; fields: Field[]; submitLabel: string; assurance?: string }
+const { id, purpose, fields, submitLabel, assurance = 'We use these details only to reply to you. No marketing, and nothing is shared.' } = Astro.props;
 const endpoint = destinations.formEndpoint;
 // Sensible length limits so pasted text can't break layouts or the inbox.
 const limit = (f: Field) => f.max ?? (f.type === 'textarea' ? 2000 : f.type === 'email' ? 254 : f.type === 'tel' ? 20 : 120);
@@ -36,11 +36,15 @@ const limit = (f: Field) => f.max ?? (f.type === 'textarea' ? 2000 : f.type === 
     <label for={`${id}-website`}>Leave this empty</label>
     <input id={`${id}-website`} name="website" type="text" tabindex="-1" autocomplete="off" />
   </div>
-  <button class="btn" type="submit" data-label={submitLabel}>{submitLabel}</button>
+  <div class="enquiry__send"><button class="btn" type="submit" data-label={submitLabel}>{submitLabel}</button><p class="enquiry__assure">{assurance}</p></div>
   <div class="enquiry__result" role="status" aria-live="polite"></div>
 </form>
 <style is:global>
-  .enquiry { max-width: 620px; }
+  .enquiry { max-width: 640px; padding: clamp(var(--s-5), 3vw, var(--s-7)); background: var(--white); border: 1px solid var(--silver-200); border-radius: 24px; box-shadow: 0 30px 60px -40px rgb(8 26 53 / 30%); }
+  .enquiry .field input[type='tel'] { max-width: 280px; }
+  .enquiry .field select { max-width: 380px; }
+  .enquiry__send { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3) var(--s-4); }
+  .enquiry__assure { margin: 0; font-size: var(--fs-sm); color: var(--slate); max-width: 40ch; }
   .enquiry > .notice { margin-bottom: var(--s-5); }
   .enquiry__result:not(:empty) { margin-top: var(--s-4); }
   .enquiry__summary ul { margin: var(--s-2) 0 0; }

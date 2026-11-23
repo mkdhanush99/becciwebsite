@@ -1,8 +1,10 @@
 ---
+import Icon from '../components/Icon.astro';
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import EnquiryForm from '../components/EnquiryForm.astro';
 import { collaborators } from '../data/site';
+const areaIcons = ['funding', 'schemes', 'education', 'entrepreneur', 'commerce', 'partnership'];
 const areas = [
   ['Access to finance', 'Credit products, awareness camps and application support with banks and financial institutions.'],
   ['Government programmes', 'Outreach for schemes, procurement and registration drives with departments.'],
@@ -13,7 +15,7 @@ const areas = [
 ];
 ---
 <Base title="Partner with BECCI" description="Institutional partnerships and collaborations with BECCI.">
-  <PageHero variant="feature" title="Partner with BECCI" lede="A bank, a government department, a college or an industry body can open doors for thousands of entrepreneurs at once. BECCI welcomes institutions that want to reach OBC entrepreneurs and help them grow." crumbs={[{ label: 'Partnerships' }]}>
+  <PageHero tone="royal" icon="partnership" variant="feature" title="Partner with BECCI" lede="A bank, a government department, a college or an industry body can open doors for thousands of entrepreneurs at once. BECCI welcomes institutions that want to reach OBC entrepreneurs and help them grow." crumbs={[{ label: 'Partnerships' }]}>
     <a class="btn btn--accent" href="#proposal" style="margin-top:var(--s-5)">Send a partnership proposal</a>
   </PageHero>
   <section class="section"><div class="wrap">
@@ -25,13 +27,13 @@ const areas = [
       </div>
     </div>
     <h2>Who we work with</h2>
-    <ul class="tag-list" style="margin-bottom:var(--s-7)">{collaborators.map((c) => <li>{c}</li>)}</ul>
+    <ul class="chips" style="margin-bottom:var(--s-7)">{collaborators.map((c) => <li>{c}</li>)}</ul>
     <h2>Areas of collaboration</h2>
-    <div class="grid grid--3">{areas.map(([t, d]) => <div class="card"><h3>{t}</h3><p class="muted">{d}</p></div>)}</div>
+    <div class="bento">{areas.map(([t, d], i) => <div class="tile"><span class="ibadge"><Icon name={areaIcons[i]} /></span><h3>{t}</h3><p>{d}</p></div>)}</div>
   </div></section>
   <section class="section section--white" id="proposal"><div class="wrap two-col">
     <div><h2>Tell us about your organisation</h2><p class="muted">A useful proposal says who you are, what you would like to do together, whom it would help and what you would need from BECCI.</p></div>
-    <EnquiryForm id="partner" purpose="partnership" submitLabel="Send proposal" fields={[
+    <EnquiryForm id="partner" purpose="partnership" submitLabel="Send proposal" assurance="BECCI’s team will reply to the official email you give. Your proposal is not shared outside BECCI." fields={[
       { name: 'org', label: 'Organisation name', required: true, autocomplete: 'organization' },
       { name: 'kind', label: 'Type of organisation', type: 'select', required: true, options: collaborators },
       { name: 'name', label: 'Contact person', required: true, autocomplete: 'name' },

@@ -1,23 +1,29 @@
 ---
-// Page banner. Two variants share one structure:
-//  editorial (default) — ivory, large type, hairline; for reading and directory pages.
-//  feature — midnight band; for pages that ask the visitor to act (membership, partnerships, wings).
-// No kicker above the heading (design rule); `note` shows a status such as "Coming later".
+// Page banner. Variants share one structure:
+//  editorial (default) — light surface (tone: ivory | ice | sky | cyan); for reading and directory pages.
+//  feature — dark surface (tone: midnight | royal); for pages that ask the visitor to act.
+// An `icon` adds a spot illustration so each page has its own composition.
 import Kinetic from './Kinetic.astro';
-interface Props { title: string; lede?: string; eyebrow?: string; note?: string; variant?: 'editorial' | 'feature'; crumbs?: { label: string; href?: string }[] }
-const { title, lede, note, variant = 'editorial', crumbs = [] } = Astro.props;
+import Spot from './Spot.astro';
+interface Props { title: string; lede?: string; eyebrow?: string; note?: string; variant?: 'editorial' | 'feature'; tone?: 'ivory' | 'ice' | 'sky' | 'cyan' | 'midnight' | 'royal'; icon?: string; crumbs?: { label: string; href?: string }[] }
+const { title, lede, note, variant = 'editorial', tone, icon, crumbs = [] } = Astro.props;
 const feature = variant === 'feature';
+const t = tone ?? (feature ? 'midnight' : 'ivory');
+const n = title.split(' ').length;
 ---
-<header class:list={['page-hero', `page-hero--${variant}`, feature && 'on-dark']}>
+<header class:list={['page-hero', `page-hero--${variant}`, `page-hero--t-${t}`, icon && 'page-hero--spot', feature && 'on-dark']}>
   <div class="lux" aria-hidden="true"><span class="lux__a"></span><span class="lux__b"></span></div>
   <div class="wrap page-hero__inner">
-    {crumbs.length > 0 && (
-      <nav class="crumbs" aria-label="Breadcrumb">
-        <a href="/">Home</a>{crumbs.map((c) => <><span aria-hidden="true"> / </span>{c.href ? <a href={c.href}>{c.label}</a> : <span aria-current="page">{c.label}</span>}</>)}
-      </nav>
-    )}
-    <h1 class="kinetic-title"><Kinetic text={title} />{note && <span class="page-hero__note">{note}</span>}</h1>
-    {lede && <p class="lede m-in" style={`--i:${title.split(' ').length + 1}`}>{lede}</p>}
-    <div class="m-in" style={`--i:${title.split(' ').length + 2}`}><slot /></div>
+    <div class="page-hero__copy">
+      {crumbs.length > 0 && (
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <a href="/">Home</a>{crumbs.map((c) => <><span aria-hidden="true"> / </span>{c.href ? <a href={c.href}>{c.label}</a> : <span aria-current="page">{c.label}</span>}</>)}
+        </nav>
+      )}
+      <h1 class="kinetic-title"><Kinetic text={title} />{note && <span class="page-hero__note">{note}</span>}</h1>
+      {lede && <p class="lede m-in" style={`--i:${n + 1}`}>{lede}</p>}
+      <div class="m-in" style={`--i:${n + 2}`}><slot /></div>
+    </div>
+    {icon && <Spot icon={icon} dark={feature} class="page-hero__spot m-in" />}
   </div>
 </header>

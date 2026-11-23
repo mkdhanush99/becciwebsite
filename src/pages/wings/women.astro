@@ -1,10 +1,11 @@
 ---
+import Icon from '../../components/Icon.astro';
 import Base from '../../layouts/Base.astro';
 import PageHero from '../../components/PageHero.astro';
 import Pending from '../../components/Pending.astro';
 ---
 <Base title="Women's Wing" description="The Women's Wing of BECCI: who it is for, what it is for, what you can use today and how to take part.">
-  <PageHero variant="feature" title="Women's Wing" lede="The Women's Wing brings together women entrepreneurs, women-led enterprises, professionals and women preparing to start a business within BECCI." crumbs={[{ label: 'Wings', href: '/wings' }, { label: "Women's Wing" }]}>
+  <PageHero tone="royal" icon="women" variant="feature" title="Women's Wing" lede="The Women's Wing brings together women entrepreneurs, women-led enterprises, professionals and women preparing to start a business within BECCI." crumbs={[{ label: 'Wings', href: '/wings' }, { label: "Women's Wing" }]}>
     <div style="display:flex;gap:var(--s-3);flex-wrap:wrap;margin-top:var(--s-5)"><a class="btn btn--accent" href="/membership#join">Join the Women's Wing</a><a class="btn btn--ghost" href="#invite">Invite someone</a></div>
   </PageHero>
   <section class="section"><div class="wrap w-grid">
@@ -22,10 +23,10 @@ import Pending from '../../components/Pending.astro';
         <p>A dedicated wing gives women members a place of their own inside the chamber: to meet other women in business, find mentors and partners, and raise the issues that matter most to women-led enterprises, with the backing of the whole of BECCI.</p>
       </section>
       <section class="w-block"><h2>What you can use today</h2>
-        <ul class="w-links">
-          <li><a href="/opportunities/finance">Loans and funding<span>Verified credit schemes, including group credit through self-help groups, with the category rule for each.</span></a></li>
-          <li><a href="https://www.standupmitra.in/" rel="noopener">Stand-Up India ↗<span>A national scheme for bank loans to women and SC/ST entrepreneurs. BECCI has not yet verified its current details.</span></a></li>
-          <li><a href="/knowledge">Knowledge Centre<span>Guides on registration, compliance and finance as BECCI publishes them.</span></a></li>
+        <ul class="w-links bento">
+          <li><a class="tile" href="/opportunities/finance"><span class="ibadge"><Icon name="funding" /></span><strong>Loans and funding</strong><span>Verified credit schemes, including group credit through self-help groups, with the category rule for each.</span></a></li>
+          <li><a class="tile" href="https://www.standupmitra.in/" rel="noopener"><span class="ibadge"><Icon name="schemes" /></span><strong>Stand-Up India ↗</strong><span>A national scheme for bank loans to women and SC/ST entrepreneurs. BECCI has not yet verified its current details.</span></a></li>
+          <li><a class="tile" href="/knowledge"><span class="ibadge"><Icon name="knowledge" /></span><strong>Knowledge Centre</strong><span>Guides on registration, compliance and finance as BECCI publishes them.</span></a></li>
         </ul>
       </section>
       <section class="w-block"><h2>Objectives, programmes and office bearers</h2>
@@ -63,10 +64,11 @@ import Pending from '../../components/Pending.astro';
   .w-block h2 { font-size: var(--fs-xl); }
   .w-list { padding-left: 1.2em; }
   .w-list li { margin-bottom: var(--s-2); }
-  .w-links { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--s-2); }
-  .w-links a { display: flex; flex-direction: column; padding: var(--s-4); border-radius: 12px; border: 1px solid var(--silver-200); background: var(--white); text-decoration: none; color: var(--midnight); font-weight: 600; transition: border-color var(--dur); }
-  .w-links a:hover { border-color: var(--royal); }
-  .w-links span { font-weight: 400; font-size: var(--fs-sm); color: var(--slate); }
+  .w-links { list-style: none; padding: 0; margin: 0; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); }
+  .w-links li { display: flex; }
+  .w-links .tile { width: 100%; }
+  .w-links strong { color: var(--midnight); font-weight: 500; font-size: var(--fs-md); }
+  .w-links span:not(.ibadge) { font-size: var(--fs-sm); color: var(--slate); }
   .w-side { display: grid; gap: var(--s-4); position: sticky; top: calc(64px + var(--s-5)); }
   .w-panel { padding: var(--s-5); }
   .w-panel h2 { font-size: var(--fs-lg); }

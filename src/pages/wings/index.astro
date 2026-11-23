@@ -1,4 +1,5 @@
 ---
+import Icon from '../../components/Icon.astro';
 import Base from '../../layouts/Base.astro';
 import PageHero from '../../components/PageHero.astro';
 import Pending from '../../components/Pending.astro';
@@ -19,12 +20,12 @@ const sectorNotes = [
 ];
 ---
 <Base title="Wings, Sectors & Chapters" description="How BECCI is organised: wings for groups of members, sector committees for industries and chapters for places.">
-  <PageHero title="Wings, sectors and chapters" lede="BECCI organises its members in three ways: wings bring together particular groups of members, sector committees bring together people in the same industry, and chapters bring the chamber close to where members live and work." crumbs={[{ label: 'Wings, Sectors & Chapters' }]} />
+  <PageHero tone="sky" icon="sectors" title="Wings, sectors and chapters" lede="BECCI organises its members in three ways: wings bring together particular groups of members, sector committees bring together people in the same industry, and chapters bring the chamber close to where members live and work." crumbs={[{ label: 'Wings, Sectors & Chapters' }]} />
   <section class="section"><div class="wrap">
     <div class="section-head"><h2>Wings</h2><p>Each wing has its own office bearers, programmes and events, and every wing member is also a full BECCI member.</p></div>
-    <div class="grid grid--2">
-      <a class="card card--link" href="/wings/women"><h3>Women’s Wing</h3><p>For women entrepreneurs, women-led enterprises, professionals and women preparing to start a business.</p><span class="link-arrow">Visit the Women’s Wing</span></a>
-      <a class="card card--link" href="/wings/youth"><h3>Youth Wing</h3><p>For students, graduates, young professionals and first-time founders at the start of their journey.</p><span class="link-arrow">Visit the Youth Wing</span></a>
+    <div class="w-two">
+      <a class="tile tile--royal w-two__t" href="/wings/women"><span class="ibadge ibadge--lg ibadge--dark"><Icon name="women" size={30} /></span><h3>Women’s Wing</h3><p>For women entrepreneurs, women-led enterprises, professionals and women preparing to start a business.</p><span class="link-arrow">Visit the Women’s Wing</span></a>
+      <a class="tile tile--cyan w-two__t" href="/wings/youth"><span class="ibadge ibadge--lg"><Icon name="youth" size={30} /></span><h3>Youth Wing</h3><p>For students, graduates, young professionals and first-time founders at the start of their journey.</p><span class="link-arrow">Visit the Youth Wing</span></a>
     </div>
     <p class="small muted" style="margin-top:var(--s-4)">More wings may be added as the chamber grows.</p>
   </div></section>
@@ -60,6 +61,10 @@ const sectorNotes = [
   </div></section>
 </Base>
 <style>
+  .w-two { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-4); }
+  .w-two__t { min-height: 260px; }
+  .w-two__t h3 { font-size: var(--fs-2xl); margin-top: var(--s-5); }
+  @media (max-width: 700px) { .w-two { grid-template-columns: 1fr; } }
   .sectors { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--s-5); border-top: var(--hair); }
   .sectors div { padding: var(--s-3) 0; border-bottom: var(--hair); }
   .sectors dt { font-weight: 600; color: var(--midnight); }

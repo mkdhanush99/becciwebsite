@@ -2,6 +2,8 @@
 import Base from '../layouts/Base.astro';
 import ScrollStory from '../components/ScrollStory.astro';
 import ImpactStats from '../components/ImpactStats.astro';
+import Icon from '../components/Icon.astro';
+import Illo from '../components/Illo.astro';
 import { site, audiences, advisors, events, news, stats } from '../data/site';
 import { opportunities, portals, CATEGORY_META, CATEGORY_ORDER, OBC_SCOPE_LABEL } from '../data/opportunities';
 import { computeStatus, STATUS_LABEL, deadlineText, todayISO, formatDate } from '../lib/status';
@@ -18,12 +20,18 @@ const statement = 'Community and Commerce have not been sufficiently connected. 
 const words = (t: string) => t.split(' ');
 // The four questions every visitor should get an answer to (Critique Review §20),
 // each with what works today and what is still being set up.
+// Four content pillars. Each answers one visitor question (Critique Review §20) and says
+// honestly whether it works today.
 const answers = [
-  { q: 'What opportunities can I access?', a: 'Government schemes, scholarships, loans, tenders, jobs and apprenticeships, each checked against its official source and dated. No account is needed.', status: 'Available now', href: '/opportunities', link: 'Open the opportunity finder' },
-  { q: 'What can BECCI do for my business?', a: 'Connect you with finance, registration, compliance and mentorship through service providers and institutions BECCI is arranging. You can tell us what you need today.', status: 'Being set up', href: '/services', link: 'See service areas' },
-  { q: 'Whom can I connect with?', a: 'Other entrepreneurs through the Women’s Wing, Youth Wing, sector committees, State chapters and BECCI events.', status: 'Being set up', href: '/wings', link: 'Wings, sectors and chapters' },
-  { q: 'How can I become part of BECCI?', a: 'Join as a member if your community is on the Central OBC list for your State or a State BC/OBC list, or partner with BECCI as an institution.', status: 'Request a call', href: '/membership', link: 'Membership and joining' },
+  { pillar: 'Discover', icon: 'search', q: 'What opportunities can I access?', a: 'Government schemes, tenders, scholarships, loans, jobs and apprenticeships, each checked against its official source and dated. No account needed.', status: 'Available now', href: '/opportunities', link: 'Open the opportunity finder' },
+  { pillar: 'Develop', icon: 'services', q: 'What can BECCI do for my business?', a: 'Connect you with finance, registration, compliance and mentorship through providers and institutions BECCI is arranging.', status: 'Being set up', href: '/services', link: 'Tell us what you need' },
+  { pillar: 'Connect', icon: 'community', q: 'Whom can I connect with?', a: 'Other entrepreneurs through the Women’s Wing, Youth Wing, sector committees, State chapters and events.', status: 'Being set up', href: '/wings', link: 'Wings, sectors and chapters' },
+  { pillar: 'Grow', icon: 'membership', q: 'How can I become part of BECCI?', a: 'Join as a member if your community is on the Central OBC list for your State or a State BC/OBC list, or partner with BECCI as an institution.', status: 'Request a call', href: '/membership', link: 'Membership and joining' },
 ];
+const pillarArt: Record<string, { tone: string; illo?: 'finder' | 'chamber' | 'members' }> = {
+  Discover: { tone: 'ice', illo: 'finder' }, Develop: { tone: 'midnight' }, Connect: { tone: 'royal', illo: 'chamber' }, Grow: { tone: 'sky', illo: 'members' },
+};
+const cardTones = ['ice', 'cyan', 'sky', 'white', 'sapphire', 'stone'];
 const more = [
   { label: 'Government Schemes', href: '/schemes' },
   { label: 'Franchise & Enterprise', href: '/franchise' },
@@ -42,49 +50,52 @@ const tiers = [
 ---
 <Base title="Home">
   <section class="h-hero on-dark">
-    <div class="h-hero__bg" aria-hidden="true"><span class="h-glow h-glow--a"></span><span class="h-glow h-glow--b"></span></div>
-    <div class="wrap h-hero__inner">
-      <h1 class="kinetic" aria-label="Where Community Meets Commerce">
-        <span class="kinetic__line" aria-hidden="true"><span class="kw" style="--i:0"><span>Where</span></span> <span class="kw" style="--i:1"><span>Community</span></span></span>
-        <span class="kinetic__line kinetic__line--lit" aria-hidden="true"><span class="kw" style="--i:2"><span>Meets</span></span> <span class="kw" style="--i:3"><span>Commerce</span></span></span>
-      </h1>
-      <p class="h-hero__lede h-in" style="--i:5">{site.supporting}</p>
-      <p class="h-hero__id h-in" style="--i:5">BECCI is the <strong>Bahujan Entrepreneurs Chamber for Commerce &amp; Industry</strong>, an OBC-exclusive national Chamber of Commerce. Use this website to find verified opportunities, learn about membership and connect with the chamber.</p>
-      <form class="h-search h-in" style="--i:6" action="/opportunities" method="get" role="search">
-        <label for="hero-q" class="visually-hidden">Find schemes, scholarships, loans, tenders and jobs</label>
-        <div class="h-search__row">
-          <svg class="h-search__icon" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m13.5 13.5 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-          <input id="hero-q" name="q" type="search" class="input" placeholder="Search loans, scholarships…" />
-          <button class="btn" type="submit">Search</button>
+    <div class="h-hero__bg" aria-hidden="true"></div>
+    <div class="wrap h-hero__grid">
+      <div class="h-hero__copy">
+        <a class="h-flag h-in" style="--i:0" href="/opportunities"><span>New</span>Opportunity Finder: {opportunities.length} verified records →</a>
+        <h1 class="kinetic" aria-label="Where Community Meets Commerce">
+          <span class="kinetic__line" aria-hidden="true"><span class="kw" style="--i:0"><span>Where</span></span> <span class="kw" style="--i:1"><span>Community</span></span></span>
+          <span class="kinetic__line kinetic__line--lit" aria-hidden="true"><span class="kw" style="--i:2"><span>Meets</span></span> <span class="kw" style="--i:3"><span>Commerce</span></span></span>
+        </h1>
+        <p class="h-hero__lede h-in" style="--i:4">{site.supporting}</p>
+        <p class="h-hero__id h-in" style="--i:5">BECCI is the <strong>Bahujan Entrepreneurs Chamber for Commerce &amp; Industry</strong>, an OBC-exclusive national Chamber of Commerce.</p>
+        <form class="h-search h-in" style="--i:6" action="/opportunities" method="get" role="search">
+          <label for="hero-q" class="visually-hidden">Find schemes, scholarships, loans, tenders and jobs</label>
+          <div class="h-search__row">
+            <Icon name="search" size={20} class="h-search__icon" />
+            <input id="hero-q" name="q" type="search" class="input" placeholder="Search loans, scholarships, tenders…" />
+            <button class="btn" type="submit">Search</button>
+          </div>
+        </form>
+        <ul class="h-cats h-in" style="--i:7" aria-label="Browse by category">
+          {CATEGORY_ORDER.map((c) => <li><a href={CATEGORY_META[c].path}>{CATEGORY_META[c].label}</a></li>)}
+        </ul>
+        <div class="h-hero__actions h-in" style="--i:8">
+          <a class="btn btn--light" href="/membership#join">Join BECCI</a>
+          <a class="btn btn--line" href="/about">About the chamber</a>
         </div>
-      </form>
-      <ul class="h-cats h-in" style="--i:7" aria-label="Browse by category">
-        {CATEGORY_ORDER.map((c) => <li><a href={CATEGORY_META[c].path}>{CATEGORY_META[c].label}</a></li>)}
-      </ul>
-      <div class="h-hero__actions h-in" style="--i:8">
-        <a class="btn btn--light" href="/membership#join">Join as a Member</a>
-        <a class="h-hero__link" href="/about">About the chamber</a>
+      </div>
+      <div class="h-art" aria-labelledby="reg-title">
+        <div class="h-art__scene" data-rise><Illo name="hero" /></div>
+        <h2 id="reg-title" class="visually-hidden">Open now</h2>
+        <span class="h-art__live">Open now · checked {formatDate(lastChecked)}</span>
+        {register.slice(0, 2).map(({ o, st }, i) => (
+          <article class={`h-card h-card--${i}`}>
+            <div class="h-card__meta"><span class={`status status--${st}`}>{STATUS_LABEL[st]}</span><span class="h-card__cat">{CATEGORY_META[o.categories[0]].label}</span></div>
+            <h3><a href={`/opportunities/${o.slug}`}>{o.title}</a></h3>
+            <p>{o.authority.split(',')[0]}</p>
+            <p class="h-card__when">{deadlineText(o, today)}</p>
+          </article>
+        ))}
       </div>
     </div>
-
-    <div class="wrap h-stage">
-      <aside class="h-reg" aria-labelledby="reg-title" data-rise>
-        <div class="h-reg__head">
-          <h2 id="reg-title">Open now</h2>
-          <span class="h-reg__live">Checked {formatDate(lastChecked)}</span>
-        </div>
-        <ol class="h-reg__list">
-          {register.map(({ o, st }) => (
-            <li>
-              <div class="h-reg__meta"><span class={`status status--${st}`}>{STATUS_LABEL[st]}</span><span class="h-reg__cat">{CATEGORY_META[o.categories[0]].label}</span></div>
-              <h3><a href={`/opportunities/${o.slug}`}>{o.title}</a></h3>
-              <p>{o.authority.split(',')[0]}</p>
-              <p class="h-reg__when">{deadlineText(o, today)}</p>
-            </li>
-          ))}
-        </ol>
-        <a class="h-reg__all" href="/opportunities">See all {opportunities.length} records and {portals.length} official portals</a>
-      </aside>
+    <div class="h-sources" aria-label="Official sources BECCI checks">
+      <p class="wrap h-sources__label">Listings are checked against official sources, including</p>
+      <div class="h-sources__track">
+        <ul>{portals.map((p) => <li>{p.name}</li>)}</ul>
+        <ul aria-hidden="true">{portals.map((p) => <li>{p.name}</li>)}</ul>
+      </div>
     </div>
   </section>
 
@@ -104,13 +115,20 @@ const tiers = [
 
   <section class="section h-paths h-curtain" aria-labelledby="paths-title">
     <div class="wrap">
-      <div class="section-head" data-reveal>
-        <h2 id="paths-title">I am…</h2>
+      <div class="h-head" data-reveal>
+        <p class="eyebrow">Start here</p>
+        <h2 id="paths-title">BECCI for…</h2>
         <p>Start from where you are today. Each path opens the part of the website that is most useful to you first.</p>
       </div>
       <ul class="h-paths__list" data-reveal-group>
         {audiences.map((a, i) => (
-          <li><a href={a.href}><span class="h-paths__n">{String(i + 1).padStart(2, '0')}</span><strong>{a.who}</strong><span class="h-paths__need">{a.need}</span><span class="h-paths__go" aria-hidden="true">→</span></a></li>
+          <li><a class={`h-path h-path--${cardTones[i % cardTones.length]}`} href={a.href}>
+            <span class="h-path__for">BECCI for</span>
+            <strong>{a.who}</strong>
+            <span class="h-path__need">{a.need}</span>
+            <span class="h-path__go">Start here <span aria-hidden="true">→</span></span>
+            <span class="h-path__art" aria-hidden="true"><Icon name={a.icon as any} size={40} /></span>
+          </a></li>
         ))}
       </ul>
     </div>
@@ -120,6 +138,7 @@ const tiers = [
     <div class="wrap">
       <div class="section-head" data-reveal>
         <div>
+          <p class="eyebrow">Discover</p>
           <h2 id="open-title">Opportunities you can apply for</h2>
           <p class="h-open__intro">Every listing names the authority that issued it, who can apply, the deadline and the official link, and shows when BECCI last checked it.</p>
         </div>
@@ -159,14 +178,22 @@ const tiers = [
 
   <section class="section" aria-labelledby="does-title">
     <div class="wrap">
-      <div class="section-head" data-reveal>
-        <h2 id="does-title">What BECCI can do for you</h2>
-        <p>Four questions every visitor asks, answered plainly, including what works today and what is still being set up.</p>
+      <div class="h-head" data-reveal>
+        <p class="eyebrow">What BECCI does</p>
+        <h2 id="does-title">Discover. Develop. Connect. Grow.</h2>
+        <p>Each pillar answers a question visitors ask, and says plainly what works today and what is still being set up.</p>
       </div>
       <ul class="h-does" data-reveal-group>
-        {answers.map((p, i) => (
-          <li class:list={[i === 0 && 'h-does__lead on-dark']}><span class="h-does__status">{p.status}</span><h3>{p.q}</h3><p>{p.a}</p><a class="link-arrow" href={p.href}>{p.link}</a></li>
-        ))}
+        {answers.map((p) => { const art = pillarArt[p.pillar]; return (
+          <li class={`h-pil h-pil--${art.tone}`}>
+            {art.tone === 'midnight' && <span class="h-pil__mark" aria-hidden="true"></span>}
+            <p class="h-pil__eyebrow"><span>{p.pillar}</span><span class="h-pil__status">{p.status}</span></p>
+            <h3>{p.q}</h3>
+            <p class="h-pil__text">{p.a}</p>
+            <a class="h-pil__link" href={p.href}>{p.link} <span aria-hidden="true">→</span></a>
+            {art.illo ? <span class="h-pil__art"><Illo name={art.illo} /></span> : <span class="h-pil__icon" aria-hidden="true"><Icon name={p.icon as any} size={56} /></span>}
+          </li>
+        ); })}
       </ul>
       <ul class="h-more" aria-label="More from BECCI">
         {more.map((m) => <li><a href={m.href}>{m.label}{m.note && <span class="nav-note">{m.note}</span>}</a></li>)}
@@ -174,35 +201,36 @@ const tiers = [
     </div>
   </section>
 
-  <section class="section section--white" aria-labelledby="join-title">
+  <section class="section h-join on-dark" aria-labelledby="join-title">
+    <div class="h-join__bg" aria-hidden="true"></div>
     <div class="wrap">
-      <div class="section-head" data-reveal>
+      <div class="h-head h-head--center" data-reveal>
+        <p class="eyebrow">Membership</p>
         <h2 id="join-title">Become part of the chamber</h2>
-        <p>Membership is for Bahujan entrepreneurs, business owners, professionals, students and first-generation founders whose community is on the Central OBC list for their State or on a State BC/OBC list. Either list is enough.</p>
+        <p>For Bahujan entrepreneurs, business owners, professionals, students and first-generation founders whose community is on the Central OBC list for their State or on a State BC/OBC list. Either list is enough.</p>
       </div>
       <ol class="h-tiers" data-reveal-group>
-        {tiers.map((t, i) => <li><span class="h-tiers__step">Level {i + 1}</span><h3>{t.name} Membership</h3><p>{t.text}</p></li>)}
+        {tiers.map((t, i) => <li><span class="h-tiers__step">Level {i + 1}</span><h3>{t.name} <span>Membership</span></h3><p>{t.text}</p></li>)}
       </ol>
       <div class="h-member__foot">
-        <a class="btn" href="/membership#join">Join as a Member</a>
-        <p class="small muted">These three categories are proposed. Fees and final benefits will be confirmed before online applications open. Until then, the membership team can explain them on a call.</p>
+        <a class="btn btn--light" href="/membership#join">Join BECCI</a>
+        <p class="small">These three categories are proposed. Fees and final benefits will be confirmed before online applications open. Until then, the membership team can explain them on a call.</p>
       </div>
     </div>
   </section>
 
   <section class="section h-close" aria-labelledby="close-title">
     <div class="wrap">
-      <div class="h-close__panel on-dark" data-grow>
-        <div>
-          <h2 id="close-title">Open doors for entrepreneurs at scale</h2>
-          <p>Government departments, banks, MSME bodies, industry associations, educational institutions, incubators and corporates can create opportunities for entrepreneurs that ordinary networking cannot. BECCI welcomes proposals for collaboration.</p>
-          <a class="btn btn--light" href="/partnerships">Partner with BECCI</a>
-        </div>
+      <div class="h-close__box" data-grow>
+        <span class="h-close__art"><Illo name="arch" /></span>
+        <h2 id="close-title">Open doors for entrepreneurs at scale</h2>
+        <p>Government departments, banks, MSME bodies, industry associations, educational institutions, incubators and corporates can create opportunities for entrepreneurs that ordinary networking cannot. BECCI welcomes proposals for collaboration.</p>
+        <div class="h-close__cta"><a class="btn" href="/partnerships">Partner with BECCI</a><a class="btn btn--ghost" href="/contact">Contact the chamber</a></div>
         <ul class="h-close__links">
-          <li><a href="/events"><strong>Event calendar</strong><span>{events.length ? `${events.length} announced` : 'No events announced yet'}</span></a></li>
-          <li><a href="/news"><strong>News Desk</strong><span>{news.length ? `${news.length} announcements` : 'No announcements yet'}</span></a></li>
-          <li><a href="/knowledge"><strong>Knowledge Centre</strong><span>Guides and resources</span></a></li>
-          <li><a href="/leadership"><strong>Leadership</strong><span>{advisors.length ? `${advisors.length} advisors` : 'Profiles coming soon'}</span></a></li>
+          <li><a href="/events"><Icon name="events" size={22} /><strong>Event calendar</strong><span>{events.length ? `${events.length} announced` : 'No events announced yet'}</span></a></li>
+          <li><a href="/news"><Icon name="news" size={22} /><strong>News</strong><span>{news.length ? `${news.length} announcements` : 'No announcements yet'}</span></a></li>
+          <li><a href="/knowledge"><Icon name="knowledge" size={22} /><strong>Knowledge Centre</strong><span>Guides and resources</span></a></li>
+          <li><a href="/leadership"><Icon name="leadership" size={22} /><strong>Leadership</strong><span>{advisors.length ? `${advisors.length} advisors` : 'Profiles coming soon'}</span></a></li>
         </ul>
       </div>
     </div>
@@ -212,139 +240,164 @@ const tiers = [
 
 
 <style>
-  /* ── Hero: centred kinetic headline over rising light ── */
-  .h-hero { position: relative; z-index: 2; isolation: isolate; background: #040d26; color: var(--on-dark-2); padding-top: clamp(var(--s-8), 9vw, 140px); text-align: center; }
-  .h-hero__bg { position: absolute; inset: 0; z-index: -1; overflow: hidden; background: linear-gradient(180deg, #050f2b 0%, var(--midnight) 40%, #0a1f5c 100%); mask-image: linear-gradient(180deg, #000 70%, transparent 100%); }
-  .h-hero__bg::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgb(255 255 255 / 4%) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / 4%) 1px, transparent 1px); background-size: 64px 64px; mask-image: radial-gradient(70% 60% at 50% 30%, #000, transparent 75%); }
-  .h-glow { position: absolute; left: 50%; border-radius: 50%; filter: blur(60px); pointer-events: none; }
-  .h-glow--a { bottom: -12%; width: 120%; height: 70%; transform: translateX(-50%); background: radial-gradient(closest-side, rgb(61 123 255 / 95%), rgb(33 82 232 / 60%) 45%, transparent 100%); }
-  .h-glow--b { bottom: 4%; width: 60%; height: 50%; transform: translateX(-30%); background: radial-gradient(closest-side, rgb(34 184 230 / 70%), transparent 100%); }
-  @media (prefers-reduced-motion: no-preference) {
-    .h-glow--a { animation: breathe 9s ease-in-out infinite alternate; }
-    .h-glow--b { animation: drift 14s ease-in-out infinite alternate; }
-  }
-  @keyframes breathe { to { transform: translateX(-50%) scale(1.08); opacity: 0.85; } }
-  @keyframes drift { from { transform: translateX(-60%); } to { transform: translateX(-20%); } }
-
-  .h-hero__inner { display: flex; flex-direction: column; align-items: center; }
-  .kinetic { color: #fff; font-size: clamp(3rem, 0.8rem + 8.2vw, 8.5rem); font-weight: 600; line-height: 0.95; letter-spacing: -0.045em; margin: 0 0 var(--s-6); max-width: none; }
+  /* ── Hero: saturated royal surface with a drawing grid, copy left, illustrated stage right ── */
+  .h-hero { position: relative; z-index: 2; isolation: isolate; overflow: hidden; background: var(--royal); color: #dbe6fb; padding-top: clamp(var(--s-7), 6vw, 96px); }
+  .h-hero__bg { position: absolute; inset: 0; z-index: -1; background-image: linear-gradient(rgb(255 255 255 / 9%) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / 9%) 1px, transparent 1px); background-size: 72px 72px; background-position: -1px -1px; mask-image: linear-gradient(180deg, #000 60%, transparent); }
+  .h-hero__bg::after { content: ''; position: absolute; inset: 0; background: radial-gradient(50% 60% at 80% 40%, rgb(101 185 242 / 35%), transparent 70%); }
+  .h-hero__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s-6); align-items: center; }
+  .h-flag { display: inline-flex; align-items: center; gap: var(--s-2); min-height: 36px; padding: 0 var(--s-3) 0 4px; margin-bottom: var(--s-5); border-radius: 999px; border: 1px solid rgb(255 255 255 / 28%); background: rgb(8 26 53 / 18%); color: #fff; font-size: var(--fs-sm); text-decoration: none; transition: background var(--dur), border-color var(--dur); }
+  .h-flag span { padding: 4px 10px; border-radius: 999px; background: #fff; color: var(--royal); font: 600 0.6875rem/1.2 var(--font-body); letter-spacing: 0.1em; text-transform: uppercase; }
+  .h-flag:hover { color: #fff; background: rgb(8 26 53 / 30%); border-color: #fff; }
+  .kinetic { color: #fff; font-size: clamp(2.75rem, 0.6rem + 4.2vw, 5rem); font-weight: 500; line-height: 0.98; letter-spacing: -0.04em; margin: 0 0 var(--s-5); max-width: none; }
   .kinetic__line { display: block; white-space: nowrap; }
-  .kinetic__line--lit { color: #8fdcf7; }
+  .kinetic__line--lit { color: #bfe7ff; }
   .kw { display: inline-block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; vertical-align: top; }
   .kw > span { display: inline-block; }
-  .h-hero__lede { font-size: var(--fs-md); color: #c3d1e8; max-width: 52ch; margin: 0 auto var(--s-3); }
-  .h-hero__id { font-size: var(--fs-sm); color: #a9bad6; max-width: 60ch; margin: 0 auto var(--s-6); }
+  .h-hero__lede { font-size: var(--fs-md); color: #e6eefc; max-width: 46ch; margin: 0 0 var(--s-2); }
+  .h-hero__id { font-size: var(--fs-sm); color: #c5d6f6; max-width: 52ch; margin: 0 0 var(--s-5); }
   .h-hero__id strong { color: #fff; font-weight: 600; }
-  .h-open__intro { margin: var(--s-2) 0 0; color: var(--slate); max-width: 56ch; }
-  .h-scope { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-4); margin: 0 0 var(--s-6); padding: var(--s-4) var(--s-5); border-radius: 16px; background: var(--ivory); border: 1px solid var(--silver-200); }
-  .h-scope dt { margin-bottom: var(--s-2); }
-  .h-scope dd { margin: 0; font-size: var(--fs-sm); color: var(--slate); }
-  @media (max-width: 760px) { .h-scope { grid-template-columns: 1fr; } }
-  .h-does__status { display: inline-flex; align-self: flex-start; font-size: var(--fs-label); font-weight: 600; padding: 4px 10px; border-radius: 999px; background: var(--sapphire-soft); color: var(--royal-deep); margin-bottom: var(--s-4); }
-  .h-does__lead .h-does__status { background: rgb(143 220 247 / 16%); color: #8fdcf7; }
   @media (prefers-reduced-motion: no-preference) {
     :global(.js) .kw > span { transform: translateY(105%) rotate(4deg); animation: rise 900ms cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: calc(120ms + var(--i) * 90ms); }
-    :global(.js) .h-in { opacity: 0; transform: translateY(16px); animation: fadeUp 700ms var(--ease) forwards; animation-delay: calc(var(--i) * 90ms); }
+    :global(.js) .h-in { opacity: 0; transform: translateY(16px); animation: fadeUp 700ms var(--ease) forwards; animation-delay: calc(var(--i) * 80ms); }
+    :global(.js) .h-card { opacity: 0; animation: cardIn 900ms cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    :global(.js) .h-card--0 { animation-delay: 700ms; } :global(.js) .h-card--1 { animation-delay: 850ms; }
+    .h-card { transition: transform 300ms var(--ease), box-shadow 300ms var(--ease); }
+    .h-sources__track { animation: marquee 60s linear infinite; }
+    .h-sources:hover .h-sources__track { animation-play-state: paused; }
   }
   @keyframes rise { to { transform: none; } }
   @keyframes fadeUp { to { opacity: 1; transform: none; } }
+  @keyframes cardIn { from { opacity: 0; translate: 0 40px; } to { opacity: 1; translate: 0 0; } }
+  @keyframes marquee { to { transform: translateX(-50%); } }
 
-  .h-search { width: min(100%, 640px); margin-bottom: var(--s-4); }
-  .h-search__row { position: relative; display: flex; align-items: center; gap: var(--s-2); padding: 6px; background: #fff; border-radius: 16px; box-shadow: 0 30px 60px -24px rgb(0 0 0 / 60%), 0 0 0 6px rgb(255 255 255 / 8%), 0 0 80px -10px rgb(61 123 255 / 50%); text-align: left; }
-  .h-search__icon { position: absolute; left: 20px; color: var(--slate); pointer-events: none; }
-  .h-search .input { flex: 1; min-width: 0; border: 0; background: transparent; min-height: 52px; padding-left: 48px; font-size: var(--fs-md); box-shadow: none; }
+  .h-search { width: min(100%, 560px); margin-bottom: var(--s-4); }
+  .h-search__row { position: relative; display: flex; align-items: center; gap: var(--s-2); padding: 6px; background: #fff; border-radius: 999px; border: 1px solid var(--midnight); box-shadow: 5px 5px 0 var(--midnight); }
+  :global(.h-search__icon) { position: absolute; left: 20px; color: var(--slate); pointer-events: none; }
+  .h-search .input { flex: 1; min-width: 0; border: 0; background: transparent; min-height: 48px; padding-left: 46px; font-size: var(--fs-base); box-shadow: none; }
   .h-search .input:focus-visible { outline: none; }
-  .h-search__row:focus-within { box-shadow: 0 30px 60px -24px rgb(0 0 0 / 60%), 0 0 0 4px var(--cyan), 0 0 80px -10px rgb(61 123 255 / 60%); }
-  .h-search .btn { min-height: 52px; padding: 0 var(--s-6); border-radius: 12px; }
-  .h-cats { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-2); list-style: none; padding: 0; margin: 0 0 var(--s-6); }
-  .h-cats a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 var(--s-4); border-radius: 999px; border: 1px solid rgb(255 255 255 / 18%); background: rgb(255 255 255 / 6%); backdrop-filter: blur(6px); color: #fff; font-size: var(--fs-sm); font-weight: 500; text-decoration: none; transition: background var(--dur), border-color var(--dur); }
-  .h-cats a:hover { color: #fff; background: rgb(34 184 230 / 18%); border-color: var(--cyan); }
-  .h-hero__actions { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: var(--s-3) var(--s-5); }
-  .h-hero__link { display: inline-flex; align-items: center; min-height: 44px; color: #fff; font-weight: 600; text-decoration: underline; text-decoration-color: rgb(255 255 255 / 35%); text-underline-offset: 6px; }
-  .h-hero__link:hover { color: #fff; text-decoration-color: var(--cyan); }
+  .h-search__row:focus-within { box-shadow: 5px 5px 0 var(--midnight), 0 0 0 4px var(--cyan); }
+  .h-search .btn { min-height: 48px; padding: 0 var(--s-5); border-radius: 999px; --bg: var(--midnight); --bd: var(--midnight); }
+  .h-cats { display: flex; flex-wrap: wrap; gap: var(--s-2); list-style: none; padding: 0; margin: 0 0 var(--s-5); }
+  .h-cats a { display: inline-flex; align-items: center; min-height: 36px; padding: 0 var(--s-3); border-radius: 999px; border: 1px solid rgb(255 255 255 / 30%); background: rgb(255 255 255 / 8%); color: #fff; font-size: var(--fs-sm); font-weight: 500; text-decoration: none; transition: background var(--dur), border-color var(--dur), color var(--dur); }
+  .h-cats a:hover { color: var(--midnight); background: #fff; border-color: #fff; }
+  .h-hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3); }
+  .h-hero__actions .btn { border-radius: 999px; }
   :global(.btn--light) { --bg: #fff; --bd: #fff; --fg: var(--midnight); }
   :global(.btn--light:hover) { --bg: var(--cyan-soft); --bd: var(--cyan-soft); --fg: var(--midnight); }
+  :global(.btn--line) { --bg: transparent; --bd: rgb(255 255 255 / 55%); --fg: #fff; }
+  :global(.btn--line:hover) { --bg: rgb(255 255 255 / 12%); --bd: #fff; --fg: #fff; }
 
-  /* Stage: the register card rises out of the light, bridging into the next band */
-  .h-stage { position: relative; display: flex; justify-content: center; margin-top: var(--s-7); margin-bottom: calc(-1 * clamp(80px, 10vw, 160px)); z-index: 2; text-align: left; }
-  .h-reg { width: min(100%, 760px); background: rgb(255 255 255 / 97%); color: var(--ink); border-radius: 24px; padding: var(--s-5) var(--s-6); box-shadow: 0 50px 100px -40px rgb(0 0 0 / 70%), 0 0 0 1px rgb(255 255 255 / 40%), 0 0 120px -20px rgb(61 123 255 / 55%); transform: translateY(calc((1 - var(--p, 1)) * 90px)) scale(calc(0.94 + var(--p, 1) * 0.06)); }
-  .h-reg__head { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); padding-bottom: var(--s-4); border-bottom: var(--hair); }
-  .h-reg__head h2 { font-size: var(--fs-md); margin: 0; }
-  .h-reg__live { display: inline-flex; align-items: center; gap: 8px; font-size: var(--fs-label); font-weight: 600; color: var(--cyan-ink); }
-  .h-reg__live::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 0 4px var(--cyan-soft); }
-  .h-reg__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-5); }
-  .h-reg__list li { position: relative; padding: var(--s-4) 0; }
-  .h-reg__meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2); }
-  .h-reg__cat { font-size: var(--fs-label); font-weight: 600; color: var(--slate); width: 100%; }
-  .h-reg h3 { font-size: var(--fs-base); line-height: 1.35; margin: var(--s-2) 0 2px; }
-  .h-reg h3 a { color: var(--midnight); text-decoration: none; }
-  .h-reg h3 a::after { content: ''; position: absolute; inset: 0; }
-  .h-reg h3 a:hover { color: var(--royal); }
-  .h-reg p { margin: 0; font-size: var(--fs-sm); color: var(--slate); }
-  .h-reg .h-reg__when { color: var(--ink); font-weight: 600; margin-top: 2px; }
-  .h-reg__all { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); min-height: 48px; border-top: var(--hair); font-size: var(--fs-sm); font-weight: 600; color: var(--royal); text-decoration: none; }
-  .h-reg__all::after { content: '→'; transition: transform var(--dur) var(--ease); }
-  .h-reg__all:hover::after { transform: translateX(4px); }
+  /* Stage: illustration with live opportunity cards layered over it */
+  .h-art { position: relative; min-height: 520px; }
+  .h-art__scene { position: absolute; inset: 14% -6% 0 6%; }
+  .h-art__live { position: absolute; top: 6%; right: 2%; z-index: 3; display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: var(--midnight); color: #fff; font-size: var(--fs-label); font-weight: 600; box-shadow: 3px 3px 0 rgb(8 26 53 / 40%); }
+  .h-art__live::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 0 3px rgb(66 200 216 / 35%); }
+  .h-card { position: absolute; z-index: 2; width: min(272px, 56%); padding: var(--s-4); background: #fff; color: var(--ink); border: 1px solid var(--midnight); border-radius: 16px; box-shadow: 6px 6px 0 var(--midnight); }
+  .h-card--0 { top: 0; left: 0; rotate: -3deg; }
+  .h-card--1 { bottom: 0; right: -2%; rotate: 2deg; }
+  .h-card:hover { transform: translateY(-4px) rotate(0.5deg); box-shadow: 8px 10px 0 var(--midnight); }
+  .h-card__meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2); }
+  .h-card__cat { margin-left: auto; font-size: var(--fs-label); font-weight: 600; color: var(--slate); }
+  .h-card h3 { font-size: var(--fs-base); line-height: 1.3; margin: var(--s-2) 0 2px; }
+  .h-card h3 a { color: var(--midnight); text-decoration: none; }
+  .h-card h3 a::after { content: ''; position: absolute; inset: 0; }
+  .h-card h3 a:hover { color: var(--royal); }
+  .h-card p { margin: 0; font-size: var(--fs-sm); color: var(--slate); }
+  .h-card .h-card__when { color: var(--ink); font-weight: 600; margin-top: 2px; }
 
-  /* Statement: oversized words light up as they scroll past */
-  .h-statement { position: relative; background: #040d26; padding-block: calc(clamp(80px, 10vw, 160px) + var(--s-8)) var(--s-8); overflow: hidden; }
-  .h-statement::before { content: ''; position: absolute; inset: 0 0 auto; height: 60%; background: radial-gradient(50% 60% at 50% 0%, rgb(61 123 255 / 30%), transparent 70%); pointer-events: none; }
-  .h-statement__text { position: relative; font: 600 clamp(2rem, 0.8rem + 4.4vw, 5rem)/1.05 var(--font-display); letter-spacing: -0.035em; color: #fff; margin: 0; max-width: 20ch; text-wrap: balance; }
-  @media (prefers-reduced-motion: no-preference) { :global(.js) .h-statement .sw[data-on]:nth-last-child(-n + 16) { color: #8fdcf7; } }
+  .h-sources { position: relative; margin-top: var(--s-6); padding: var(--s-4) 0 calc(var(--s-6) + 40px); overflow: hidden; border-top: 1px solid rgb(255 255 255 / 16%); }
+  .h-sources__label { margin: 0 auto var(--s-3); font-size: var(--fs-label); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #c5d6f6; }
+  .h-sources__track { display: flex; width: max-content; }
+  .h-sources ul { display: flex; gap: var(--s-7); list-style: none; margin: 0; padding: 0 var(--s-7) 0 0; }
+  .h-sources li { white-space: nowrap; font: 500 var(--fs-md)/1.2 var(--font-display); color: #fff; opacity: 0.85; }
+  @media (prefers-reduced-motion: reduce) { .h-sources__track { width: auto; } .h-sources ul { flex-wrap: wrap; padding-inline: var(--gutter); gap: var(--s-2) var(--s-5); } .h-sources ul[aria-hidden] { display: none; } }
+
+  @media (max-width: 1000px) {
+    .h-hero__grid { grid-template-columns: 1fr; }
+    .h-art { min-height: 0; aspect-ratio: 640 / 520; max-width: 640px; width: 100%; margin-inline: auto; }
+    .h-art__scene { inset: 0; }
+  }
+  @media (max-width: 560px) {
+    .h-hero { padding-top: var(--s-6); }
+    .kinetic { font-size: clamp(2.2rem, 11vw, 3.2rem); }
+    .h-search__row { flex-wrap: wrap; border-radius: 20px; }
+    .h-search .btn { width: 100%; border-radius: 14px; }
+    :global(.h-search__icon) { top: 20px; }
+    .h-cats a { padding: 0 var(--s-3); }
+    .h-art { aspect-ratio: auto; display: grid; gap: var(--s-3); padding-top: 64%; }
+    .h-art__scene { inset: 0 -6% auto -6%; }
+    .h-card { position: relative; inset: auto; width: 100%; rotate: none; box-shadow: 4px 4px 0 var(--midnight); }
+    .h-card--1 { display: none; }
+    .h-art__live { top: 0; right: 0; }
+  }
+
+  /* Statement */
+  .h-statement { position: relative; background: #061329; padding-block: calc(var(--s-8) + 40px) var(--s-8); margin-top: -40px; overflow: hidden; }
+  .h-statement::before { content: ''; position: absolute; inset: 0 0 auto; height: 60%; background: radial-gradient(50% 60% at 50% 0%, rgb(40 105 232 / 30%), transparent 70%); pointer-events: none; }
+  .h-statement__text { position: relative; font: 500 clamp(2rem, 0.8rem + 4.4vw, 5rem)/1.05 var(--font-display); letter-spacing: -0.035em; color: #fff; margin: 0; max-width: 20ch; text-wrap: balance; }
+  @media (prefers-reduced-motion: no-preference) { :global(.js) .h-statement .sw[data-on]:nth-last-child(-n + 16) { color: var(--sky); } }
   .h-facts { position: relative; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s-3) var(--s-6); margin-top: var(--s-8); padding-top: var(--s-5); border-top: 1px solid rgb(255 255 255 / 12%); }
   .h-promise { margin: 0; font-weight: 500; letter-spacing: 0.02em; color: #fff; }
   .h-facts ul { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-6); list-style: none; margin: 0; padding: 0; font-size: var(--fs-sm); color: #a9bad6; }
-  .h-facts strong { color: #8fdcf7; font-weight: 600; font-variant-numeric: tabular-nums; }
   .h-facts a { color: #fff; }
+  .h-hero { border-radius: 0 0 40px 40px; }
 
-  /* Curtain: the light surface slides over the dark band with a rounded edge */
+  /* Curtain */
   .h-curtain { position: relative; z-index: 1; margin-top: -40px; border-radius: 40px 40px 0 0; background: var(--ivory); }
+  @media (max-width: 560px) { .h-curtain { border-radius: 24px 24px 0 0; margin-top: -24px; } .h-hero { border-radius: 0 0 24px 24px; } .h-facts { flex-direction: column; align-items: flex-start; } }
 
-  @media (max-width: 860px) { .h-reg__list { grid-template-columns: 1fr; gap: 0; } .h-reg__list li + li { border-top: var(--hair); } .h-reg__cat { width: auto; margin-left: auto; } }
-  @media (max-width: 520px) {
-    .h-hero { padding-top: var(--s-7); }
-    .kinetic { font-size: clamp(2.2rem, 10.6vw, 3.2rem); }
-    .h-hero__lede { margin-bottom: var(--s-5); }
-    .h-search__row { flex-wrap: wrap; }
-    .h-search .btn { width: 100%; }
-    .h-search__icon { top: 22px; }
-    .h-cats { margin-bottom: var(--s-5); }
-    .h-cats a { padding: 0 var(--s-3); }
-    .h-hero__actions .btn--light { display: none; }
-    .h-reg { padding: var(--s-4); border-radius: 18px; }
-    .h-reg__list li:nth-child(3) { display: none; }
-    .h-facts { flex-direction: column; align-items: flex-start; }
-    .h-curtain { border-radius: 24px 24px 0 0; margin-top: -24px; }
-  }
+  /* Section heads (Tines: eyebrow, large editorial heading, short lede) */
+  .h-head { max-width: 760px; margin-bottom: var(--s-7); }
+  .h-head h2 { font-size: clamp(2.25rem, 1.4rem + 3vw, 4rem); font-weight: 500; letter-spacing: -0.035em; line-height: 1.02; margin-bottom: var(--s-4); }
+  .h-head p:not(.eyebrow) { color: var(--slate); font-size: var(--fs-md); max-width: 56ch; margin: 0; }
+  .h-head--center { margin-inline: auto; text-align: center; }
+  .h-head--center p:not(.eyebrow) { margin-inline: auto; }
+  .eyebrow { letter-spacing: 0.14em; }
 
-
-  /* ── Paths ── */
+  /* ── Audience paths: colour-blocked "BECCI for" cards ── */
   .h-paths__list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-4); }
-  .h-paths__list a { position: relative; display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto auto 1fr; column-gap: var(--s-4); height: 100%; padding: var(--s-5); background: var(--white); border: 1px solid var(--silver-200); border-radius: 16px; color: var(--slate); text-decoration: none; font-size: var(--fs-sm); transition: border-color var(--dur), box-shadow var(--dur), transform var(--dur) var(--ease); }
-  .h-paths__list a:hover { border-color: var(--royal); box-shadow: 0 16px 32px -20px rgb(33 82 232 / 45%); transform: translateY(-2px); color: var(--slate); }
-  .h-paths__n { grid-column: 1; font-size: var(--fs-label); font-weight: 600; color: var(--royal); letter-spacing: 0.04em; font-variant-numeric: tabular-nums; margin-bottom: var(--s-4); }
-  .h-paths__list strong { grid-column: 1; font-size: var(--fs-lg); font-weight: 600; color: var(--midnight); letter-spacing: -0.01em; line-height: 1.2; margin-bottom: var(--s-2); }
-  .h-paths__need { grid-column: 1; }
-  .h-paths__go { grid-column: 2; grid-row: 1 / 3; align-self: start; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; background: var(--silver-100); color: var(--royal); font-size: 1.125rem; transition: background var(--dur), color var(--dur), transform var(--dur) var(--ease); }
-  .h-paths__list a:hover .h-paths__go { background: var(--royal); color: #fff; transform: translateX(2px); }
+  .h-path { --bg: var(--ice); --art: var(--sapphire-soft); position: relative; display: flex; flex-direction: column; height: 100%; min-height: 300px; padding: var(--s-5) var(--s-5) var(--s-5); overflow: hidden; background: var(--bg); border: 1px solid rgb(8 26 53 / 14%); border-radius: 18px; color: var(--slate); text-decoration: none; font-size: var(--fs-sm); transition: transform 260ms var(--ease), box-shadow 260ms var(--ease); }
+  .h-path--cyan { --bg: var(--cyan-soft); --art: #b5ecf2; }
+  .h-path--sky { --bg: var(--sky-tint); --art: #bcdaf7; }
+  .h-path--white { --bg: #fff; --art: var(--ice); }
+  .h-path--sapphire { --bg: var(--royal); --art: var(--sapphire); color: #d3e0fa; }
+  .h-path--stone { --bg: #ece7da; --art: #ded6c3; }
+  .h-path:hover { color: inherit; transform: translateY(-4px); box-shadow: 6px 8px 0 var(--midnight); }
+  .h-path--sapphire:hover { color: #d3e0fa; }
+  .h-path__for { font: 600 0.6875rem/1 var(--font-body); letter-spacing: 0.14em; text-transform: uppercase; color: var(--royal); }
+  .h-path--sapphire .h-path__for { color: var(--sky); }
+  .h-path strong { margin: var(--s-2) 0 var(--s-3); font: 500 var(--fs-xl)/1.1 var(--font-display); letter-spacing: -0.02em; color: var(--midnight); max-width: 12ch; }
+  .h-path--sapphire strong { color: #fff; }
+  .h-path__need { max-width: 30ch; }
+  .h-path__go { margin-top: auto; padding-top: var(--s-5); font-weight: 600; color: var(--midnight); }
+  .h-path--sapphire .h-path__go { color: #fff; }
+  .h-path__go span { display: inline-block; transition: translate 200ms var(--ease); }
+  .h-path:hover .h-path__go span { translate: 4px 0; }
+  .h-path__art { position: absolute; right: var(--s-5); bottom: var(--s-5); display: grid; place-items: center; width: 84px; height: 84px; border-radius: 22px; background: var(--art); border: 1px solid rgb(8 26 53 / 18%); color: var(--midnight); --icon-accent: var(--cyan); rotate: 8deg; box-shadow: 4px 4px 0 rgb(8 26 53 / 85%); transition: rotate 300ms var(--ease); }
+  .h-path--sapphire .h-path__art { color: #fff; --icon-accent: var(--sky); }
+  .h-path:hover .h-path__art { rotate: -4deg; }
   @media (max-width: 960px) { .h-paths__list { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 600px) { .h-paths__list { grid-template-columns: 1fr; gap: var(--s-2); } .h-paths__list a { padding: var(--s-4); align-items: center; } .h-paths__n { display: none; } .h-paths__list strong { font-size: var(--fs-md); margin-bottom: 2px; } .h-paths__go { grid-row: 1 / 3; align-self: center; width: 36px; height: 36px; } }
+  @media (max-width: 600px) { .h-paths__list { grid-template-columns: 1fr; gap: var(--s-3); } .h-path { min-height: 0; padding-right: 110px; } .h-path__art { width: 64px; height: 64px; border-radius: 18px; top: var(--s-5); bottom: auto; } .h-path strong { font-size: var(--fs-lg); } }
 
   /* ── Opportunities ── */
+  .h-open__intro { margin: var(--s-2) 0 0; color: var(--slate); max-width: 56ch; }
+  .h-scope { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-4); margin: 0 0 var(--s-6); padding: var(--s-4) var(--s-5); border-radius: 16px; background: var(--ivory); border: 1px solid rgb(8 26 53 / 12%); }
+  .h-scope dt { margin-bottom: var(--s-2); }
+  .h-scope dd { margin: 0; font-size: var(--fs-sm); color: var(--slate); }
+  @media (max-width: 760px) { .h-scope { grid-template-columns: 1fr; } }
   .h-open { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--s-6); align-items: stretch; }
-  .h-open__feature { position: relative; overflow: hidden; border-radius: 20px; padding: clamp(var(--s-5), 3vw, var(--s-7)); display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-3); color: #c3d1e8;
-    background: radial-gradient(80% 70% at 100% 0%, rgb(34 184 230 / 40%), transparent 60%), linear-gradient(155deg, var(--royal) 0%, var(--sapphire-deep) 55%, var(--midnight) 100%); }
+  .h-open__feature { position: relative; border-radius: 18px; padding: clamp(var(--s-5), 3vw, var(--s-7)); display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-3); color: #d3e0fa; background: var(--royal); border: 1px solid var(--midnight); box-shadow: 10px 10px 0 var(--sky-tint), 10px 10px 0 1px rgb(8 26 53 / 30%); background-image: linear-gradient(rgb(255 255 255 / 7%) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / 7%) 1px, transparent 1px); background-size: 36px 36px; }
   .h-open__feature h3 { font-size: var(--fs-xl); line-height: 1.2; margin: var(--s-2) 0 0; color: #fff; }
   .h-open__feature p { margin: 0; }
-  .h-open__feature .h-open__auth { color: #a9c3f0; font-size: var(--fs-sm); }
+  .h-open__feature .h-open__auth { color: #bcd0f5; font-size: var(--fs-sm); }
   .h-open__feature h3 a { color: #fff; text-decoration: none; }
   .h-open__feature h3 a:hover { color: #fff; text-decoration: underline; }
-  .h-open__scope { font-size: var(--fs-label); font-weight: 600; color: #fff; padding: 5px 8px; border-radius: 4px; background: rgb(255 255 255 / 14%); }
+  .h-open__scope { font-size: var(--fs-label); font-weight: 600; color: #fff; padding: 5px 8px; border-radius: 4px; background: rgb(255 255 255 / 16%); }
   .h-open__deadline { margin-top: auto !important; padding-top: var(--s-4); font-weight: 600; color: #fff; }
   .h-open h3 a::after { content: ''; position: absolute; inset: 0; }
   .h-open__list { list-style: none; padding: 0; margin: 0; border-top: var(--hair); }
   .h-open__list li { position: relative; padding: var(--s-5) var(--s-3); border-bottom: var(--hair); border-radius: 8px; transition: background var(--dur); }
-  .h-open__list li:hover { background: var(--ivory); }
+  .h-open__list li:hover { background: var(--ice); }
   .h-open__list h3 { margin: var(--s-3) 0 var(--s-1); font-size: var(--fs-md); }
   .h-open__list h3 a { color: var(--midnight); text-decoration: none; }
   .h-open__list h3 a:hover { color: var(--royal); }
@@ -352,46 +405,70 @@ const tiers = [
   .h-open__meta { display: flex; flex-wrap: wrap; gap: var(--s-2); }
   @media (max-width: 960px) { .h-open { grid-template-columns: 1fr; } }
 
-  /* ── What BECCI does: bento ── */
-  .h-does { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1.3fr 1fr 1fr; grid-template-rows: auto auto; gap: var(--s-4); }
-  .h-does li { display: flex; flex-direction: column; padding: var(--s-6); background: var(--white); border: 1px solid var(--silver-200); border-radius: 20px; }
-  .h-does h3 { font-size: var(--fs-lg); }
-  .h-does p { color: var(--slate); flex: 1; }
-  .h-does .link-arrow { color: var(--royal); }
-  .h-does li:nth-child(4) { grid-column: 2 / 4; }
-  .h-does__lead { grid-row: 1 / 3; border: 0 !important; justify-content: flex-end; min-height: 360px; color: #c3d1e8;
-    background: radial-gradient(70% 60% at 100% 0%, rgb(34 184 230 / 35%), transparent 65%), linear-gradient(160deg, var(--midnight-2), var(--midnight)) !important; }
-  .h-does__lead h3 { color: #fff; font-size: var(--fs-2xl); max-width: 14ch; }
-  .h-does__lead p { color: #c3d1e8; flex: 0; max-width: 36ch; }
-  .h-does__lead .link-arrow { color: #8fdcf7; }
-  .h-does__lead .link-arrow:hover { color: #fff; }
+  /* ── Pillars: Tines resource grid, mixed spans and surfaces ── */
+  .h-does { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--s-4); }
+  .h-pil { --bg: var(--ice); --fg: var(--midnight); --sub: var(--slate); --ey: var(--royal); position: relative; overflow: hidden; display: flex; flex-direction: column; min-height: 360px; padding: var(--s-6); border-radius: 18px; background: var(--bg); color: var(--sub); border: 1px solid rgb(8 26 53 / 14%); }
+  .h-pil:nth-child(1), .h-pil:nth-child(4) { grid-column: span 7; }
+  .h-pil:nth-child(2), .h-pil:nth-child(3) { grid-column: span 5; }
+  .h-pil--midnight { --bg: var(--midnight); --fg: #fff; --sub: #b9c8e0; --ey: var(--cyan); }
+  .h-pil--royal { --bg: var(--royal); --fg: #fff; --sub: #d3e0fa; --ey: #bfe7ff; background-image: linear-gradient(rgb(255 255 255 / 7%) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / 7%) 1px, transparent 1px); background-size: 36px 36px; }
+  .h-pil--sky { --bg: var(--sky-tint); }
+  .h-pil__eyebrow { display: flex; align-items: center; gap: var(--s-3); margin: 0 0 var(--s-4); font: 600 0.6875rem/1 var(--font-body); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ey); }
+  .h-pil__status { padding: 4px 8px; border-radius: 999px; border: 1px solid currentColor; letter-spacing: 0.06em; }
+  .h-pil h3 { margin: 0 0 var(--s-3); max-width: 16ch; font-size: clamp(1.5rem, 1.1rem + 1.2vw, 2.125rem); font-weight: 500; line-height: 1.1; letter-spacing: -0.025em; color: var(--fg); }
+  .h-pil__text { margin: 0; max-width: 38ch; }
+  .h-pil__link { position: relative; z-index: 1; margin-top: auto; padding-top: var(--s-6); align-self: flex-start; font-weight: 600; color: var(--fg); text-decoration: none; }
+  .h-pil__link::before { content: ''; position: absolute; inset: -400px -2000px -40px -40px; }
+  .h-pil__link span { display: inline-block; transition: translate 200ms var(--ease); }
+  .h-pil:hover .h-pil__link span { translate: 4px 0; }
+  .h-pil:hover .h-pil__link { color: var(--fg); text-decoration: underline; text-underline-offset: 4px; }
+  .h-pil__art { position: absolute; right: -2%; bottom: -4%; width: 44%; max-width: 300px; pointer-events: none; transition: transform 400ms var(--ease); }
+  .h-pil:hover .h-pil__art { transform: translateY(-6px) rotate(-2deg); }
+  .h-pil--royal .h-pil__art { width: 40%; right: 2%; bottom: -2%; }
+  .h-pil__icon { position: absolute; right: var(--s-6); bottom: var(--s-6); display: grid; place-items: center; width: 112px; height: 112px; border-radius: 28px; background: var(--royal); color: #fff; --icon-accent: var(--cyan); border: 1px solid rgb(255 255 255 / 25%); rotate: -8deg; box-shadow: 6px 6px 0 var(--cyan); }
+  .h-pil__mark { position: absolute; top: 0; right: var(--s-6); width: 28px; height: 44px; background: var(--cyan); clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%); }
+  .h-pil:has(.h-pil__art) .h-pil__text, .h-pil:has(.h-pil__art) h3 { max-width: min(38ch, 58%); }
   .h-more { display: flex; flex-wrap: wrap; gap: var(--s-2); list-style: none; padding: 0; margin: var(--s-5) 0 0; }
-  .h-more a { display: inline-flex; align-items: center; gap: var(--s-2); min-height: 44px; padding: 0 var(--s-4); border-radius: 999px; background: var(--white); border: 1px solid var(--silver-200); color: var(--midnight); font-size: var(--fs-sm); font-weight: 500; text-decoration: none; transition: border-color var(--dur), color var(--dur); }
-  .h-more a:hover { border-color: var(--royal); color: var(--royal); }
-  @media (max-width: 960px) { .h-does { grid-template-columns: 1fr 1fr; } .h-does__lead { grid-column: 1 / -1; grid-row: auto; min-height: 280px; } .h-does li:nth-child(4) { grid-column: 1 / -1; } }
-  @media (max-width: 600px) { .h-does { grid-template-columns: 1fr; } .h-does li { padding: var(--s-5); } .h-does__lead { min-height: 240px; } }
+  .h-more a { display: inline-flex; align-items: center; gap: var(--s-2); min-height: 44px; padding: 0 var(--s-4); border-radius: 999px; background: var(--white); border: 1px solid rgb(8 26 53 / 14%); color: var(--midnight); font-size: var(--fs-sm); font-weight: 500; text-decoration: none; transition: border-color var(--dur), color var(--dur), background var(--dur); }
+  .h-more a:hover { border-color: var(--midnight); background: var(--ice); color: var(--midnight); }
+  @media (max-width: 960px) { .h-pil:nth-child(n) { grid-column: 1 / -1; } }
+  @media (max-width: 600px) { .h-pil { padding: var(--s-5); min-height: 0; } .h-pil__art { position: relative; right: auto; bottom: auto; width: 70% !important; margin: var(--s-4) 0 0 auto; } .h-pil:has(.h-pil__art) .h-pil__text, .h-pil:has(.h-pil__art) h3 { max-width: none; } .h-pil__icon { width: 72px; height: 72px; border-radius: 20px; right: var(--s-5); bottom: var(--s-5); } .h-pil__icon :global(svg) { width: 36px; height: 36px; } .h-pil__link { padding-top: var(--s-5); } }
 
-  /* ── Membership ── */
+  /* ── Membership: royal band with outlined tier cards ── */
+  .h-join { position: relative; isolation: isolate; background: var(--royal); color: #d3e0fa; border-radius: 40px; margin-inline: clamp(8px, 1.5vw, 24px); }
+  .h-join__bg { position: absolute; inset: 0; z-index: -1; border-radius: inherit; background-image: linear-gradient(rgb(255 255 255 / 8%) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / 8%) 1px, transparent 1px); background-size: 72px 72px; mask-image: radial-gradient(80% 80% at 50% 40%, #000, transparent); }
+  .h-join h2 { color: #fff; }
+  .h-join .h-head p:not(.eyebrow) { color: #d3e0fa; }
+  .h-join .eyebrow { color: #bfe7ff; }
   .h-tiers { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-4); }
-  .h-tiers li { padding: var(--s-6); border-radius: 20px; background: var(--ivory); border: 1px solid var(--silver-200); }
-  .h-tiers__step { display: inline-flex; font-size: var(--fs-label); font-weight: 600; color: var(--royal); background: var(--sapphire-soft); padding: 5px 10px; border-radius: 999px; margin-bottom: var(--s-5); }
-  .h-tiers h3 { font-size: var(--fs-lg); }
-  .h-tiers p { color: var(--slate); margin: 0; }
-  .h-member__foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-4) var(--s-5); margin-top: var(--s-6); }
-  .h-member__foot p { margin: 0; }
-  @media (max-width: 760px) { .h-tiers { grid-template-columns: 1fr; gap: var(--s-3); } .h-tiers li { padding: var(--s-5); } .h-tiers__step { margin-bottom: var(--s-3); } }
+  .h-tiers li { display: flex; flex-direction: column; min-height: 240px; padding: var(--s-6); border-radius: 18px; background: rgb(255 255 255 / 6%); border: 1px solid rgb(255 255 255 / 28%); transition: background var(--dur), transform 260ms var(--ease); }
+  .h-tiers li:nth-child(3) { background: #fff; border-color: #fff; color: var(--slate); }
+  .h-tiers li:hover { transform: translateY(-3px); }
+  .h-tiers__step { align-self: flex-start; font: 600 0.6875rem/1 var(--font-body); letter-spacing: 0.14em; text-transform: uppercase; color: #bfe7ff; margin-bottom: auto; padding-bottom: var(--s-6); }
+  .h-tiers li:nth-child(3) .h-tiers__step { color: var(--royal); }
+  .h-tiers h3 { font-size: var(--fs-xl); font-weight: 500; letter-spacing: -0.02em; color: #fff; margin-bottom: var(--s-2); }
+  .h-tiers h3 span { font-weight: 300; }
+  .h-tiers li:nth-child(3) h3 { color: var(--midnight); }
+  .h-tiers p { margin: 0; }
+  .h-member__foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; text-align: center; gap: var(--s-4) var(--s-5); margin-top: var(--s-7); }
+  .h-member__foot .btn { border-radius: 999px; }
+  .h-member__foot p { margin: 0; max-width: 64ch; color: #c5d6f6; }
+  @media (max-width: 760px) { .h-tiers { grid-template-columns: 1fr; gap: var(--s-3); } .h-tiers li { min-height: 0; padding: var(--s-5); } .h-tiers__step { padding-bottom: var(--s-4); } .h-join { border-radius: 24px; } }
 
-  /* ── Close ── */
-  .h-close__panel { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: clamp(var(--s-6), 5vw, var(--s-8)); align-items: center; padding: clamp(var(--s-6), 5vw, var(--s-8)); border-radius: 28px; color: #c3d1e8;
-    background: radial-gradient(60% 80% at 100% 100%, rgb(34 184 230 / 45%), transparent 65%), linear-gradient(135deg, var(--royal) 0%, var(--sapphire-deep) 60%, var(--midnight-2) 100%); }
-  .h-close__panel h2 { color: #fff; max-width: 16ch; }
-  .h-close__panel p { color: #d5e0f3; max-width: 46ch; margin-bottom: var(--s-6); }
-  .h-close__links { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--s-2); }
-  .h-close__links a { display: flex; justify-content: space-between; align-items: center; gap: var(--s-4); min-height: 60px; padding: 0 var(--s-5); border-radius: 12px; background: rgb(255 255 255 / 10%); border: 1px solid rgb(255 255 255 / 14%); color: #fff; text-decoration: none; transition: background var(--dur), border-color var(--dur); }
-  .h-close__links a:hover { color: #fff; background: rgb(255 255 255 / 18%); border-color: rgb(255 255 255 / 40%); }
+  /* ── Close: Tines-style bordered call-to-action box ── */
+  .h-close__box { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; padding: clamp(var(--s-6), 5vw, var(--s-8)); border-radius: 24px; background: var(--ice); border: 1px solid rgb(8 26 53 / 16%); }
+  .h-close__art { width: 92px; margin-bottom: var(--s-4); }
+  .h-close__box h2 { max-width: 18ch; font-size: clamp(2rem, 1.3rem + 2.4vw, 3.25rem); font-weight: 500; letter-spacing: -0.03em; line-height: 1.05; }
+  .h-close__box > p { max-width: 58ch; color: var(--slate); }
+  .h-close__cta { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-3); margin: var(--s-3) 0 var(--s-7); }
+  .h-close__cta .btn { border-radius: 999px; }
+  .h-close__links { list-style: none; padding: 0; margin: 0; width: 100%; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-3); text-align: left; }
+  .h-close__links a { display: grid; gap: 4px; height: 100%; padding: var(--s-4); border-radius: 14px; background: #fff; border: 1px solid rgb(8 26 53 / 12%); color: var(--midnight); text-decoration: none; --icon-accent: var(--cyan); transition: transform 220ms var(--ease), box-shadow 220ms var(--ease); }
+  .h-close__links a:hover { color: var(--midnight); transform: translateY(-3px); box-shadow: 4px 5px 0 var(--midnight); }
+  .h-close__links :global(svg) { color: var(--royal); margin-bottom: var(--s-2); }
   .h-close__links strong { font-weight: 600; }
-  .h-close__links span { color: #c3d1e8; font-size: var(--fs-sm); text-align: right; }
-  @media (max-width: 860px) { .h-close__panel { grid-template-columns: 1fr; border-radius: 20px; } }
-  @media (max-width: 480px) { .h-close__links a { flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px; padding: var(--s-3) var(--s-4); } .h-close__links span { text-align: left; } }
+  .h-close__links span { color: var(--slate); font-size: var(--fs-sm); }
+  @media (max-width: 860px) { .h-close__links { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 420px) { .h-close__links { grid-template-columns: 1fr; } }
   .h-stats { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--s-4); padding: 0; margin-top: var(--s-7); }
 </style>

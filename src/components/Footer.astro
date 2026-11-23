@@ -1,47 +1,59 @@
 ---
-import { site, socials } from '../data/site';
+import { site, socials, nav } from '../data/site';
 import Logo from './Logo.astro';
+const groups = nav.filter((g) => g.children);
+// Decorative shapes for the footer band (positions in %, size in px). Purely ornamental.
+const shapes = [
+  { k: 'ring', x: 6, y: 14, s: 34, c: 'var(--sky)', d: 0 }, { k: 'sq', x: 18, y: 6, s: 22, c: 'var(--cyan)', d: 2 },
+  { k: 'dot', x: 31, y: 18, s: 12, c: '#fff', d: 4 }, { k: 'pill', x: 47, y: 8, s: 40, c: 'var(--sky)', d: 1 },
+  { k: 'sq', x: 62, y: 20, s: 18, c: '#fff', d: 3 }, { k: 'ring', x: 74, y: 7, s: 26, c: 'var(--cyan)', d: 5 },
+  { k: 'tri', x: 86, y: 16, s: 26, c: 'var(--sky)', d: 2 }, { k: 'dot', x: 95, y: 6, s: 10, c: 'var(--cyan)', d: 1 },
+];
 ---
 <footer class="site-footer on-dark">
+  <div class="footer-sky" aria-hidden="true">
+    {shapes.map((sh) => <span class={`fs fs--${sh.k}`} style={`left:${sh.x}%;top:${sh.y}%;--s:${sh.s}px;--c:${sh.c};--d:${sh.d}s`}></span>)}
+  </div>
   <div class="wrap">
     <div class="footer-top">
       <p class="footer-promise" data-scrub>{'Building Businesses • Building Bharat'.split(' ').map((w) => <><span class="sw">{w}</span>{' '}</>)}</p>
       <div class="footer-cta">
-        <a class="btn btn--accent" href="/membership#join">Join as a Member</a>
+        <a class="btn btn--light" href="/membership#join">Join BECCI</a>
         <a class="btn btn--ghost" href="/partnerships">Partner with BECCI</a>
       </div>
     </div>
     <div class="footer-grid">
       <div class="footer-id">
         <Logo tone="light" />
-        <p>{site.fullName}</p>
+        <p>{site.identity}</p>
         {socials.length ? (
           <ul class="footer-social">{socials.map((s) => <li><a href={s.url} rel="noopener">{s.label}</a></li>)}</ul>
         ) : <p class="small">Official social media links will be added once BECCI confirms them.</p>}
       </div>
-      <div><h2>Opportunities</h2><ul>
-        <li><a href="/schemes">Government Schemes</a></li><li><a href="/opportunities/tenders">Tenders</a></li>
-        <li><a href="/opportunities/jobs">Jobs &amp; Internships</a></li><li><a href="/opportunities/scholarships">Scholarships</a></li>
-        <li><a href="/opportunities/finance">Loans &amp; Funding</a></li><li><a href="/franchise">Franchise &amp; Enterprise</a></li></ul></div>
-      <div><h2>Chamber</h2><ul>
-        <li><a href="/about">About Us</a></li><li><a href="/leadership">Leadership</a></li><li><a href="/wings">Wings &amp; Chapters</a></li>
-        <li><a href="/wings/women">Women's Wing</a></li><li><a href="/wings/youth">Youth Wing</a></li><li><a href="/success-stories">Success Stories</a></li></ul></div>
-      <div><h2>Get involved</h2><ul>
-        <li><a href="/membership">Membership</a></li><li><a href="/partnerships">Partnerships</a></li><li><a href="/services">Services</a></li>
-        <li><a href="/biz-connect">Biz Connect</a></li><li><a href="/marketplace">Marketplace</a></li></ul></div>
-      <div><h2>Updates</h2><ul>
-        <li><a href="/events">Event Calendar</a></li><li><a href="/news">News Desk</a></li><li><a href="/knowledge">Knowledge Centre</a></li><li><a href="/contact">Contact</a></li></ul></div>
+      {groups.map((g) => (
+        <div><h2>{g.label}</h2><ul>{[...g.children!, ...(g.more ?? [])].map((c) => <li><a href={c.href}>{c.label}</a></li>)}</ul></div>
+      ))}
     </div>
     <div class="footer-base">
-      <span>© {new Date().getFullYear()} BECCI</span>
-      <span><a href="/policies">Privacy Policy</a> · <a href="/policies#terms">Terms</a> · <a href="/opportunities/about-data">How we check opportunities</a></span>
+      <span>© {new Date().getFullYear()} BECCI · {site.fullName}</span>
+      <span><a href="/membership">Membership</a> · <a href="/policies">Privacy Policy</a> · <a href="/policies#terms">Terms</a> · <a href="/opportunities/about-data">How we check opportunities</a></span>
     </div>
   </div>
 </footer>
 <style is:global>
+  .site-footer { position: relative; overflow: hidden; isolation: isolate; background: linear-gradient(180deg, var(--royal) 0%, var(--royal-deep) 22%, var(--midnight) 70%); padding-top: clamp(140px, 14vw, 200px); }
+  .footer-sky { position: absolute; inset: 0 0 auto; height: 200px; z-index: -1; pointer-events: none; }
+  .fs { position: absolute; width: var(--s); height: var(--s); opacity: 0.75; }
+  .fs--ring { border: 3px solid var(--c); border-radius: 50%; }
+  .fs--sq { background: var(--c); border-radius: 6px; transform: rotate(18deg); }
+  .fs--dot { background: var(--c); border-radius: 50%; }
+  .fs--pill { height: calc(var(--s) * 0.4); background: var(--c); border-radius: 999px; transform: rotate(-14deg); }
+  .fs--tri { width: 0; height: 0; border-left: calc(var(--s) / 2) solid transparent; border-right: calc(var(--s) / 2) solid transparent; border-bottom: var(--s) solid var(--c); background: none; }
+  @media (prefers-reduced-motion: no-preference) { .fs { animation: fs-float 7s ease-in-out infinite alternate; animation-delay: calc(var(--d) * -1s); } }
+  @keyframes fs-float { to { translate: 0 -10px; rotate: 12deg; } }
   .footer-cta { display: flex; flex-wrap: wrap; gap: var(--s-3); }
-  .footer-id p { margin: var(--s-4) 0 0; max-width: 30ch; }
-  .footer-id .brand__mark { width: 56px; }
-  .footer-id .brand__word { color: #fff; }
+  .footer-id p { margin: var(--s-4) 0 0; max-width: 34ch; }
   .footer-social { list-style: none; padding: 0; display: flex; gap: var(--s-4); margin-top: var(--s-4); }
+  .footer-grid { grid-template-columns: 1.4fr repeat(4, 1fr) !important; }
+  @media (max-width: 900px) { .footer-grid { grid-template-columns: 1fr 1fr !important; } .site-footer { padding-top: 120px; } }
 </style>

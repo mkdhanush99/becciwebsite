@@ -1,0 +1,151 @@
+---
+// BECCI illustration set. Original flat-outline scenes in the BECCI palette:
+// one ink outline (midnight), pastel and saturated blue fills, a hard offset shadow under
+// each object. Decorative: always aria-hidden. Motion is CSS only and reduced-motion gated.
+type Scene = 'finder' | 'chamber' | 'members' | 'updates' | 'hero' | 'arch';
+interface Props { name: Scene; class?: string }
+const { name, class: cls = '' } = Astro.props;
+
+const K = '#081a35'; // ink
+const R = '#174fc1', S = '#2869e8', Y = '#65b9f2', C = '#42c8d8', I = '#eaf3fc', T = '#dcecfb', Cs = '#dcf4f7', W = '#ffffff', V = '#f7f5ef';
+const st = `stroke="${K}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"`;
+// A floating island: side wall + top ellipse
+const island = (cx: number, cy: number, rx: number, ry: number, h: number, top = I, side = S) =>
+  `<path d="M${cx - rx} ${cy}v${h}a${rx} ${ry} 0 0 0 ${2 * rx} 0v-${h}" fill="${side}" ${st}/>` +
+  `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${top}" ${st}/>`;
+const cloud = (x: number, y: number, s = 1) =>
+  `<g transform="translate(${x} ${y}) scale(${s})" class="il-cloud"><path d="M0 18a10 10 0 0 1 10-10 14 14 0 0 1 26-2 10 10 0 0 1 14 12Z" fill="${W}" ${st}/></g>`;
+const tree = (x: number, y: number, c = C) =>
+  `<g transform="translate(${x} ${y})"><path d="M0 0v-14" ${st} fill="none"/><circle cx="0" cy="-22" r="11" fill="${c}" ${st}/></g>`;
+const spark = (x: number, y: number, c = Y) =>
+  `<path class="il-spark" d="M${x} ${y - 7}q1 6 7 7q-6 1-7 7q-1-6-7-7q6-1 7-7Z" fill="${c}" ${st}/>`;
+
+const scenes: Record<Scene, { vb: string; svg: string }> = {
+  // Opportunities: stacked notices under a magnifier, one ticked as checked
+  finder: { vb: '0 0 220 170', svg: `
+    <rect x="44" y="40" width="96" height="112" rx="10" fill="${K}" transform="rotate(-8 92 96) translate(4 4)"/>
+    <rect x="44" y="40" width="96" height="112" rx="10" fill="${T}" transform="rotate(-8 92 96)" ${st}/>
+    <rect x="64" y="30" width="96" height="112" rx="10" fill="${K}" transform="translate(4 4)"/>
+    <rect x="64" y="30" width="96" height="112" rx="10" fill="${W}" ${st}/>
+    <rect x="78" y="46" width="44" height="10" rx="5" fill="${R}"/>
+    <path d="M78 70h66M78 82h56M78 94h62M78 106h40" stroke="${K}" stroke-width="2" stroke-linecap="round" opacity=".35"/>
+    <circle cx="140" cy="126" r="13" fill="${C}" ${st}/><path d="m134 126 4.5 4.5 8-8.5" fill="none" ${st}/>
+    <g class="il-bob"><circle cx="168" cy="70" r="26" fill="${K}" transform="translate(4 4)"/><circle cx="168" cy="70" r="26" fill="${Y}" fill-opacity=".55" ${st}/><circle cx="168" cy="70" r="17" fill="${W}" fill-opacity=".6" ${st}/><path d="m186 89 18 20" stroke="${K}" stroke-width="9" stroke-linecap="round"/><path d="m186 89 18 20" stroke="${S}" stroke-width="5" stroke-linecap="round"/></g>
+    ${spark(36, 34, C)}${spark(196, 30)}${spark(26, 128, Y)}` },
+  // Chamber: an arched hall with columns and a pennant
+  chamber: { vb: '0 0 220 170', svg: `
+    ${island(110, 142, 92, 18, 12, Cs, C)}
+    <path d="M50 136V78h120v58" fill="${K}" transform="translate(4 4)"/>
+    <path d="M50 136V78h120v58Z" fill="${W}" ${st}/>
+    <path d="M42 80 110 40l68 40Z" fill="${R}" ${st}/>
+    <path d="M38 80h144v10H38Z" fill="${T}" ${st}/>
+    <path d="M64 136V96M82 136V96M138 136V96M156 136V96" stroke="${K}" stroke-width="5" stroke-linecap="round"/>
+    <path d="M64 136V96M82 136V96M138 136V96M156 136V96" stroke="${Y}" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M96 136v-24a14 14 0 0 1 28 0v24Z" fill="${S}" ${st}/>
+    <path d="M110 40V14" ${st} fill="none"/><path class="il-flag" d="M110 14h24l-6 7 6 7h-24Z" fill="${C}" ${st}/>
+    <circle cx="110" cy="64" r="6" fill="${W}" ${st}/>
+    ${tree(30, 140, Y)}${tree(192, 140)}${cloud(150, 10, 0.8)}` },
+  // Membership: a member card, a rosette and a key
+  members: { vb: '0 0 220 170', svg: `
+    <g transform="rotate(-7 110 92)">
+      <rect x="40" y="46" width="140" height="92" rx="12" fill="${K}" transform="translate(5 5)"/>
+      <rect x="40" y="46" width="140" height="92" rx="12" fill="${R}" ${st}/>
+      <rect x="40" y="62" width="140" height="14" fill="${S}" stroke="${K}" stroke-width="2"/>
+      <circle cx="74" cy="104" r="15" fill="${T}" ${st}/><circle cx="74" cy="100" r="5" fill="${R}"/><path d="M65 113c2-4 5-6 9-6s7 2 9 6" fill="none" stroke="${R}" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M102 98h56M102 110h38" stroke="${W}" stroke-width="3" stroke-linecap="round"/>
+    </g>
+    <g class="il-bob"><path d="m168 112-8 34 12-8 10 10 4-34Z" fill="${C}" ${st}/><circle cx="176" cy="104" r="20" fill="${Y}" ${st}/><circle cx="176" cy="104" r="11" fill="${W}" ${st}/></g>
+    <g transform="rotate(30 40 40)"><circle cx="36" cy="34" r="12" fill="${Cs}" ${st}/><circle cx="36" cy="34" r="4" fill="${W}" ${st}/><path d="M48 34h30m-10 0v8m-8-8v6" fill="none" ${st}/></g>
+    ${spark(196, 40)}${spark(24, 140, C)}` },
+  // Updates: calendar page, megaphone and a paper plane
+  updates: { vb: '0 0 220 170', svg: `
+    <rect x="36" y="44" width="96" height="100" rx="12" fill="${K}" transform="translate(4 4)"/>
+    <rect x="36" y="44" width="96" height="100" rx="12" fill="${W}" ${st}/>
+    <path d="M36 56a12 12 0 0 1 12-12h72a12 12 0 0 1 12 12v12H36Z" fill="${S}" ${st}/>
+    <path d="M58 36v18M110 36v18" ${st}/>
+    <g fill="${T}" stroke="${K}" stroke-width="1.5"><rect x="50" y="80" width="16" height="14" rx="3"/><rect x="76" y="80" width="16" height="14" rx="3"/><rect x="102" y="80" width="16" height="14" rx="3"/><rect x="50" y="104" width="16" height="14" rx="3"/><rect x="102" y="104" width="16" height="14" rx="3"/></g>
+    <rect x="76" y="104" width="16" height="14" rx="3" fill="${C}" ${st}/>
+    <g class="il-bob"><path d="M136 86l46-24v62l-46-20Z" fill="${Y}" ${st}/><rect x="124" y="84" width="16" height="22" rx="4" fill="${R}" ${st}/><path d="m132 106 6 20h10l-4-18" fill="${W}" ${st}/><path d="M190 76l10-6M192 94h12M190 112l10 6" ${st}/></g>
+    <path class="il-plane" d="m150 24 52-12-20 40-10-16Z" fill="${W}" ${st}/><path d="m172 36 30-24" ${st}/>
+    ${spark(24, 34, C)}` },
+  // Small arch used in panels and the closing call to action
+  arch: { vb: '0 0 120 140', svg: `
+    <path d="M24 128V56a36 36 0 0 1 72 0v72Z" fill="${K}" transform="translate(5 5)"/>
+    <path d="M24 128V56a36 36 0 0 1 72 0v72Z" fill="${R}" ${st}/>
+    <path d="M38 128V60a22 22 0 0 1 44 0v68Z" fill="${K}"/>
+    <g class="il-orbit">${spark(52, 72, Y)}<circle cx="68" cy="92" r="5" fill="${C}" ${st}/><rect x="50" y="102" width="9" height="9" rx="2" fill="${W}" ${st} transform="rotate(20 54 106)"/></g>
+    <path d="M14 128h92l-8 10H22Z" fill="${C}" ${st}/>` },
+  // Homepage hero: three floating islands (enterprise, industry, education) linked by trade routes
+  hero: { vb: '0 0 640 500', svg: `
+    ${cloud(40, 70, 1.4)}${cloud(520, 30, 1.1)}${cloud(300, 8, 0.9)}
+    <path class="il-route" d="M230 330C300 250 360 230 430 220" fill="none" stroke="${W}" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round"/>
+    <path class="il-route" d="M330 370C390 400 430 410 470 400" fill="none" stroke="${W}" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round"/>
+    <!-- island B: industry -->
+    <g class="il-float il-float--b">
+      ${island(470, 200, 122, 40, 28, T, S)}
+      <path d="M408 196v-56h112v56" fill="${K}" transform="translate(5 5)"/>
+      <path d="M408 196v-56l28-18v18l28-18v18l28-18v18l28-18v56Z" fill="${W}" ${st}/>
+      <rect x="500" y="88" width="16" height="56" fill="${R}" ${st}/>
+      <g class="il-smoke"><circle cx="508" cy="74" r="8" fill="${W}" ${st}/><circle cx="520" cy="58" r="11" fill="${W}" ${st}/><circle cx="536" cy="40" r="7" fill="${W}" ${st}/></g>
+      <path d="M422 160h16v16h-16ZM450 160h16v16h-16ZM478 160h16v16h-16Z" fill="${Y}" ${st}/>
+      ${tree(380, 206)}${tree(560, 208, Y)}
+    </g>
+    <!-- island A: the enterprise street -->
+    <g class="il-float il-float--a">
+      ${island(230, 340, 178, 58, 40, I, R)}
+      <path d="M118 334v-74h104v74" fill="${K}" transform="translate(5 5)"/>
+      <path d="M118 334v-74h104v74Z" fill="${W}" ${st}/>
+      <path d="M110 262h120l-8 24H118Z" fill="${S}" ${st}/>
+      <path d="M126 286v-24M146 286v-24M166 286v-24M186 286v-24M206 286v-24" stroke="${W}" stroke-width="6"/>
+      <path d="M110 262h120l-8 24H118Z" fill="none" ${st}/>
+      <rect x="132" y="296" width="30" height="38" rx="3" fill="${C}" ${st}/>
+      <rect x="174" y="296" width="36" height="22" rx="3" fill="${T}" ${st}/>
+      <rect x="140" y="238" width="60" height="20" rx="4" fill="${Y}" ${st}/>
+      <path d="M150 248h40" stroke="${K}" stroke-width="2" stroke-linecap="round"/>
+      <path d="M250 334v-110h70v110" fill="${K}" transform="translate(5 5)"/>
+      <path d="M250 334v-110h70v110Z" fill="${T}" ${st}/>
+      <path d="M262 240h14v14h-14ZM294 240h14v14h-14ZM262 268h14v14h-14ZM294 268h14v14h-14ZM262 296h14v14h-14Z" fill="${W}" ${st}/>
+      <rect x="292" y="300" width="18" height="34" rx="2" fill="${S}" ${st}/>
+      <g class="il-coins"><ellipse cx="356" cy="340" rx="16" ry="6" fill="${C}" ${st}/><path d="M340 340v-8a16 6 0 0 1 32 0v8" fill="${C}" ${st}/><ellipse cx="356" cy="332" rx="16" ry="6" fill="${C}" ${st}/><path d="M340 332v-8a16 6 0 0 1 32 0v8" fill="${Y}" ${st}/><ellipse cx="356" cy="324" rx="16" ry="6" fill="${Y}" ${st}/></g>
+      ${tree(96, 348)}${tree(76, 336, Y)}${tree(392, 340, Y)}
+    </g>
+    <!-- island C: learning -->
+    <g class="il-float il-float--c">
+      ${island(500, 410, 96, 30, 24, Cs, C)}
+      <path d="M454 404v-40h92v40" fill="${K}" transform="translate(5 5)"/>
+      <path d="M454 404v-40h92v40Z" fill="${W}" ${st}/>
+      <path d="M446 366 500 336l54 30Z" fill="${S}" ${st}/>
+      <path d="M470 404v-30M490 404v-30M510 404v-30M530 404v-30" stroke="${K}" stroke-width="5" stroke-linecap="round"/>
+      <path d="M470 404v-30M490 404v-30M510 404v-30M530 404v-30" stroke="${Y}" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M500 336v-30" ${st}/><path class="il-flag" d="M500 306h22l-5 6 5 6h-22Z" fill="${C}" ${st}/>
+    </g>
+    ${spark(60, 210, C)}${spark(600, 300)}${spark(360, 140, W)}${spark(120, 440, Y)}` },
+};
+const s = scenes[name];
+---
+<svg class:list={['illo', `illo--${name}`, cls]} viewBox={s.vb} aria-hidden="true" focusable="false" set:html={s.svg} />
+<style is:global>
+  .illo { display: block; width: 100%; height: auto; overflow: visible; }
+  @media (prefers-reduced-motion: no-preference) {
+    .illo .il-bob { animation: il-bob 5s ease-in-out infinite alternate; transform-box: fill-box; }
+    .illo .il-spark { animation: il-twinkle 3.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    .illo .il-spark:nth-of-type(2n) { animation-delay: -1.4s; }
+    .illo .il-flag { animation: il-wave 2.4s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: left center; }
+    .illo .il-cloud { animation: il-drift 14s ease-in-out infinite alternate; }
+    .illo .il-float { animation: il-bob 7s ease-in-out infinite alternate; }
+    .illo .il-float--b { animation-duration: 8.5s; animation-delay: -2s; }
+    .illo .il-float--c { animation-duration: 6s; animation-delay: -4s; }
+    .illo .il-route { animation: il-dash 2.2s linear infinite; }
+    .illo .il-smoke circle { animation: il-smoke 4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    .illo .il-smoke circle:nth-child(2) { animation-delay: -1.3s; }
+    .illo .il-smoke circle:nth-child(3) { animation-delay: -2.6s; }
+    .illo .il-plane { animation: il-bob 4s ease-in-out infinite alternate-reverse; }
+    .illo .il-orbit { animation: il-bob 3.6s ease-in-out infinite alternate; }
+  }
+  @keyframes il-bob { from { translate: 0 0; } to { translate: 0 -8px; } }
+  @keyframes il-twinkle { 0%, 100% { scale: 1; opacity: 1; } 50% { scale: 0.6; opacity: 0.6; } }
+  @keyframes il-wave { from { skew: 0 0deg; } to { skew: 0 -10deg; scale: 0.92 1; } }
+  @keyframes il-drift { to { translate: 24px 0; } }
+  @keyframes il-dash { to { stroke-dashoffset: -24; } }
+  @keyframes il-smoke { 0%, 100% { scale: 1; } 50% { scale: 1.15; } }
+</style>
