@@ -1,4 +1,5 @@
 ---
+import { schemeLogos, NO_LOGO_NOTE } from '../../data/scheme-logos';
 // One government scheme, told as six chapters (purpose, offer, who can benefit, what you need,
 // how to apply, official verification). Every sentence comes from the record in
 // src/data/opportunities.ts, which in turn quotes the official pages it links to.
@@ -39,6 +40,7 @@ const officialRows = [
   { k: 'Pages BECCI read for this summary', l: o.sources },
 ].filter(Boolean) as { k: string; l: { label: string; url: string }[] }[];
 const guideline = s.links.guidelines?.[0] ?? s.links.scheme;
+const logo = schemeLogos[o.slug];
 ---
 <Base title={s.short ? `${s.short} — ${o.title}` : o.title} description={`${o.summary} Explained in plain language, with official links.`}>
   <header class="gx-hero">
@@ -46,10 +48,16 @@ const guideline = s.links.guidelines?.[0] ?? s.links.scheme;
       <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true"> / </span><a href="/opportunities">Opportunities</a><span aria-hidden="true"> / </span><a href="/schemes" data-sx-back>Government Schemes</a><span aria-hidden="true"> / </span><span aria-current="page">{s.short ?? o.title}</span></nav>
       <div class="gx-hero__grid">
         <div class="gx-id">
+          {logo && (
+            <figure class="gx-logo">
+              <img src={logo.src} alt={logo.alt} width="240" height="96" decoding="async" />
+              <figcaption>Logo: {logo.label}</figcaption>
+            </figure>
+          )}
           <p class="gx-id__auth"><Icon name="schemes" size={20} />{o.level} Government · {s.ministry}</p>
           <h1>{o.title}</h1>
           <p class="gx-id__sum">{o.summary}</p>
-          <p class="gx-id__note">{s.identitySource} BECCI is not a government body and is not endorsed by the issuing authority.</p>
+          <p class="gx-id__note">{logo ? <>Official logo from <a href={logo.source.url} target="_blank" rel="noopener noreferrer">{logo.source.label}</a>, downloaded {formatDate(logo.fetched)}.</> : NO_LOGO_NOTE} BECCI is not a government body and is not endorsed by the issuing authority.</p>
         </div>
         <aside class="gx-glance" aria-label="At a glance">
           <div class="gx-glance__row"><span class={`status status--${st}`}>{STATUS_LABEL[st]}</span><span class="gx-glance__when">{deadlineText(o, today)}</span></div>
@@ -158,6 +166,10 @@ const guideline = s.links.guidelines?.[0] ?? s.links.scheme;
   .gx-id__auth { display: flex; align-items: center; gap: var(--s-2); margin: 0 0 var(--s-4); font-size: var(--fs-sm); font-weight: 600; color: var(--royal); --icon-accent: var(--cyan); }
   .gx-id h1 { margin: 0 0 var(--s-4); max-width: 20ch; font-size: clamp(2rem, 1.2rem + 2.8vw, 3.5rem); font-weight: 500; letter-spacing: -0.035em; line-height: 1.04; }
   .gx-id__sum { margin: 0; max-width: 56ch; font-size: var(--fs-md); line-height: 1.55; color: var(--ink-2); }
+  .gx-logo { display: inline-grid; gap: 6px; margin: 0 0 var(--s-5); }
+  .gx-logo img { display: block; width: auto; height: 72px; max-width: min(320px, 100%); object-fit: contain; object-position: left center; padding: 10px 14px; background: #fff; border: 1px solid rgb(8 26 53 / 12%); border-radius: 12px; box-sizing: content-box; }
+  .gx-logo figcaption { font-size: var(--fs-label); color: var(--slate); }
+  @media (max-width: 560px) { .gx-logo img { height: 52px; } }
   .gx-id__note { margin: var(--s-5) 0 0; max-width: 60ch; font-size: var(--fs-sm); color: var(--slate); }
   .gx-glance { display: grid; gap: var(--s-4); padding: var(--s-5); border-radius: 20px; background: var(--white); border: 1px solid rgb(8 26 53 / 14%); box-shadow: 0 24px 48px -32px rgb(8 26 53 / 40%); }
   .gx-glance__row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-3); }

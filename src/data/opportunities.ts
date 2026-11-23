@@ -37,9 +37,8 @@ export interface SchemeStory {
     portal?: SourceLink; // application portal
     notices?: SourceLink[]; // amendments, circulars, updated notices
   };
-  // Official logos are not reproduced: reuse terms for scheme logos and the State Emblem were not
-  // confirmed as permitting reproduction on a non-government website. The identity panel shows the
-  // scheme name and issuing authority instead, with links to the official source.
+  // Where the scheme name and authority were taken from. Official logos, where found on a Government
+  // of India source, live in src/data/scheme-logos.ts with their source and download date.
   identitySource: string;
   humanReviewed: string | null; // date a BECCI staff member checked every fact; null = not yet
 }

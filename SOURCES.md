@@ -60,6 +60,19 @@ myScheme is the Government of India's scheme platform (National e-Governance Div
 
 The "Compendium of Schemes for MSMEs" (Grant Thornton Bharat with SIDBI, v2.0) supplied by the client was used only to choose which schemes to research. No figure on the site is taken from it.
 
-**Official logos are not reproduced.** Reuse terms for scheme logos and the State Emblem of India (whose use is restricted by the State Emblem of India (Prohibition of Improper Use) Act, 2005) were not confirmed as permitting reproduction on a non-government website. Each scheme page shows the scheme name and issuing authority instead, with links to the official source.
+**Official logos (added 23 Nov 2026 at the client's request).** Logos are shown only where found on a Government of India source, each labelled with what it represents (the scheme, its parent initiative, the administering ministry, the implementing agency, or the application portal), so no ministry or portal logo is presented as the scheme's own. Files are in `public/logos/schemes/`; the mapping, source and download date are in `src/data/scheme-logos.ts`. Each page states BECCI is not a government body and is not endorsed. The State Emblem is not used on its own anywhere; it appears only inside the Ministry of MSME and National Scholarship Portal logos as those bodies publish them.
+
+| Scheme | Logo shown | What it is | Source |
+|---|---|---|---|
+| PM Mudra Yojana | PMMY logo | Scheme | DBIM toolkit (MeitY) Visual Components Library |
+| Stand-Up India | Stand-Up India logo | Scheme | DBIM toolkit |
+| Startup India Seed Fund | Startup India logo | Parent initiative | DBIM toolkit |
+| PMEGP, PM Vishwakarma | Ministry of MSME logo | Administering ministry | DBIM toolkit |
+| NBCFDC individual and group loans | NBCFDC logo | Implementing agency | nbcfdc.gov.in |
+| PM YASASVI, PM-USP | National Scholarship Portal logo | Application portal | scholarships.gov.in |
+| Telangana ePASS post-matric | Telangana ePASS logo | Application portal | telanganaepass.cgg.gov.in |
+| PMFME | None | Neither the scheme nor the Ministry of Food Processing Industries is in the DBIM library; pmfme.mofpi.gov.in unreachable from our checker | — |
+
+Reuse terms for these logos on a non-government website have not been confirmed in writing; the client should confirm before public launch.
 
 No scheme record has been reviewed by BECCI staff yet (`humanReviewed: null`). Pages say so.

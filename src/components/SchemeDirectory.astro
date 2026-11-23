@@ -4,6 +4,7 @@
 // people decide on (who it is for, the category rule, the application status).
 // Filters live in the URL so Back, refresh and shared links keep them (UXPeak, Design Filters 3).
 import Icon from './Icon.astro';
+import { schemeLogos } from '../data/scheme-logos';
 import { opportunities, OBC_SCOPE_LABEL, type Opportunity } from '../data/opportunities';
 import { computeStatus, STATUS_LABEL, deadlineText, todayISO, type Status } from '../lib/status';
 
@@ -69,7 +70,9 @@ const quick: { label: string; value: string }[] = [
           data-level={o.level} data-area={o.geography.join('|')} data-for={s.beneficiaries.join('|')}
           data-purpose={s.purposeTags.join('|')} data-applicant={s.applicantTypes.join('|')} data-scope={o.obcScope} data-status={st}
           data-text={[o.title, s.short, o.authority, s.ministry, o.summary, ...s.purposeTags, ...s.beneficiaries, ...s.sectors].join(' ').toLowerCase()}>
-          <span class="sd-row__mark" aria-hidden="true"><Icon name={iconFor(o) as any} size={24} /></span>
+          {schemeLogos[o.slug]
+            ? <span class="sd-row__mark sd-row__mark--logo"><img src={schemeLogos[o.slug].src} alt={schemeLogos[o.slug].alt} width="112" height="56" loading="lazy" decoding="async" /></span>
+            : <span class="sd-row__mark" aria-hidden="true"><Icon name={iconFor(o) as any} size={24} /></span>}
           <div class="sd-row__main">
             <h3><a href={`/schemes/${o.slug}`} data-sd-link>{o.title}</a></h3>
             <p class="sd-row__by">{s.ministry} · {o.level} Government · {o.geography.join(', ')}</p>
@@ -133,9 +136,13 @@ const quick: { label: string; value: string }[] = [
   .sd-row__for span { font-weight: 600; color: var(--royal); margin-right: 4px; }
   .sd-row__facts { display: grid; justify-items: start; gap: var(--s-2); }
   .sd-row__when { font-size: var(--fs-sm); color: var(--slate); }
+  .sd-row__mark--logo { width: 112px; height: 64px; padding: 6px 8px; background: #fff; }
+  .sd-row__mark--logo img { width: 100%; height: 100%; object-fit: contain; }
+  .sd-row--closed .sd-row__mark--logo { background: #fff; }
+  .sd-row--closed .sd-row__mark--logo img { filter: grayscale(1); opacity: 0.7; }
   .sd-row--closed .sd-row__mark { background: var(--silver-100); color: var(--slate); }
   .sd-row--closed h3 a { color: var(--ink-2); }
-  @media (max-width: 760px) { .sd-row { grid-template-columns: auto minmax(0, 1fr); gap: var(--s-3) var(--s-4); padding-inline: 0; } .sd-row__facts { grid-column: 2; display: flex; flex-wrap: wrap; align-items: center; } .sd-row__mark { width: 40px; height: 40px; } }
+  @media (max-width: 760px) { .sd-row { grid-template-columns: auto minmax(0, 1fr); gap: var(--s-3) var(--s-4); padding-inline: 0; } .sd-row__facts { grid-column: 2; display: flex; flex-wrap: wrap; align-items: center; } .sd-row__mark { width: 40px; height: 40px; } .sd-row__mark--logo { width: 80px; height: 48px; padding: 4px 6px; } }
   .sd-row[hidden], .sd-empty[hidden] { display: none; }
   .sd-empty { display: grid; justify-items: start; gap: var(--s-2); padding: var(--s-6); margin-top: var(--s-4); border-radius: 18px; border: 1px dashed rgb(8 26 53 / 22%); background: var(--ice); }
   .sd-empty p { margin: 0; color: var(--slate); }

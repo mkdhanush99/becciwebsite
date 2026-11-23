@@ -4,6 +4,7 @@ import ScrollStory from '../components/ScrollStory.astro';
 import ImpactStats from '../components/ImpactStats.astro';
 import Icon from '../components/Icon.astro';
 import Illo from '../components/Illo.astro';
+import { schemeLogos } from '../data/scheme-logos';
 import { site, audiences, advisors, events, news, stats } from '../data/site';
 import { opportunities, portals, CATEGORY_META, CATEGORY_ORDER, OBC_SCOPE_LABEL } from '../data/opportunities';
 import { computeStatus, STATUS_LABEL, deadlineText, todayISO, formatDate } from '../lib/status';
@@ -180,6 +181,7 @@ const tiers = [
         {featuredSchemes.map((o) => (
           <li>
             <a href={`/schemes/${o.slug}`}>
+              {schemeLogos[o.slug] && <span class="h-gs__logo"><img src={schemeLogos[o.slug].src} alt="" width="96" height="40" loading="lazy" decoding="async" /></span>}
               <span class="h-gs__name">{o.title}</span>
               <span class="h-gs__by">{o.scheme!.ministry}</span>
               <span class="h-gs__meta"><span>For {o.scheme!.beneficiaries.join(', ').toLowerCase()}</span><span class={`scope scope--${o.obcScope}`}>{OBC_SCOPE_LABEL[o.obcScope]}</span></span>
@@ -491,6 +493,8 @@ const tiers = [
   .h-gs__list { list-style: none; margin: 0; padding: 0; border-top: 1px solid rgb(8 26 53 / 14%); }
   .h-gs__list a { position: relative; display: grid; gap: 4px; padding: var(--s-5) 48px var(--s-5) var(--s-3); border-bottom: 1px solid rgb(8 26 53 / 14%); color: var(--midnight); text-decoration: none; transition: background var(--dur); }
   .h-gs__list a::after { content: '→'; position: absolute; right: var(--s-3); top: 50%; translate: 0 -50%; color: var(--royal); transition: translate 200ms var(--ease); }
+  .h-gs__logo { display: block; margin-bottom: 4px; }
+  .h-gs__logo img { display: block; width: auto; height: 36px; max-width: 180px; object-fit: contain; object-position: left center; }
   .h-gs__list a:hover { background: var(--white); color: var(--midnight); }
   .h-gs__list a:hover::after { translate: 4px -50%; }
   .h-gs__name { font: 500 var(--fs-lg)/1.25 var(--font-display); letter-spacing: -0.015em; }
