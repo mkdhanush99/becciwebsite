@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import LetterStory from '../components/LetterStory.astro';
+import ScrollStory from '../components/ScrollStory.astro';
 import { site, audiences, advisors, events, news, stats } from '../data/site';
 import { opportunities, portals, CATEGORY_META, CATEGORY_ORDER, OBC_SCOPE_LABEL } from '../data/opportunities';
 import { computeStatus, STATUS_LABEL, deadlineText, todayISO, formatDate } from '../lib/status';
@@ -13,6 +13,8 @@ const open = opportunities
 const [featured, ...rest] = open;
 const lastChecked = opportunities.map((o) => o.lastVerified).sort().at(-1);
 const register = open.slice(0, 3);
+const statement = 'Every record is checked against its official source. Every deadline is dated. Central OBC and State BC lists are never mixed.';
+const words = (t: string) => t.split(' ');
 const pillars = [
   { title: 'Open opportunities', text: 'Schemes, scholarships, loans, tenders and jobs, each checked against its official source.', href: '/opportunities', link: 'Find opportunities' },
   { title: 'Connect entrepreneurs', text: 'Events, wings and sector committees that put business owners in the same room.', href: '/wings', link: 'Wings and sectors' },
@@ -33,30 +35,33 @@ const tiers = [
 ];
 ---
 <Base title="Home">
-  <section class="h-hero on-dark" data-enter>
-    <div class="h-hero__bg" aria-hidden="true"></div>
-    <div class="wrap h-hero__grid">
-      <div class="h-hero__copy">
-        <h1>Where Community <span>Meets Commerce</span></h1>
-        <p class="h-hero__lede">{site.supporting}</p>
-        <form class="h-search" action="/opportunities" method="get" role="search">
-          <label for="hero-q" class="h-search__label">Find schemes, scholarships, loans, tenders and jobs</label>
-          <div class="h-search__row">
-            <svg class="h-search__icon" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m13.5 13.5 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-            <input id="hero-q" name="q" type="search" class="input" placeholder="Try “loan” or “scholarship”" />
-            <button class="btn" type="submit">Search</button>
-          </div>
-        </form>
-        <ul class="h-cats" aria-label="Browse by category">
-          {CATEGORY_ORDER.map((c) => <li><a href={CATEGORY_META[c].path}>{CATEGORY_META[c].label}</a></li>)}
-        </ul>
-        <div class="h-hero__actions">
-          <a class="btn btn--light" href="/membership#join">Join as a Member</a>
-          <a class="h-hero__link" href="/about">About the chamber</a>
+  <section class="h-hero on-dark">
+    <div class="h-hero__bg" aria-hidden="true"><span class="h-glow h-glow--a"></span><span class="h-glow h-glow--b"></span></div>
+    <div class="wrap h-hero__inner">
+      <h1 class="kinetic" aria-label="Where Community Meets Commerce">
+        <span class="kinetic__line" aria-hidden="true"><span class="kw" style="--i:0"><span>Where</span></span> <span class="kw" style="--i:1"><span>Community</span></span></span>
+        <span class="kinetic__line kinetic__line--lit" aria-hidden="true"><span class="kw" style="--i:2"><span>Meets</span></span> <span class="kw" style="--i:3"><span>Commerce</span></span></span>
+      </h1>
+      <p class="h-hero__lede h-in" style="--i:5">{site.supporting}</p>
+      <form class="h-search h-in" style="--i:6" action="/opportunities" method="get" role="search">
+        <label for="hero-q" class="visually-hidden">Find schemes, scholarships, loans, tenders and jobs</label>
+        <div class="h-search__row">
+          <svg class="h-search__icon" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m13.5 13.5 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <input id="hero-q" name="q" type="search" class="input" placeholder="Search loans, scholarships…" />
+          <button class="btn" type="submit">Search</button>
         </div>
+      </form>
+      <ul class="h-cats h-in" style="--i:7" aria-label="Browse by category">
+        {CATEGORY_ORDER.map((c) => <li><a href={CATEGORY_META[c].path}>{CATEGORY_META[c].label}</a></li>)}
+      </ul>
+      <div class="h-hero__actions h-in" style="--i:8">
+        <a class="btn btn--light" href="/membership#join">Join as a Member</a>
+        <a class="h-hero__link" href="/about">About the chamber</a>
       </div>
+    </div>
 
-      <aside class="h-reg" aria-labelledby="reg-title">
+    <div class="wrap h-stage">
+      <aside class="h-reg" aria-labelledby="reg-title" data-rise>
         <div class="h-reg__head">
           <h2 id="reg-title">Open now</h2>
           <span class="h-reg__live">Checked {formatDate(lastChecked)}</span>
@@ -74,23 +79,29 @@ const tiers = [
         <a class="h-reg__all" href="/opportunities">See all {opportunities.length} records and {portals.length} official portals</a>
       </aside>
     </div>
-    <div class="wrap h-facts">
-      <p class="h-promise">{site.promise}</p>
-      <ul>
-        <li><strong>{opportunities.length}</strong> verified records</li>
-        <li><strong>{portals.length}</strong> official portals</li>
-        <li>Central OBC and State BC lists kept separate</li>
-      </ul>
+  </section>
+
+  <section class="h-statement on-dark" aria-label="How BECCI handles opportunity data">
+    <div class="wrap">
+      <p class="h-statement__text" data-scrub>{words(statement).map((w, i) => <><span class="sw" style={`--w:${i}`}>{w}</span>{' '}</>)}</p>
+      <div class="h-facts">
+        <p class="h-promise">{site.promise}</p>
+        <ul>
+          <li><strong>{opportunities.length}</strong> verified records</li>
+          <li><strong>{portals.length}</strong> official portals</li>
+          <li><a href="/opportunities/about-data">How we check</a></li>
+        </ul>
+      </div>
     </div>
   </section>
 
-  <section class="section h-paths" aria-labelledby="paths-title">
+  <section class="section h-paths h-curtain" aria-labelledby="paths-title">
     <div class="wrap">
-      <div class="section-head">
+      <div class="section-head" data-reveal>
         <h2 id="paths-title">I am…</h2>
         <p>Pick the line that fits you. Each one opens the part of BECCI built for it.</p>
       </div>
-      <ul class="h-paths__list">
+      <ul class="h-paths__list" data-reveal-group>
         {audiences.map((a, i) => (
           <li><a href={a.href}><span class="h-paths__n">{String(i + 1).padStart(2, '0')}</span><strong>{a.who}</strong><span class="h-paths__need">{a.need}</span><span class="h-paths__go" aria-hidden="true">→</span></a></li>
         ))}
@@ -100,11 +111,11 @@ const tiers = [
 
   <section class="section section--white" aria-labelledby="open-title">
     <div class="wrap">
-      <div class="section-head">
+      <div class="section-head" data-reveal>
         <h2 id="open-title">Opportunities you can apply for</h2>
         <a class="link-arrow" href="/opportunities">All opportunities and official portals</a>
       </div>
-      <div class="h-open">
+      <div class="h-open" data-reveal-group>
         {featured && (
           <article class="h-open__feature on-dark">
             <div class="h-open__meta"><span class={`status status--${featured.st}`}>{STATUS_LABEL[featured.st]}</span><span class="h-open__scope">{OBC_SCOPE_LABEL[featured.o.obcScope]}</span></div>
@@ -127,15 +138,15 @@ const tiers = [
     </div>
   </section>
 
-  <LetterStory />
+  <ScrollStory />
 
   <section class="section" aria-labelledby="does-title">
     <div class="wrap">
-      <div class="section-head">
+      <div class="section-head" data-reveal>
         <h2 id="does-title">From a first idea to an established enterprise</h2>
         <p>BECCI is a national chamber for OBC entrepreneurs. It began in Telangana and Andhra Pradesh and is building towards a national presence.</p>
       </div>
-      <ul class="h-does">
+      <ul class="h-does" data-reveal-group>
         {pillars.map((p, i) => (
           <li class:list={[i === 0 && 'h-does__lead on-dark']}><h3>{p.title}</h3><p>{p.text}</p><a class="link-arrow" href={p.href}>{p.link}</a></li>
         ))}
@@ -148,11 +159,11 @@ const tiers = [
 
   <section class="section section--white" aria-labelledby="join-title">
     <div class="wrap">
-      <div class="section-head">
+      <div class="section-head" data-reveal>
         <h2 id="join-title">Become part of the chamber</h2>
         <p>For Bahujan entrepreneurs, professionals, students and first-generation founders whose community is in the Central OBC list for their State or a State BC/OBC list.</p>
       </div>
-      <ol class="h-tiers">
+      <ol class="h-tiers" data-reveal-group>
         {tiers.map((t, i) => <li><span class="h-tiers__step">Level {i + 1}</span><h3>{t.name} Membership</h3><p>{t.text}</p></li>)}
       </ol>
       <div class="h-member__foot">
@@ -164,7 +175,7 @@ const tiers = [
 
   <section class="section h-close" aria-labelledby="close-title">
     <div class="wrap">
-      <div class="h-close__panel on-dark">
+      <div class="h-close__panel on-dark" data-grow>
         <div>
           <h2 id="close-title">Open doors for entrepreneurs at scale</h2>
           <p>Government departments, banks, MSME bodies, educational institutions, incubators and corporates can create opportunities that ordinary networking cannot.</p>
@@ -182,79 +193,146 @@ const tiers = [
   </section>
 </Base>
 
-<style>
-  /* ── Hero ── */
-  .h-hero { position: relative; isolation: isolate; overflow: hidden; background: var(--midnight); color: var(--on-dark-2); padding-top: clamp(var(--s-7), 6vw, var(--s-8)); }
-  .h-hero__bg { position: absolute; inset: 0; z-index: -1;
-    background:
-      radial-gradient(48% 60% at 88% 8%, rgb(34 184 230 / 38%), transparent 70%),
-      radial-gradient(60% 70% at 70% 100%, rgb(33 82 232 / 55%), transparent 70%),
-      radial-gradient(40% 50% at 0% 0%, rgb(27 79 168 / 45%), transparent 70%),
-      linear-gradient(180deg, #071a44 0%, var(--midnight) 100%); }
-  .h-hero__bg::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgb(255 255 255 / 4%) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / 4%) 1px, transparent 1px); background-size: 56px 56px; mask-image: linear-gradient(180deg, #000 0%, transparent 85%); }
-  .h-hero__grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(var(--s-6), 5vw, var(--s-8)); align-items: center; }
-  .h-hero h1 { color: #fff; font-size: clamp(2.5rem, 1.3rem + 4vw, 4.5rem); font-weight: 600; line-height: 1.02; letter-spacing: -0.03em; margin-bottom: var(--s-5); }
-  .h-hero h1 span { display: block; color: #8fdcf7; }
-  .h-hero__lede { font-size: var(--fs-md); color: #c3d1e8; max-width: 46ch; margin-bottom: var(--s-6); }
+<script>
+  const motionOK = window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
+  if (motionOK) {
+    // Reveals
+    document.querySelectorAll<HTMLElement>('[data-reveal-group]').forEach((g) => Array.from(g.children).forEach((c, i) => (c as HTMLElement).style.setProperty('--k', String(i))));
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -12% 0px' });
+    document.querySelectorAll('[data-reveal], [data-reveal-group]').forEach((el) => io.observe(el));
 
-  .h-search { margin-bottom: var(--s-4); max-width: 600px; }
-  .h-search__label { display: block; font-size: var(--fs-sm); font-weight: 500; color: #c3d1e8; margin-bottom: var(--s-3); }
-  .h-search__row { position: relative; display: flex; align-items: center; gap: var(--s-2); padding: 6px; background: #fff; border-radius: 14px; box-shadow: 0 24px 48px -20px rgb(0 0 0 / 55%), 0 0 0 6px rgb(255 255 255 / 8%); }
+    // Scroll-linked: card rise, word scrub, panel grow
+    const rise = document.querySelector<HTMLElement>('[data-rise]');
+    const scrub = document.querySelector<HTMLElement>('[data-scrub]');
+    const sw = scrub ? Array.from(scrub.querySelectorAll<HTMLElement>('.sw')) : [];
+    const grow = document.querySelector<HTMLElement>('[data-grow]');
+    const clamp = (n: number) => Math.min(1, Math.max(0, n));
+    let lit = -1, queued = false;
+    const frame = () => {
+      queued = false;
+      const vh = window.innerHeight;
+      if (rise) { const r = rise.getBoundingClientRect(); rise.style.setProperty('--p', clamp((vh - r.top) / (vh * 0.55)).toFixed(3)); }
+      if (scrub) {
+        const r = scrub.getBoundingClientRect();
+        const p = clamp((vh * 0.85 - r.top) / (r.height + vh * 0.35));
+        const n = Math.round(p * sw.length);
+        if (n !== lit) { lit = n; sw.forEach((w, i) => w.toggleAttribute('data-on', i < n)); }
+      }
+      if (grow) { const r = grow.getBoundingClientRect(); grow.style.setProperty('--p', clamp((vh - r.top) / (vh * 0.7)).toFixed(3)); }
+    };
+    const onScroll = () => { if (!queued) { queued = true; requestAnimationFrame(frame); } };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    frame();
+  }
+</script>
+
+<style>
+  /* ── Hero: centred kinetic headline over rising light ── */
+  .h-hero { position: relative; z-index: 2; isolation: isolate; background: #040d26; color: var(--on-dark-2); padding-top: clamp(var(--s-8), 9vw, 140px); text-align: center; }
+  .h-hero__bg { position: absolute; inset: 0; z-index: -1; overflow: hidden; background: linear-gradient(180deg, #050f2b 0%, var(--midnight) 40%, #0a1f5c 100%); mask-image: linear-gradient(180deg, #000 70%, transparent 100%); }
+  .h-hero__bg::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgb(255 255 255 / 4%) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / 4%) 1px, transparent 1px); background-size: 64px 64px; mask-image: radial-gradient(70% 60% at 50% 30%, #000, transparent 75%); }
+  .h-glow { position: absolute; left: 50%; border-radius: 50%; filter: blur(60px); pointer-events: none; }
+  .h-glow--a { bottom: -12%; width: 120%; height: 70%; transform: translateX(-50%); background: radial-gradient(closest-side, rgb(61 123 255 / 95%), rgb(33 82 232 / 60%) 45%, transparent 100%); }
+  .h-glow--b { bottom: 4%; width: 60%; height: 50%; transform: translateX(-30%); background: radial-gradient(closest-side, rgb(34 184 230 / 70%), transparent 100%); }
+  @media (prefers-reduced-motion: no-preference) {
+    .h-glow--a { animation: breathe 9s ease-in-out infinite alternate; }
+    .h-glow--b { animation: drift 14s ease-in-out infinite alternate; }
+  }
+  @keyframes breathe { to { transform: translateX(-50%) scale(1.08); opacity: 0.85; } }
+  @keyframes drift { from { transform: translateX(-60%); } to { transform: translateX(-20%); } }
+
+  .h-hero__inner { display: flex; flex-direction: column; align-items: center; }
+  .kinetic { color: #fff; font-size: clamp(3rem, 0.8rem + 8.2vw, 8.5rem); font-weight: 600; line-height: 0.95; letter-spacing: -0.045em; margin: 0 0 var(--s-6); max-width: none; }
+  .kinetic__line { display: block; white-space: nowrap; }
+  .kinetic__line--lit { color: #8fdcf7; }
+  .kw { display: inline-block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; vertical-align: top; }
+  .kw > span { display: inline-block; }
+  .h-hero__lede { font-size: var(--fs-md); color: #c3d1e8; max-width: 52ch; margin: 0 auto var(--s-6); }
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) .kw > span { transform: translateY(105%) rotate(4deg); animation: rise 900ms cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: calc(120ms + var(--i) * 90ms); }
+    :global(.js) .h-in { opacity: 0; transform: translateY(16px); animation: fadeUp 700ms var(--ease) forwards; animation-delay: calc(var(--i) * 90ms); }
+  }
+  @keyframes rise { to { transform: none; } }
+  @keyframes fadeUp { to { opacity: 1; transform: none; } }
+
+  .h-search { width: min(100%, 640px); margin-bottom: var(--s-4); }
+  .h-search__row { position: relative; display: flex; align-items: center; gap: var(--s-2); padding: 6px; background: #fff; border-radius: 16px; box-shadow: 0 30px 60px -24px rgb(0 0 0 / 60%), 0 0 0 6px rgb(255 255 255 / 8%), 0 0 80px -10px rgb(61 123 255 / 50%); text-align: left; }
   .h-search__icon { position: absolute; left: 20px; color: var(--slate); pointer-events: none; }
   .h-search .input { flex: 1; min-width: 0; border: 0; background: transparent; min-height: 52px; padding-left: 48px; font-size: var(--fs-md); box-shadow: none; }
   .h-search .input:focus-visible { outline: none; }
-  .h-search__row:focus-within { box-shadow: 0 24px 48px -20px rgb(0 0 0 / 55%), 0 0 0 4px var(--cyan); }
-  .h-search .btn { min-height: 52px; padding: 0 var(--s-6); border-radius: 10px; }
-
-  .h-cats { display: flex; flex-wrap: wrap; gap: var(--s-2); list-style: none; padding: 0; margin: 0 0 var(--s-7); }
-  .h-cats a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 var(--s-4); border-radius: 999px; border: 1px solid rgb(255 255 255 / 18%); background: rgb(255 255 255 / 6%); color: #fff; font-size: var(--fs-sm); font-weight: 500; text-decoration: none; transition: background var(--dur), border-color var(--dur); }
+  .h-search__row:focus-within { box-shadow: 0 30px 60px -24px rgb(0 0 0 / 60%), 0 0 0 4px var(--cyan), 0 0 80px -10px rgb(61 123 255 / 60%); }
+  .h-search .btn { min-height: 52px; padding: 0 var(--s-6); border-radius: 12px; }
+  .h-cats { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-2); list-style: none; padding: 0; margin: 0 0 var(--s-6); }
+  .h-cats a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 var(--s-4); border-radius: 999px; border: 1px solid rgb(255 255 255 / 18%); background: rgb(255 255 255 / 6%); backdrop-filter: blur(6px); color: #fff; font-size: var(--fs-sm); font-weight: 500; text-decoration: none; transition: background var(--dur), border-color var(--dur); }
   .h-cats a:hover { color: #fff; background: rgb(34 184 230 / 18%); border-color: var(--cyan); }
-
-  .h-hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3) var(--s-5); }
+  .h-hero__actions { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: var(--s-3) var(--s-5); }
   .h-hero__link { display: inline-flex; align-items: center; min-height: 44px; color: #fff; font-weight: 600; text-decoration: underline; text-decoration-color: rgb(255 255 255 / 35%); text-underline-offset: 6px; }
   .h-hero__link:hover { color: #fff; text-decoration-color: var(--cyan); }
   :global(.btn--light) { --bg: #fff; --bd: #fff; --fg: var(--midnight); }
   :global(.btn--light:hover) { --bg: var(--cyan-soft); --bd: var(--cyan-soft); --fg: var(--midnight); }
 
-  /* Register panel: real records, the hero's image */
-  .h-reg { background: rgb(255 255 255 / 97%); color: var(--ink); border-radius: 20px; padding: var(--s-5); box-shadow: 0 40px 80px -32px rgb(0 0 0 / 60%), 0 0 0 1px rgb(255 255 255 / 30%); }
+  /* Stage: the register card rises out of the light, bridging into the next band */
+  .h-stage { position: relative; display: flex; justify-content: center; margin-top: var(--s-7); margin-bottom: calc(-1 * clamp(80px, 10vw, 160px)); z-index: 2; text-align: left; }
+  .h-reg { width: min(100%, 760px); background: rgb(255 255 255 / 97%); color: var(--ink); border-radius: 24px; padding: var(--s-5) var(--s-6); box-shadow: 0 50px 100px -40px rgb(0 0 0 / 70%), 0 0 0 1px rgb(255 255 255 / 40%), 0 0 120px -20px rgb(61 123 255 / 55%); transform: translateY(calc((1 - var(--p, 1)) * 90px)) scale(calc(0.94 + var(--p, 1) * 0.06)); }
   .h-reg__head { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); padding-bottom: var(--s-4); border-bottom: var(--hair); }
   .h-reg__head h2 { font-size: var(--fs-md); margin: 0; }
   .h-reg__live { display: inline-flex; align-items: center; gap: 8px; font-size: var(--fs-label); font-weight: 600; color: var(--cyan-ink); }
   .h-reg__live::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 0 4px var(--cyan-soft); }
-  .h-reg__list { list-style: none; margin: 0; padding: 0; }
-  .h-reg__list li { position: relative; padding: var(--s-4) 0; border-bottom: var(--hair); }
-  .h-reg__meta { display: flex; align-items: center; justify-content: space-between; gap: var(--s-2); }
-  .h-reg__cat { font-size: var(--fs-label); font-weight: 600; color: var(--slate); }
+  .h-reg__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-5); }
+  .h-reg__list li { position: relative; padding: var(--s-4) 0; }
+  .h-reg__meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2); }
+  .h-reg__cat { font-size: var(--fs-label); font-weight: 600; color: var(--slate); width: 100%; }
   .h-reg h3 { font-size: var(--fs-base); line-height: 1.35; margin: var(--s-2) 0 2px; }
   .h-reg h3 a { color: var(--midnight); text-decoration: none; }
   .h-reg h3 a::after { content: ''; position: absolute; inset: 0; }
   .h-reg h3 a:hover { color: var(--royal); }
   .h-reg p { margin: 0; font-size: var(--fs-sm); color: var(--slate); }
   .h-reg .h-reg__when { color: var(--ink); font-weight: 600; margin-top: 2px; }
-  .h-reg__all { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); min-height: 48px; margin-top: var(--s-3); font-size: var(--fs-sm); font-weight: 600; color: var(--royal); text-decoration: none; }
+  .h-reg__all { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); min-height: 48px; border-top: var(--hair); font-size: var(--fs-sm); font-weight: 600; color: var(--royal); text-decoration: none; }
   .h-reg__all::after { content: '→'; transition: transform var(--dur) var(--ease); }
   .h-reg__all:hover::after { transform: translateX(4px); }
 
-  .h-facts { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s-3) var(--s-6); margin-top: clamp(var(--s-7), 6vw, var(--s-8)); padding-block: var(--s-5); border-top: 1px solid rgb(255 255 255 / 12%); }
+  /* Statement: oversized words light up as they scroll past */
+  .h-statement { position: relative; background: #040d26; padding-block: calc(clamp(80px, 10vw, 160px) + var(--s-8)) var(--s-8); overflow: hidden; }
+  .h-statement::before { content: ''; position: absolute; inset: 0 0 auto; height: 60%; background: radial-gradient(50% 60% at 50% 0%, rgb(61 123 255 / 30%), transparent 70%); pointer-events: none; }
+  .h-statement__text { position: relative; font: 600 clamp(2rem, 0.8rem + 4.4vw, 5rem)/1.05 var(--font-display); letter-spacing: -0.035em; color: #fff; margin: 0; max-width: 20ch; text-wrap: balance; }
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) .sw { color: rgb(255 255 255 / 16%); transition: color 250ms, text-shadow 400ms; }
+    :global(.js) .sw[data-on] { color: #fff; }
+    :global(.js) .sw[data-on]:nth-last-child(-n + 16) { color: #8fdcf7; }
+  }
+  .h-facts { position: relative; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s-3) var(--s-6); margin-top: var(--s-8); padding-top: var(--s-5); border-top: 1px solid rgb(255 255 255 / 12%); }
   .h-promise { margin: 0; font-weight: 500; letter-spacing: 0.02em; color: #fff; }
   .h-facts ul { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-6); list-style: none; margin: 0; padding: 0; font-size: var(--fs-sm); color: #a9bad6; }
   .h-facts strong { color: #8fdcf7; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .h-facts a { color: #fff; }
 
-  @media (max-width: 960px) { .h-hero__grid { grid-template-columns: 1fr; } .h-reg { max-width: 560px; } .h-cats { margin-bottom: var(--s-6); } }
+  /* Curtain: the light surface slides over the dark band with a rounded edge */
+  .h-curtain { position: relative; z-index: 1; margin-top: -40px; border-radius: 40px 40px 0 0; background: var(--ivory); }
+
+  @media (max-width: 860px) { .h-reg__list { grid-template-columns: 1fr; gap: 0; } .h-reg__list li + li { border-top: var(--hair); } .h-reg__cat { width: auto; margin-left: auto; } }
   @media (max-width: 520px) {
-    .h-hero h1 { font-size: 2.5rem; }
+    .h-hero { padding-top: var(--s-7); }
+    .kinetic { font-size: clamp(2.2rem, 10.6vw, 3.2rem); }
     .h-hero__lede { margin-bottom: var(--s-5); }
     .h-search__row { flex-wrap: wrap; }
     .h-search .btn { width: 100%; }
     .h-search__icon { top: 22px; }
-    .h-cats { gap: var(--s-2); }
-    .h-reg { padding: var(--s-4); border-radius: 16px; }
+    .h-cats { margin-bottom: var(--s-5); }
+    .h-cats a { padding: 0 var(--s-3); }
+    .h-hero__actions .btn--light { display: none; }
+    .h-reg { padding: var(--s-4); border-radius: 18px; }
     .h-reg__list li:nth-child(3) { display: none; }
     .h-facts { flex-direction: column; align-items: flex-start; }
-    .h-hero__actions .btn--light { display: none; }
-    .h-cats a { min-height: 40px; padding: 0 var(--s-3); }
-    .h-cats { margin-bottom: var(--s-5); }
+    .h-curtain { border-radius: 24px 24px 0 0; margin-top: -24px; }
+  }
+
+  /* Scroll reveals (JS adds .is-in) */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) [data-reveal], :global(.js) [data-reveal-group] > * { opacity: 0; transform: translateY(28px); transition: opacity 700ms var(--ease), transform 900ms cubic-bezier(0.16, 1, 0.3, 1); transition-delay: calc(var(--k, 0) * 80ms); }
+    :global(.js) [data-reveal].is-in, :global(.js) [data-reveal-group].is-in > * { opacity: 1; transform: none; }
+    :global(.js) [data-grow] { transform: scale(calc(0.9 + var(--p, 1) * 0.1)); border-radius: calc(60px - var(--p, 1) * 32px) !important; }
   }
 
   /* ── Paths ── */
