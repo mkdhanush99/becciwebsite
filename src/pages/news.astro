@@ -1,4 +1,5 @@
 ---
+import Pending from '../components/Pending.astro';
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import { news } from '../data/site';
@@ -10,7 +11,7 @@ const topics = ['BECCI announcements', 'Government announcements', 'Business and
   <section class="section"><div class="wrap">
     <ul class="tag-list" aria-label="Topics covered" style="margin-bottom:var(--s-6)">{topics.map((t) => <li>{t}</li>)}</ul>
     {news.length ? <ul>{news.map((n) => <li><p class="small muted">{formatDate(n.date)}</p><h3>{n.title}</h3><p>{n.summary}</p></li>)}</ul>
-      : <div class="empty"><h2 class="empty__title">No announcements published yet</h2><p class="muted">BECCI’s first announcements will appear here, each with its date. For deadlines that are open now, use the <a href="/opportunities">opportunity finder</a>.</p></div>}
+      : <Pending label="News" title="No announcements published yet" heading="h2" icon="news" action={{ label: "Open the opportunity finder", href: "/opportunities" }}>BECCI’s first announcements will appear here, each with its date. Deadlines that are open now are already in the opportunity finder.</Pending>}
     <p class="small muted" style="margin-top:var(--s-6)">Looking for guides and explainers rather than news? See the <a href="/knowledge">Knowledge Centre</a>.</p>
   </div></section>
 </Base>

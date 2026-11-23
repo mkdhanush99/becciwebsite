@@ -90,7 +90,7 @@ const journey = [
     <div class="wrap">
       <div class="section-head"><h2 id="what-title">What BECCI does</h2><p>Six areas of work. Each says honestly whether you can use it today or whether it is still being built.</p></div>
       <ul class="a-does bento">
-        {does.map((d) => <li class="tile-li"><a href={d.href} class="tile"><span class="a-top"><span class="ibadge"><Icon name={d.icon} /></span><span class="a-status">{d.status}</span></span><h3>{d.t}</h3><p>{d.d}</p><span class="link-arrow">Find out more</span></a></li>)}
+        {does.map((d) => <li class="tile-li"><a href={d.href} class="tile"><span class="a-top"><span class="ibadge"><Icon name={d.icon as any} /></span><span class="a-status">{d.status}</span></span><h3>{d.t}</h3><p>{d.d}</p><span class="link-arrow">Find out more</span></a></li>)}
       </ul>
     </div>
   </section>
@@ -159,7 +159,7 @@ const journey = [
       <div>
         <h2 id="founder-title">Founder and founding vision</h2>
         <p>BECCI was founded on the idea that community and commerce belong together. The founder’s own account of why the chamber was started, and the responsibility it carries, will be published here in their words.</p>
-        <Pending label="Awaiting approved profile">Founder’s name, photograph, background and founding statement.</Pending>
+        <Pending label="Awaiting approved profile" icon="leadership">Founder’s name, photograph, background and founding statement.</Pending>
         <p style="margin-top:var(--s-5)"><a class="btn" href="/membership#join">Join as a Member</a></p>
       </div>
     </div>

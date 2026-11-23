@@ -29,7 +29,7 @@ const areas = [
     <h2>Who we work with</h2>
     <ul class="chips" style="margin-bottom:var(--s-7)">{collaborators.map((c) => <li>{c}</li>)}</ul>
     <h2>Areas of collaboration</h2>
-    <div class="bento">{areas.map(([t, d], i) => <div class="tile"><span class="ibadge"><Icon name={areaIcons[i]} /></span><h3>{t}</h3><p>{d}</p></div>)}</div>
+    <div class="bento">{areas.map(([t, d], i) => <div class="tile"><span class="ibadge"><Icon name={areaIcons[i] as any} /></span><h3>{t}</h3><p>{d}</p></div>)}</div>
   </div></section>
   <section class="section section--white" id="proposal"><div class="wrap two-col">
     <div><h2>Tell us about your organisation</h2><p class="muted">A useful proposal says who you are, what you would like to do together, whom it would help and what you would need from BECCI.</p></div>

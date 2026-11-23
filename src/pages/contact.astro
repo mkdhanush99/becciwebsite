@@ -23,7 +23,7 @@ const has = destinations.email || destinations.phone || destinations.address;
       <h2>Official contact details</h2>
       {has ? (
         <dl>{destinations.email && <><dt>Email</dt><dd><a href={`mailto:${destinations.email}`}>{destinations.email}</a></dd></>}{destinations.phone && <><dt>Phone</dt><dd>{destinations.phone}</dd></>}{destinations.address && <><dt>Office</dt><dd>{destinations.address}</dd></>}</dl>
-      ) : <Pending>BECCI's official email, office phone and address will be published here once confirmed.</Pending>}
+      ) : <Pending label="Contact details" icon="support">BECCI's official email, office phone and address will be published here once confirmed.</Pending>}
       <p class="small muted" style="margin-top:var(--s-4)">BECCI never publishes the personal phone numbers of its leadership. Please use these official routes.</p>
     </div>
     <div>

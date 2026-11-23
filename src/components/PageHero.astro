@@ -5,13 +5,14 @@
 // An `icon` adds a spot illustration so each page has its own composition.
 import Kinetic from './Kinetic.astro';
 import Spot from './Spot.astro';
-interface Props { title: string; lede?: string; eyebrow?: string; note?: string; variant?: 'editorial' | 'feature'; tone?: 'ivory' | 'ice' | 'sky' | 'cyan' | 'midnight' | 'royal'; icon?: string; crumbs?: { label: string; href?: string }[] }
-const { title, lede, note, variant = 'editorial', tone, icon, crumbs = [] } = Astro.props;
+import Illo from './Illo.astro';
+interface Props { title: string; lede?: string; eyebrow?: string; note?: string; variant?: 'editorial' | 'feature'; tone?: 'ivory' | 'ice' | 'sky' | 'cyan' | 'midnight' | 'royal'; icon?: string; illo?: 'finder' | 'chamber' | 'members' | 'updates'; crumbs?: { label: string; href?: string }[] }
+const { title, lede, note, variant = 'editorial', tone, icon, illo, crumbs = [] } = Astro.props;
 const feature = variant === 'feature';
 const t = tone ?? (feature ? 'midnight' : 'ivory');
 const n = title.split(' ').length;
 ---
-<header class:list={['page-hero', `page-hero--${variant}`, `page-hero--t-${t}`, icon && 'page-hero--spot', feature && 'on-dark']}>
+<header class:list={['page-hero', `page-hero--${variant}`, `page-hero--t-${t}`, (icon || illo) && 'page-hero--spot', feature && 'on-dark']}>
   <div class="lux" aria-hidden="true"><span class="lux__a"></span><span class="lux__b"></span></div>
   <div class="wrap page-hero__inner">
     <div class="page-hero__copy">
@@ -24,6 +25,6 @@ const n = title.split(' ').length;
       {lede && <p class="lede m-in" style={`--i:${n + 1}`}>{lede}</p>}
       <div class="m-in" style={`--i:${n + 2}`}><slot /></div>
     </div>
-    {icon && <Spot icon={icon} dark={feature} class="page-hero__spot m-in" />}
+    {illo ? <div class="page-hero__illo m-in" aria-hidden="true"><Illo name={illo} /></div> : icon && <Spot icon={icon} dark={feature} class="page-hero__spot m-in" />}
   </div>
 </header>

@@ -12,7 +12,7 @@ const kinds = ['Bahujan entrepreneurs', 'MSME growth', 'First-generation entrepr
     <div class="prose">
       <ul class="tag-list">{kinds.map((k) => <li>{k}</li>)}</ul>
       <p style="margin-top:var(--s-5)">Every story will include a photograph, the person’s background, the challenges they faced, what they achieved and the lessons they would pass on.</p>
-      {stories.length ? null : <Pending label="No stories published yet">Stories are published only with the entrepreneur’s written consent and after BECCI has checked the facts.</Pending>}
+      {stories.length ? null : <Pending label="No stories published yet" icon="stories" action={{ label: "Tell BECCI about your enterprise", href: "/contact" }}>Stories are published only with the entrepreneur’s written consent and after BECCI has checked the facts.</Pending>}
     </div>
   </div></section>
   <section class="section section--white"><div class="wrap two-col">

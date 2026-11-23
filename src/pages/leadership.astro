@@ -37,7 +37,7 @@ const roles: Record<string, string> = {
               <li><h3>{p.name}</h3><p class="muted">{p.role}{p.affiliation && ` · ${p.affiliation}`}</p>{p.intro && <p>{p.intro}</p>}
                 {p.links?.map((l) => <a class="ext" href={l.url} rel="noopener">{l.label}</a>)}</li>
             ))}</ul>
-          ) : <Pending label="Profiles">Published once BECCI approves names, photographs and biographies.</Pending>}
+          ) : <Pending label="Profiles" icon="leadership">Published once BECCI approves names, photographs and biographies.</Pending>}
         </section>
       ))}
     </div>

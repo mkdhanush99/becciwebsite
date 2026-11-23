@@ -1,4 +1,5 @@
 ---
+import MobileCTA from '../components/MobileCTA.astro';
 import Icon from '../components/Icon.astro';
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
@@ -11,7 +12,7 @@ const tiers = [
 ];
 ---
 <Base title="Membership" description="Why join BECCI, who can join, the proposed membership categories, what is available today and how joining works.">
-  <PageHero tone="midnight" icon="membership" variant="feature" title="Join a chamber built for you" lede="Membership makes you part of a national chamber of OBC entrepreneurs, business owners, professionals and students: people who share your starting point and want to build businesses together. Here is who can join, what membership offers, and where things stand today." crumbs={[{ label: 'Membership' }]}>
+  <PageHero tone="midnight" illo="members" variant="feature" title="Join a chamber built for you" lede="Membership makes you part of a national chamber of OBC entrepreneurs, business owners, professionals and students: people who share your starting point and want to build businesses together. Here is who can join, what membership offers, and where things stand today." crumbs={[{ label: 'Membership' }]}>
     <div style="display:flex;gap:var(--s-3);flex-wrap:wrap;margin-top:var(--s-5)"><a class="btn btn--accent" href="#join">Join as a Member</a><a class="btn btn--ghost" href="#member-login">Member Login</a></div>
   </PageHero>
 
@@ -39,7 +40,11 @@ const tiers = [
     <div id="eligibility"><h2>Who can join</h2></div>
     <div class="prose">
       <p>You can apply if your caste or community is recognised in <strong>either</strong>:</p>
-      <ol><li>the Government of India's Central OBC list applicable to your State, or</li><li>your State Government's official BC/OBC list.</li></ol>
+      <div class="m-either" role="list">
+        <div class="m-either__opt" role="listitem"><span class="m-either__tag">Central list</span><strong>Government of India’s Central OBC list</strong><span>as it applies to your State</span></div>
+        <span class="m-either__or" aria-hidden="true">or</span>
+        <div class="m-either__opt" role="listitem"><span class="m-either__tag">State list</span><strong>Your State Government’s official BC/OBC list</strong><span>published by your State</span></div>
+      </div>
       <p>Recognition in both is not required. The two lists are separate classifications, and being on one does not mean you are on the other. Applications are subject to document verification and BECCI's membership rules.</p>
       <p>Both individuals and businesses can become members. Aspiring entrepreneurs do not need business registrations such as Udyam or GSTIN.</p>
       <p class="muted">Membership eligibility is separate from eligibility for any government scheme. Each scheme applies its own rules.</p>
@@ -115,6 +120,7 @@ const tiers = [
       { name: 'message', label: 'Anything you would like us to know', type: 'textarea' },
     ]} />
   </div></section>
+  <MobileCTA href="#request-call" target="#request-call" label="Request a call" note="Online applications are not open yet. The team can explain membership on a call." />
 </Base>
 <style>
   .m-tiers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-4); }

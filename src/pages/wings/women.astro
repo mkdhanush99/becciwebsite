@@ -1,4 +1,5 @@
 ---
+import MobileCTA from '../../components/MobileCTA.astro';
 import Icon from '../../components/Icon.astro';
 import Base from '../../layouts/Base.astro';
 import PageHero from '../../components/PageHero.astro';
@@ -30,7 +31,7 @@ import Pending from '../../components/Pending.astro';
         </ul>
       </section>
       <section class="w-block"><h2>Objectives, programmes and office bearers</h2>
-        <Pending label="Awaiting approved content">The wing’s approved objectives, its office bearers and its first programmes will be published here. Personal phone numbers are never published.</Pending>
+        <Pending label="Awaiting approved content" icon="events" action={{ label: "Request a call from the team", href: "/membership#join" }}>The wing’s approved objectives, its office bearers and its first programmes will be published here. Personal phone numbers are never published.</Pending>
       </section>
       <section class="w-block"><h2>Events and initiatives</h2><p class="muted">No Women’s Wing events have been announced yet. When they are, they will appear here and on the <a href="/events">event calendar</a>.</p></section>
     </div>
@@ -48,6 +49,7 @@ import Pending from '../../components/Pending.astro';
       </div>
     </aside>
   </div></section>
+  <MobileCTA href="/membership#join" target=".page-hero" label="Join the Women's Wing" note="Start with a call from the membership team." />
 </Base>
 <script>
   const b = document.querySelector('[data-share]'); const s = document.querySelector('[data-share-status]');

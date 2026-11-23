@@ -6,7 +6,7 @@ import { formatDate } from '../../lib/status';
 const reached = portals.filter((p) => p.reachable).length;
 ---
 <Base title="How we check opportunities">
-  <PageHero tone="ice" icon="tenders" title="How we check opportunities" lede="What is listed, where it comes from, and what the dates mean." crumbs={[{ label: 'Opportunities', href: '/opportunities' }, { label: 'How we check' }]} />
+  <PageHero tone="ice" illo="finder" title="How we check opportunities" lede="What is listed, where it comes from, and what the dates mean." crumbs={[{ label: 'Opportunities', href: '/opportunities' }, { label: 'How we check' }]} />
   <section class="section"><div class="wrap prose">
     <h2>What is listed today</h2>
     <p>{opportunities.length} individual records, each checked by hand against its official government page, plus a directory of {portals.length} official portals ({reached} reached by our checker on the last check).</p>

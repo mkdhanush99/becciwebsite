@@ -17,7 +17,7 @@ const groups: [string, string, string[]][] = [
   <section class="section"><div class="wrap">
     <div class="section-head"><h2>Service areas</h2><p>The areas BECCI plans to cover. No individual provider has been confirmed yet, so nothing below is on offer today.</p></div>
     <div class="bento svc">
-      {groups.map(([t, d, items], n) => <div class="tile"><span class="ibadge"><Icon name={["funding","support","tenders","knowledge"][n]} /></span><h3>{t}</h3><p>{d}</p><ul class="chips chips--sm">{items.map((i) => <li>{i}</li>)}</ul></div>)}
+      {groups.map(([t, d, items], n) => <div class="tile"><span class="ibadge"><Icon name={["funding","support","tenders","knowledge"][n] as any} /></span><h3>{t}</h3><p>{d}</p><ul class="chips chips--sm">{items.map((i) => <li>{i}</li>)}</ul></div>)}
     </div>
   </div></section>
   <section class="section section--white"><div class="wrap two-col">
@@ -25,7 +25,7 @@ const groups: [string, string, string[]][] = [
     <div class="prose">
       <p>Most services will be delivered by banks, insurers, chartered accountants, consultants and other professionals, not by BECCI itself. BECCI’s role is to connect members with suitable providers and to help them prepare.</p>
       <p>Where a service is delivered by an external provider, its listing will name the provider and say exactly what BECCI does and does not do. Any fees are set by the provider.</p>
-      <Pending label="Providers not yet confirmed">Names of service providers and the terms of BECCI’s facilitation.</Pending>
+      <Pending label="Providers not yet confirmed" icon="services" action={{ label: "Tell us what you need", href: "#service" }}>Names of service providers and the terms of BECCI’s facilitation.</Pending>
     </div>
   </div></section>
   <section class="section"><div class="wrap two-col">

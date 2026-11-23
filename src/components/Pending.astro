@@ -1,8 +1,18 @@
 ---
-interface Props { label?: string }
-const { label = 'Awaiting approved content' } = Astro.props;
+// Empty / not-yet-published state (UXPeak, Onboarding "Empty states as first impressions" and
+// Junior vs Senior "Passive to active"): acknowledge what is missing, say when it will appear,
+// and give the visitor one useful next step instead of a dead end.
+import Icon from './Icon.astro';
+interface Props { label?: string; title?: string; icon?: string; action?: { label: string; href: string }; heading?: 'h2' | 'h3' | 'p' }
+const { label = 'Awaiting approved content', title, icon = 'news', action, heading = 'p' } = Astro.props;
+const H = heading;
 ---
 <div class="pending" role="note">
-  <span class="pending__label">{label}</span>
-  <p><slot /></p>
+  <span class="pending__art" aria-hidden="true"><Icon name={icon as any} size={28} /></span>
+  <div class="pending__body">
+    <span class="pending__label">{label}</span>
+    {title && <H class="pending__title">{title}</H>}
+    <p class="pending__text"><slot /></p>
+    {action && <a class="pending__go" href={action.href}>{action.label} <span aria-hidden="true">→</span></a>}
+  </div>
 </div>

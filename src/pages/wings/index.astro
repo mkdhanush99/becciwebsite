@@ -46,7 +46,7 @@ const sectorNotes = [
         <li><strong>District</strong><span>Brings members in a district together and connects them with the State chapter.</span></li>
         <li><strong>City</strong><span>Regular meetings and introductions close to where members do business.</span></li>
       </ol>
-      {chapters.length ? <ul>{chapters.map((c) => <li>{c.level}: {c.name}</li>)}</ul> : <Pending label="Chapters not yet published">The list of confirmed chapters, with their official contact details, will appear here.</Pending>}
+      {chapters.length ? <ul>{chapters.map((c) => <li>{c.level}: {c.name}</li>)}</ul> : <Pending label="Chapters not yet published" icon="chapters" action={{ label: "Ask about your State", href: "/contact" }}>The list of confirmed chapters, with their official contact details, will appear here.</Pending>}
     </div>
   </div></section>
 
