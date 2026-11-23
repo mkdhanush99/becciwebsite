@@ -308,3 +308,5 @@ a:hover > .media img, .media:hover img { transform: scale(1.025); }
 .finder-page { padding-block: var(--s-5) var(--s-8); }
 .brand-media__graphic img.brand-media__mark { width: 58%; height: auto; max-width: 360px; object-fit: contain; position: relative; }
 .site-footer a.btn { color: var(--fg); text-decoration: none; }
+
+.on-dark a:not(.btn):hover, .section--midnight a:not(.btn):hover, .section--blue a:not(.btn):hover { color: #fff; }
