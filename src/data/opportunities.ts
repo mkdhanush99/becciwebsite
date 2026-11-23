@@ -144,7 +144,7 @@ export const opportunities: Opportunity[] = [
     stage: ['Aspiring entrepreneur', 'New enterprise', 'Existing enterprise'],
     lastFetched: '2026-11-22',
     lastVerified: '2026-11-22',
-    verification: 'Editorial check of the official NBCFDC pages listed below.',
+    verification: 'Editorial check of the official NBCFDC pages listed under Official sources.',
   },
   {
     slug: 'nbcfdc-group-loan-scheme',
@@ -181,7 +181,7 @@ export const opportunities: Opportunity[] = [
     stage: ['Aspiring entrepreneur', 'Existing enterprise'],
     lastFetched: '2026-11-22',
     lastVerified: '2026-11-22',
-    verification: 'Editorial check of the official NBCFDC pages listed below.',
+    verification: 'Editorial check of the official NBCFDC pages listed under Official sources.',
   },
   {
     slug: 'pm-yasasvi-top-class-school-education',

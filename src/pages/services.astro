@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Pending from '../components/Pending.astro';
+import EnquiryForm from '../components/EnquiryForm.astro';
+import { serviceCategories } from '../data/site';
+---
+<Base title="Services" description="Professional and business services available through BECCI's network.">
+  <PageHero eyebrow="Services" title="Help with the work of running a business" lede="Finance, compliance, advisory and mentorship through BECCI's network and institutional arrangements." crumbs={[{ label: 'Services' }]} />
+  <section class="section"><div class="wrap">
+    <h2>Service areas</h2>
+    <ul class="tag-list" style="margin-bottom:32px">{serviceCategories.map((s) => <li>{s}</li>)}</ul>
+    <Pending label="Providers not yet confirmed">Where a service is delivered by an external provider, its page will name the provider and explain exactly what BECCI facilitates. No providers have been confirmed for publication yet, so no individual services are offered on this page.</Pending>
+  </div></section>
+  <section class="section section--white"><div class="wrap two-col">
+    <div><span class="eyebrow">Service request</span><h2>Tell us what you need</h2></div>
+    <EnquiryForm id="service" purpose="service-request" submitLabel="Send request" fields={[
+      { name: 'name', label: 'Your name', required: true, autocomplete: 'name' },
+      { name: 'email', label: 'Email', type: 'email', required: true, autocomplete: 'email' },
+      { name: 'phone', label: 'Mobile number', type: 'tel', autocomplete: 'tel' },
+      { name: 'service', label: 'Service needed', type: 'select', required: true, options: serviceCategories },
+      { name: 'message', label: 'Describe your request', type: 'textarea', required: true },
+    ]} />
+  </div></section>
+</Base>

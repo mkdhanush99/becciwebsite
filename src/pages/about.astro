@@ -1,0 +1,54 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Pending from '../components/Pending.astro';
+import { audiences, site } from '../data/site';
+const toc = [
+  ['intro', 'Introduction'], ['why', 'Why BECCI exists'], ['vision', 'Vision'], ['mission', 'Mission'], ['objectives', 'Objectives'],
+  ['what', 'What we do'], ['whom', 'Whom we serve'], ['approach', 'Our approach'], ['structure', 'Structure and governance'], ['founder', 'Founder and founding vision'],
+];
+---
+<Base title="About BECCI" description="Who BECCI is, why it exists, whom it serves and how it works.">
+  <PageHero eyebrow="About BECCI" title="A chamber built for Bahujan enterprise" lede="BECCI is a national Chamber of Commerce for OBC communities. It exists so that entrepreneurs who have long been underrepresented in business networks can find capital, markets and each other." crumbs={[{ label: 'About' }]} />
+  <section class="section"><div class="wrap two-col">
+    <nav class="toc" aria-label="On this page"><ol>{toc.map(([id, l]) => <li><a href={`#${id}`}>{l}</a></li>)}</ol></nav>
+    <div class="prose">
+      <h2 id="intro">Introduction</h2>
+      <p>The Bahujan Entrepreneurs Chamber for Commerce &amp; Industry is an OBC-exclusive national chamber. It strengthens entrepreneurship, facilitates business connections, promotes enterprise development and creates economic opportunities for Bahujan communities.</p>
+      <p>BECCI began its work in Telangana and Andhra Pradesh. Its ambition is national.</p>
+
+      <h2 id="why">Why BECCI exists</h2>
+      <p>Community and commerce are two halves of the same story, yet for many Bahujan entrepreneurs they have rarely met. Talent and ambition are plentiful; introductions, information and access are not. BECCI was established to bring the two together, so that a first-generation founder has the same doors open to them as an established business family.</p>
+      <Pending>BECCI's own account of its founding history and rationale will be published here once approved.</Pending>
+
+      <h2 id="vision">Vision</h2>
+      <Pending>The approved vision statement has not been supplied yet.</Pending>
+      <h2 id="mission">Mission</h2>
+      <Pending>The approved mission statement has not been supplied yet.</Pending>
+      <h2 id="objectives">Objectives</h2>
+      <Pending>The approved list of objectives has not been supplied yet.</Pending>
+
+      <h2 id="what">What we do</h2>
+      <ul>
+        <li><strong>Open opportunities.</strong> A public finder for government schemes, scholarships, loans, tenders and jobs, each linked to its official source.</li>
+        <li><strong>Connect businesses.</strong> Events, wings and sector committees that put entrepreneurs in the same room.</li>
+        <li><strong>Build capability.</strong> Knowledge resources, services and guidance for starting and growing an enterprise.</li>
+        <li><strong>Partner with institutions.</strong> Banks, government departments, educational institutions and industry bodies.</li>
+      </ul>
+
+      <h2 id="whom">Whom we serve</h2>
+      <ul>{audiences.map((a) => <li><strong>{a.who}</strong> — {a.need}</li>)}</ul>
+      <p>Membership is open to people whose caste or community is recognised in the Government of India's Central OBC list for their State, or in a State Government's BC/OBC list. Recognition in either list is enough; the two lists are separate. <a href="/membership">Read about membership</a>.</p>
+
+      <h2 id="approach">Our approach to entrepreneurship</h2>
+      <p>Every business begins with a person, an idea and a dream. BECCI's approach follows that journey: encourage the idea, connect the entrepreneur to a community, turn connections into commerce, and measure success by lasting impact. The <a href="/#story-title">five-letter BECCI story</a> sets this out.</p>
+
+      <h2 id="structure">Institutional structure and governance</h2>
+      <p>BECCI is organised through a national leadership, State committees, dedicated wings and sector committees, with chapters planned from national to city level. <a href="/leadership">See leadership and governance</a> and <a href="/wings">wings, sectors and chapters</a>.</p>
+
+      <h2 id="founder">Founder and founding vision</h2>
+      <Pending>The founder's profile, photograph and founding vision will appear here once approved for publication.</Pending>
+      <p class="muted" style="margin-top:2em">{site.promise}</p>
+    </div>
+  </div></section>
+</Base>

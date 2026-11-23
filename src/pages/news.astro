@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { news } from '../data/site';
+import { formatDate } from '../lib/status';
+const topics = ['BECCI announcements', 'Government announcements', 'Business and MSME updates', 'Scheme updates', 'Programme news'];
+---
+<Base title="News Desk" description="BECCI announcements, scheme updates and business news.">
+  <PageHero eyebrow="News Desk" title="News and announcements" lede="Announcements from BECCI, scheme updates and business news that matters to entrepreneurs." crumbs={[{ label: 'News Desk' }]} />
+  <section class="section"><div class="wrap">
+    <ul class="tag-list" aria-label="Topics covered" style="margin-bottom:32px">{topics.map((t) => <li>{t}</li>)}</ul>
+    {news.length ? <ul>{news.map((n) => <li><p class="small muted">{formatDate(n.date)}</p><h3>{n.title}</h3><p>{n.summary}</p></li>)}</ul>
+      : <div class="empty"><h3>No announcements published yet</h3><p class="muted">The first BECCI announcements will appear here. For current scheme deadlines, see the <a href="/opportunities">opportunity finder</a>.</p></div>}
+  </div></section>
+</Base>

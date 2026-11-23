@@ -172,6 +172,8 @@ ul, ol { padding-left: 1.2em; }
 .page-hero h1 { color: #fff; max-width: 18ch; }
 .page-hero .lede { color: #c9d4e8; }
 .page-hero__mark { position: absolute; right: -4%; top: 50%; translate: 0 -50%; width: min(52vw, 620px); opacity: 0.16; pointer-events: none; }
+.page-hero__mark { }
+@media (max-width: 640px) { .page-hero__mark { width: 70vw; top: auto; bottom: -8%; translate: 0 0; opacity: 0.08; } }
 .crumbs { font-size: var(--step--1); margin-bottom: 18px; }
 .crumbs a { color: var(--gold-300); }
 .crumbs span { color: #9fb0cc; }

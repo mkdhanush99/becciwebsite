@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+const features = "Search products and services,Publish business requirements,Request and submit quotations,Offer and request services,Buy and sell products,Discover suppliers,Connect buyers and sellers,Verified business directory".split(',');
+---
+<Base title="Marketplace" description="A platform to do business — coming later.">
+  <PageHero eyebrow="Coming later" title="Marketplace" lede="A platform to do business." crumbs={[{ label: 'Marketplace' }]} />
+  <section class="section"><div class="wrap two-col">
+    <div><p class="notice notice--warn"><strong>Not available yet.</strong> Marketplace is a members-only service that will launch with the member portal. There is nothing to sign up for on this website today.</p></div>
+    <div class="prose">
+      <h2>What it is</h2><p>The Marketplace is planned as the commercial space for BECCI members: a verified business directory, business-to-business enquiries and buyer–seller connections.</p><p>Businesses registered under Biz Connect will be listed automatically, subject to listing and verification rules, and other eligible members will be able to take part under the applicable access rules.</p>
+      <h2>What it will include</h2><ul>{features.map((f) => <li>{f}</li>)}</ul>
+      <h2>Until then</h2><p>Browse <a href="/opportunities">public opportunities</a>, read about <a href="/membership">membership</a>, or <a href="/membership#request-call">ask the membership team to call you</a>.</p>
+    </div>
+  </div></section>
+</Base>

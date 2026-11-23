@@ -1,0 +1,28 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Pending from '../../components/Pending.astro';
+---
+<Base title="Youth Wing" description="A dedicated home for students, young professionals and first-time founders within BECCI.">
+  <PageHero eyebrow="Wings" title="Youth Wing" lede="A dedicated home for students, young professionals and first-time founders within BECCI." crumbs={[{ label: 'Wings', href: '/wings' }, { label: "Youth Wing" }]}>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:24px"><a class="btn btn--gold" href="/membership#join">Join the Youth Wing</a><a class="btn btn--ghost" href="#invite">Invite someone</a></div>
+  </PageHero>
+  <section class="section"><div class="wrap grid grid--2">
+    <div><h2>Introduction and objectives</h2><Pending>The Youth Wing's approved introduction and objectives will be published here.</Pending></div>
+    <div><h2>Leadership and office bearers</h2><Pending>Office bearers will be listed once approved. Personal phone numbers are not published.</Pending></div>
+    <div><h2>Activities and programmes</h2><Pending>Programmes for young entrepreneurs and students will appear here as they are announced.</Pending></div>
+    <div><h2>Events and initiatives</h2><p class="muted">No Youth Wing events have been announced yet. <a href="/events">See the event calendar</a>.</p></div>
+    <div><h2>Taking part</h2><p>The Youth Wing is part of BECCI membership. Read who can join and how on the <a href="/membership">Membership page</a>.</p></div>
+    <div id="invite"><h2>Invite someone</h2><p>Know someone who should be part of the Youth Wing? Share this page with them.</p>
+      <button class="btn btn--ghost btn--sm" type="button" data-share>Copy link to this page</button> <span class="small muted" role="status" data-share-status></span>
+      <p class="small muted" style="margin-top:12px">Personal invitation links with referral tracking are a member feature that is not available yet.</p></div>
+  </div></section>
+</Base>
+<script>
+  const b = document.querySelector('[data-share]'); const s = document.querySelector('[data-share-status]');
+  b?.addEventListener('click', async () => {
+    const url = location.origin + location.pathname;
+    try { if (navigator.share) { await navigator.share({ title: document.title, url }); return; } await navigator.clipboard.writeText(url); if (s) s.textContent = 'Link copied.'; }
+    catch { if (s) s.textContent = url; }
+  });
+</script>

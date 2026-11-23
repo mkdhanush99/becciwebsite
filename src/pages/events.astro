@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { events } from '../data/site';
+import { formatDate, todayISO } from '../lib/status';
+const today = todayISO();
+const upcoming = events.filter((e) => e.date >= today).sort((a, b) => a.date.localeCompare(b.date));
+const past = events.filter((e) => e.date < today).sort((a, b) => b.date.localeCompare(a.date));
+const types = ['Business Networking Meetings', 'Conferences', 'Seminars', 'Workshops', 'Training Programmes', 'Government Interaction Programmes', 'Investor Meetings', 'Industry-specific Events'];
+---
+<Base title="Event Calendar" description="Upcoming and past BECCI events.">
+  <PageHero eyebrow="Event Calendar" title="Events" lede="Networking meetings, conferences, workshops and training. Open to everyone to browse; registration links appear with each event." crumbs={[{ label: 'Events' }]} />
+  <section class="section"><div class="wrap">
+    <h2>Upcoming events</h2>
+    {upcoming.length ? (
+      <ul class="ev">{upcoming.map((e) => <li class="card"><p class="small muted">{formatDate(e.date)} · {e.venue} · {e.type}</p><h3>{e.title}</h3><p>{e.summary}</p>{e.registerUrl && <a class="btn btn--sm" href={e.registerUrl}>Register</a>}</li>)}</ul>
+    ) : <div class="empty"><h3>No upcoming events announced</h3><p class="muted">BECCI has not announced any events yet. Check back here, or follow the News Desk for announcements.</p></div>}
+    <h2 style="margin-top:56px">Past events</h2>
+    {past.length ? <ul class="ev">{past.map((e) => <li class="card"><p class="small muted">{formatDate(e.date)}</p><h3>{e.title}</h3></li>)}</ul> : <p class="muted">The archive of past events, with photographs, videos and reports, will build up here.</p>}
+    <h2 style="margin-top:56px">Types of events</h2>
+    <ul class="tag-list">{types.map((t) => <li>{t}</li>)}</ul>
+  </div></section>
+</Base>
+<style>.ev { list-style: none; padding: 0; display: grid; gap: 14px; }</style>

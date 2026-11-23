@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Pending from '../components/Pending.astro';
+import EnquiryForm from '../components/EnquiryForm.astro';
+import { destinations } from '../data/site';
+const has = destinations.email || destinations.phone || destinations.address;
+---
+<Base title="Contact" description="How to contact BECCI.">
+  <PageHero eyebrow="Contact" title="Contact BECCI" lede="Questions about membership, partnerships, events or the opportunity finder." crumbs={[{ label: 'Contact' }]} />
+  <section class="section"><div class="wrap two-col">
+    <div>
+      <h2>Official contact details</h2>
+      {has ? (
+        <dl>{destinations.email && <><dt>Email</dt><dd><a href={`mailto:${destinations.email}`}>{destinations.email}</a></dd></>}{destinations.phone && <><dt>Phone</dt><dd>{destinations.phone}</dd></>}{destinations.address && <><dt>Office</dt><dd>{destinations.address}</dd></>}</dl>
+      ) : <Pending>BECCI's official email, office phone and address will be published here once confirmed.</Pending>}
+      <p class="small muted" style="margin-top:16px">For a specific scheme or tender, contact the issuing authority listed on that opportunity's page.</p>
+    </div>
+    <div>
+      <h2>Send an enquiry</h2>
+      <EnquiryForm id="contact" purpose="general" submitLabel="Send enquiry" fields={[
+        { name: 'name', label: 'Your name', required: true, autocomplete: 'name' },
+        { name: 'email', label: 'Email', type: 'email', required: true, autocomplete: 'email' },
+        { name: 'topic', label: 'Topic', type: 'select', required: true, options: ['Membership', 'Partnership', 'Events', 'Opportunities', 'Media', 'Something else'] },
+        { name: 'message', label: 'Message', type: 'textarea', required: true },
+      ]} />
+    </div>
+  </div></section>
+</Base>

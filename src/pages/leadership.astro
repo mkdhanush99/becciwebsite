@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Pending from '../components/Pending.astro';
+import { leadershipGroups } from '../data/site';
+---
+<Base title="Leadership & Governance" description="BECCI's leadership structure, advisors and committees.">
+  <PageHero eyebrow="Leadership & Governance" title="The people accountable for BECCI" lede="BECCI's leadership is collective: advisors, a national committee, State committees, wing presidents and sector committees, each with a defined role." crumbs={[{ label: 'Leadership & Governance' }]} />
+  <section class="section"><div class="wrap">
+    <div class="org" aria-label="Leadership structure">
+      <div class="org__row"><span class="org__node org__node--top">National Committee</span></div>
+      <div class="org__row"><span class="org__node">Advisors</span><span class="org__node">State Committees</span><span class="org__node">Wing Presidents</span><span class="org__node">Sector Committees</span></div>
+    </div>
+    {leadershipGroups.map((g) => (
+      <section class="lead-group" aria-labelledby={`g-${g.title}`}>
+        <h2 id={`g-${g.title}`}>{g.title}</h2>
+        {g.people.length ? (
+          <ul class="people">{g.people.map((p) => (
+            <li class="person card"><h3>{p.name}</h3><p class="muted">{p.role}{p.affiliation && ` · ${p.affiliation}`}</p>{p.intro && <p>{p.intro}</p>}
+              {p.links?.map((l) => <a class="ext" href={l.url} rel="noopener">{l.label}</a>)}</li>
+          ))}</ul>
+        ) : <Pending>Profiles for this group will be published once BECCI approves names, photographs and biographies. Each profile shows a photograph, name, designation, professional background, a short introduction and professional links. Personal phone numbers are never shown.</Pending>}
+      </section>
+    ))}
+    <p class="notice notice--info" style="margin-top:32px">To reach the leadership, please use BECCI's official contact routes on the <a href="/contact">Contact page</a>.</p>
+  </div></section>
+</Base>
+<style>
+  .org { display: grid; gap: 16px; justify-items: center; margin-bottom: 56px; padding: 32px; background: var(--white); border: 1px solid var(--line-2); border-radius: var(--radius); }
+  .org__row { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; position: relative; }
+  .org__node { padding: 12px 18px; border-radius: 10px; border: 1.5px solid var(--blue-700); color: var(--blue-900); font-weight: 650; background: var(--paper); }
+  .org__node--top { background: var(--blue-900); color: #fff; border-color: var(--blue-900); }
+  .lead-group { padding-block: 28px; border-top: 1px solid var(--line); }
+  .lead-group h2 { font-size: var(--step-2); }
+  .people { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+</style>

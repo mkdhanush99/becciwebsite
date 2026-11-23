@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+const features = "Member business profiles,Business categories and sectors,Networking groups,Member-to-member connections,Business referrals and tracking,Referral conversion and business value,Networking activities,Performance reports and recognition".split(',');
+---
+<Base title="Biz Connect" description="A structured business networking programme — coming later.">
+  <PageHero eyebrow="Coming later" title="Biz Connect" lede="A structured business networking programme." crumbs={[{ label: 'Biz Connect' }]} />
+  <section class="section"><div class="wrap two-col">
+    <div><p class="notice notice--warn"><strong>Not available yet.</strong> Biz Connect is a members-only service that will launch with the member portal. There is nothing to sign up for on this website today.</p></div>
+    <div class="prose">
+      <h2>What it is</h2><p>Biz Connect is planned as BECCI's dedicated business networking platform: member business profiles, sector groups, member-to-member connections and referrals, with referral and business-generated tracking.</p><p>It will be a separate membership category with its own registration and fee, distinct from ordinary BECCI membership.</p>
+      <h2>What it will include</h2><ul>{features.map((f) => <li>{f}</li>)}</ul>
+      <h2>Until then</h2><p>Browse <a href="/opportunities">public opportunities</a>, read about <a href="/membership">membership</a>, or <a href="/membership#request-call">ask the membership team to call you</a>.</p>
+    </div>
+  </div></section>
+</Base>

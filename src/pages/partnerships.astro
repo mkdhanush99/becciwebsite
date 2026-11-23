@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import EnquiryForm from '../components/EnquiryForm.astro';
+import { collaborators } from '../data/site';
+const areas = [
+  ['Access to finance', 'Credit products, awareness camps and application support with banks and financial institutions.'],
+  ['Government programmes', 'Outreach for schemes, procurement and registration drives with departments.'],
+  ['Skills and education', 'Training, internships and entrepreneurship programmes with educational institutions.'],
+  ['Incubation', 'Pathways from idea to venture with incubators and accelerators.'],
+  ['Market access', 'Supplier development and buyer meetings with corporates and industry associations.'],
+  ['Exports', 'Readiness and market linkages with export promotion organisations.'],
+];
+---
+<Base title="Partner with BECCI" description="Institutional partnerships and collaborations with BECCI.">
+  <PageHero eyebrow="Partnerships & Institutional Collaborations" title="Partner with BECCI" lede="Institutions can create opportunities for entrepreneurs that ordinary networking cannot. BECCI welcomes collaboration." crumbs={[{ label: 'Partnerships' }]}>
+    <a class="btn btn--gold" href="#proposal" style="margin-top:24px">Send a partnership proposal</a>
+  </PageHero>
+  <section class="section"><div class="wrap">
+    <h2>Who we work with</h2>
+    <ul class="tag-list" style="margin-bottom:48px">{collaborators.map((c) => <li>{c}</li>)}</ul>
+    <h2>Areas of collaboration</h2>
+    <div class="grid grid--3">{areas.map(([t, d]) => <div class="card"><h3>{t}</h3><p class="muted">{d}</p></div>)}</div>
+  </div></section>
+  <section class="section section--white" id="proposal"><div class="wrap two-col">
+    <div><span class="eyebrow">Proposal</span><h2>Tell us about your organisation</h2></div>
+    <EnquiryForm id="partner" purpose="partnership" submitLabel="Send proposal" fields={[
+      { name: 'org', label: 'Organisation name', required: true, autocomplete: 'organization' },
+      { name: 'kind', label: 'Type of organisation', type: 'select', required: true, options: collaborators },
+      { name: 'name', label: 'Contact person', required: true, autocomplete: 'name' },
+      { name: 'email', label: 'Official email', type: 'email', required: true, autocomplete: 'email' },
+      { name: 'phone', label: 'Phone', type: 'tel', autocomplete: 'tel' },
+      { name: 'proposal', label: 'What would you like to do together?', type: 'textarea', required: true },
+    ]} />
+  </div></section>
+</Base>

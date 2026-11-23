@@ -1,0 +1,73 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import EnquiryForm from '../components/EnquiryForm.astro';
+import { destinations } from '../data/site';
+const tiers = [
+  { name: 'Free Membership', points: ['Access to the basic membership platform', 'Manual search of government schemes', 'Schemes for your registered home State and National schemes', 'Search other States’ schemes and opportunities separately'] },
+  { name: 'Affiliate Membership', points: ['Everything in Free Membership', 'Scheme suggestions based on your profile', 'Notifications about relevant opportunities', 'Option to request a detailed Scheme Suggestion Report for a fee'] },
+  { name: 'Associate Membership', points: ['Everything in Affiliate Membership', 'Higher-level membership benefits', 'One complimentary Scheme Suggestion Report', 'Further reports at a preferential fee'] },
+];
+---
+<Base title="Membership" description="Who can join BECCI, proposed membership categories and how to get involved.">
+  <PageHero eyebrow="Membership / Join Us" title="Join a chamber built for you" lede="BECCI membership is for Bahujan entrepreneurs, professionals, students and first-generation founders. Here is who can join, what the categories are planned to offer, and where things stand today." crumbs={[{ label: 'Membership' }]}>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:24px"><a class="btn btn--gold" href="#join">Join as a Member</a><a class="btn btn--ghost" href="#member-login">Member Login</a></div>
+  </PageHero>
+
+  <section class="section"><div class="wrap two-col">
+    <div><span class="eyebrow">Eligibility</span><h2>Who can join</h2></div>
+    <div class="prose">
+      <p>You can apply if your caste or community is recognised in <strong>either</strong>:</p>
+      <ol><li>the Government of India's Central OBC list applicable to your State, or</li><li>your State Government's official BC/OBC list.</li></ol>
+      <p>Recognition in both is not required. The two lists are separate classifications, and being on one does not mean you are on the other. Applications are subject to document verification and BECCI's membership rules.</p>
+      <p>Both individuals and businesses can become members. Aspiring entrepreneurs do not need business registrations such as Udyam or GSTIN.</p>
+      <p class="notice notice--info">Membership eligibility is separate from eligibility for any government scheme. Each scheme applies its own rules.</p>
+    </div>
+  </div></section>
+
+  <section class="section section--white"><div class="wrap">
+    <div class="section-head"><div><span class="eyebrow">Categories</span><h2>Proposed membership categories</h2></div>
+      <p>These categories are proposed by BECCI. <strong>Fees and final benefits have not been decided yet</strong> and will be confirmed before applications open.</p></div>
+    <div class="grid grid--3">
+      {tiers.map((t) => (
+        <div class="card tier"><h3>{t.name}</h3><ul>{t.points.map((p) => <li>{p}</li>)}</ul>{t.name !== 'Free Membership' && <p class="small muted">Fee: to be announced</p>}</div>
+      ))}
+    </div>
+    <p class="small muted" style="margin-top:20px">Biz Connect, BECCI's structured business networking programme, is planned as a separate membership with its own fee. <a href="/biz-connect">About Biz Connect</a>.</p>
+  </div></section>
+
+  <section class="section"><div class="wrap grid grid--2">
+    <div id="join">
+      <span class="eyebrow">Join now</span><h2>Applying for membership</h2>
+      {destinations.joinApplication ? <a class="btn btn--gold" href={destinations.joinApplication}>Start your application</a> : (
+        <>
+          <p class="notice notice--warn"><strong>Online applications are not open yet.</strong> The membership application with OTP and document verification is being built separately and is not part of this website. Nothing on this page collects an application.</p>
+          <p>When applications open, the application link will appear here. Until then, you can ask the membership team to call you.</p>
+        </>
+      )}
+    </div>
+    <div id="member-login">
+      <span class="eyebrow">Members</span><h2>Member Login</h2>
+      {destinations.memberLogin ? <a class="btn" href={destinations.memberLogin}>Go to Member Login</a> : (
+        <p class="notice notice--warn"><strong>The member portal is not available yet.</strong> Member Login, the Membership Directory, Upgrade Membership and the Membership Referral Programme will be offered inside the member portal when it launches.</p>
+      )}
+    </div>
+  </div></section>
+
+  <section class="section section--white" id="request-call"><div class="wrap two-col">
+    <div><span class="eyebrow">Talk to us</span><h2>Request a call from the membership team</h2><p class="muted">BECCI's office staff explain categories and arrangements personally.</p></div>
+    <EnquiryForm id="call" purpose="membership-call" submitLabel="Request a call" fields={[
+      { name: 'name', label: 'Your name', required: true, autocomplete: 'name' },
+      { name: 'phone', label: 'Mobile number', type: 'tel', required: true, autocomplete: 'tel' },
+      { name: 'email', label: 'Email', type: 'email', autocomplete: 'email' },
+      { name: 'state', label: 'State', required: true },
+      { name: 'type', label: 'I am interested as', type: 'select', required: true, options: ['An individual', 'A business', 'A student', 'Not sure yet'] },
+      { name: 'message', label: 'Anything you would like us to know', type: 'textarea' },
+    ]} />
+  </div></section>
+</Base>
+<style>
+  .tier { display: flex; flex-direction: column; }
+  .tier ul { padding-left: 1.1em; flex: 1; }
+  .tier li { margin-bottom: 6px; }
+</style>
