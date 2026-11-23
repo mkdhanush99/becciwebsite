@@ -4,7 +4,7 @@
 interface Props { class?: string; tone?: 'color' | 'light' | 'mono'; title?: string }
 const { class: cls = '', tone = 'color', title } = Astro.props;
 const a = tone === 'light' ? '#ffffff' : tone === 'mono' ? 'currentColor' : '#0f2b5b';
-const b = tone === 'mono' ? 'currentColor' : '#d4a63a';
+const b = tone === 'mono' ? 'currentColor' : tone === 'light' ? '#a9c3f0' : '#4f7fd6';
 const id = 'g' + Math.random().toString(36).slice(2, 8);
 ---
 <svg class={cls} viewBox="0 0 200 100" fill="none" role={title ? 'img' : undefined} aria-hidden={title ? undefined : 'true'} aria-label={title}>

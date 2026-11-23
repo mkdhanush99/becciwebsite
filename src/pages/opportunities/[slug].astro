@@ -57,7 +57,7 @@ const notStated = 'Not stated by the official source.';
             <div><dt>Where it applies</dt><dd>{o.level} · {o.geography.join(', ')}{o.geographyNote && <span class="small muted"><br />{o.geographyNote}</span>}</dd></div>
             {o.openingDate && <div><dt>Opens</dt><dd>{formatDate(o.openingDate)}</dd></div>}
           </dl>
-          <a class="btn btn--gold decide__apply" href={o.applyUrl} target="_blank" rel="noopener">{o.applyLabel}<span aria-hidden="true">↗</span><span class="visually-hidden"> (official site, opens in a new tab)</span></a>
+          <a class="btn btn--accent decide__apply" href={o.applyUrl} target="_blank" rel="noopener">{o.applyLabel}<span aria-hidden="true">↗</span><span class="visually-hidden"> (official site, opens in a new tab)</span></a>
           <p class="small muted decide__leave">You will leave BECCI and go to the official government website.</p>
         </div>
         <div class="decide__card">

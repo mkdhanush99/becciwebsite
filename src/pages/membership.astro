@@ -11,7 +11,7 @@ const tiers = [
 ---
 <Base title="Membership" description="Who can join BECCI, proposed membership categories and how to get involved.">
   <PageHero eyebrow="Membership / Join Us" title="Join a chamber built for you" lede="BECCI membership is for Bahujan entrepreneurs, professionals, students and first-generation founders. Here is who can join, what the categories are planned to offer, and where things stand today." crumbs={[{ label: 'Membership' }]}>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:24px"><a class="btn btn--gold" href="#join">Join as a Member</a><a class="btn btn--ghost" href="#member-login">Member Login</a></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:24px"><a class="btn btn--accent" href="#join">Join as a Member</a><a class="btn btn--ghost" href="#member-login">Member Login</a></div>
   </PageHero>
 
   <section class="section"><div class="wrap two-col">
@@ -39,7 +39,7 @@ const tiers = [
   <section class="section"><div class="wrap grid grid--2">
     <div id="join">
       <span class="eyebrow">Join now</span><h2>Applying for membership</h2>
-      {destinations.joinApplication ? <a class="btn btn--gold" href={destinations.joinApplication}>Start your application</a> : (
+      {destinations.joinApplication ? <a class="btn btn--accent" href={destinations.joinApplication}>Start your application</a> : (
         <>
           <p class="notice notice--warn"><strong>Online applications are not open yet.</strong> The membership application with OTP and document verification is being built separately and is not part of this website. Nothing on this page collects an application.</p>
           <p>When applications open, the application link will appear here. Until then, you can ask the membership team to call you.</p>

@@ -203,7 +203,7 @@ const title = category ? CATEGORY_META[category].label : 'All opportunities';
   .finder-sort { display: grid; gap: 4px; }
   .finder-sort .select { min-height: 52px; border-radius: 12px; }
   .filter-open { min-height: 52px; display: none; }
-  .filter-count { background: var(--gold-500); color: var(--blue-950); border-radius: 999px; padding: 2px 8px; font-size: 0.8rem; }
+  .filter-count { background: var(--accent-500); color: var(--blue-950); border-radius: 999px; padding: 2px 8px; font-size: 0.8rem; }
   .finder-layout { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 32px; align-items: start; }
   .filter-sheet { position: static; display: block; border: 0; padding: 0; margin: 0; background: transparent; width: auto; max-width: none; color: inherit; }
   .filter-sheet__head, .filter-sheet__foot { display: none; }
@@ -217,7 +217,7 @@ const title = category ? CATEGORY_META[category].label : 'All opportunities';
   .check input:checked + .check__box { background: var(--blue-800); border-color: var(--blue-800); }
   .check input:checked + .check__box::after { content: ''; width: 10px; height: 6px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(-45deg) translate(1px, -1px); }
   .check input:checked ~ .check__label { font-weight: 600; color: var(--blue-900); }
-  .check input:focus-visible + .check__box { outline: 3px solid var(--gold-500); outline-offset: 2px; }
+  .check input:focus-visible + .check__box { outline: 3px solid var(--accent-500); outline-offset: 2px; }
   .check__count { font-size: 0.8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
   .check[data-zero] { opacity: 0.5; }
   .results-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 16px; margin-bottom: 10px; }
@@ -236,7 +236,7 @@ const title = category ? CATEGORY_META[category].label : 'All opportunities';
   .results { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
   .result[hidden] { display: none; }
   .result__card { position: relative; background: var(--white); border: 1px solid var(--line-2); border-radius: var(--radius); padding: clamp(18px, 2.4vw, 26px); transition: border-color 160ms, box-shadow 200ms; }
-  .result__card:hover { border-color: var(--gold-500); box-shadow: var(--shadow); }
+  .result__card:hover { border-color: var(--accent-500); box-shadow: var(--shadow); }
   .result__card:focus-within { border-color: var(--blue-700); }
   .result__top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin-bottom: 12px; }
   .result__level { font-size: 0.85rem; color: var(--muted); }
@@ -245,7 +245,7 @@ const title = category ? CATEGORY_META[category].label : 'All opportunities';
   .result__title a::after { content: ''; position: absolute; inset: 0; border-radius: var(--radius); }
   .result__title a:hover { text-decoration: underline; }
   .result__title a:focus-visible { outline: none; }
-  .result__title a:focus-visible::after { outline: 3px solid var(--gold-500); outline-offset: 2px; }
+  .result__title a:focus-visible::after { outline: 3px solid var(--accent-500); outline-offset: 2px; }
   .result__authority { font-size: 0.9rem; color: var(--muted); margin-bottom: 10px; }
   .result__summary { margin-bottom: 14px; color: var(--ink-2); }
   .result__facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 20px; margin: 0; padding-top: 14px; border-top: 1px solid var(--line-2); font-size: 0.9rem; }

@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import HeroInfinity from '../components/HeroInfinity.astro';
+import InfinityMark from '../components/InfinityMark.astro';
 import LetterStory from '../components/LetterStory.astro';
 import Pending from '../components/Pending.astro';
 import { site, audiences, advisors, testimonials, events, news, stats } from '../data/site';
@@ -38,7 +38,7 @@ const areas = [
           <label for="hero-q" class="hero-search__label">What are you looking for?</label>
           <div class="hero-search__row">
             <input id="hero-q" name="q" type="search" class="input" placeholder="Try “loan”, “scholarship” or “tender”" />
-            <button class="btn btn--gold" type="submit">Search</button>
+            <button class="btn btn--accent" type="submit">Search</button>
           </div>
           <ul class="hero-cats" aria-label="Browse by category">
             {CATEGORY_ORDER.map((c) => <li><a href={CATEGORY_META[c].path}>{CATEGORY_META[c].label}</a></li>)}
@@ -46,12 +46,15 @@ const areas = [
         </form>
 
         <div class="hero__actions">
-          <a class="btn btn--gold" href="/membership#join">Join as a Member</a>
+          <a class="btn btn--accent" href="/membership#join">Join as a Member</a>
           <a class="btn btn--ghost" href="/about">About the chamber</a>
         </div>
       </div>
       <div class="hero__art">
-        <HeroInfinity />
+        <div class="hero-mark" aria-hidden="true">
+          <InfinityMark class="hero-mark__svg" tone="light" />
+          <span class="hero-mark__l">Community</span><span class="hero-mark__r">Commerce</span>
+        </div>
         <p class="hero__caption">Two Cs, Community and Commerce, brought together as one continuous loop.</p>
       </div>
     </div>
@@ -121,7 +124,7 @@ const areas = [
         <p>BECCI is a chamber for Bahujan entrepreneurs — business owners, professionals, students and first-generation founders whose community appears in the Central OBC list for their State or in a State BC/OBC list.</p>
       </div>
       <div class="join-band__actions">
-        <a class="btn btn--gold" href="/membership#join">Join as a Member</a>
+        <a class="btn btn--accent" href="/membership#join">Join as a Member</a>
         <a class="btn btn--ghost" href="/membership">Membership categories and benefits</a>
       </div>
     </div>
@@ -169,7 +172,7 @@ const areas = [
   .hero { background: radial-gradient(120% 90% at 85% 40%, #173c7a 0%, var(--blue-900) 45%, var(--blue-950) 100%); color: #d6deee; padding-block: clamp(40px, 6vw, 80px) 0; overflow: hidden; }
   .hero__grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 56px); align-items: center; }
   .hero h1 { color: #fff; font-size: clamp(2.5rem, 1.6rem + 3.8vw, 4.6rem); max-width: 12ch; margin-bottom: 0.35em; }
-  .hero .eyebrow { color: var(--gold-300); }
+  .hero .eyebrow { color: var(--accent-300); }
   .hero__lede { font-size: var(--step-1); color: #c6d1e6; max-width: 44ch; }
   .hero-search { margin: 28px 0 24px; background: rgb(255 255 255 / 6%); border: 1px solid rgb(255 255 255 / 14%); border-radius: 18px; padding: 16px; }
   .hero-search__label { display: block; font-weight: 600; color: #fff; margin-bottom: 10px; }
@@ -178,14 +181,24 @@ const areas = [
   .hero-search .btn { min-height: 52px; }
   .hero-cats { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 14px 0 0; }
   .hero-cats a { display: inline-flex; align-items: center; min-height: 40px; padding: 8px 14px; border-radius: 999px; background: rgb(255 255 255 / 9%); color: #fff; text-decoration: none; font-weight: 600; font-size: 0.92rem; border: 1px solid rgb(255 255 255 / 10%); transition: background 160ms, border-color 160ms; }
-  .hero-cats a:hover { background: var(--gold-500); color: var(--blue-950); border-color: var(--gold-500); }
+  .hero-cats a:hover { background: #fff; color: var(--blue-900); border-color: #fff; }
   .hero__actions { display: flex; flex-wrap: wrap; gap: 10px; }
+  .hero-mark { position: relative; width: 100%; padding-bottom: 36px; }
+  .hero-mark :global(.hero-mark__svg) { width: 100%; height: auto; }
+  .hero-mark__l, .hero-mark__r { position: absolute; bottom: 0; translate: -50% 0; font: 600 0.78rem/1 var(--font-body); letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-300); }
+  .hero-mark__l { left: 33%; } .hero-mark__r { left: 67%; }
+  @media (max-width: 520px) { .hero-mark__l, .hero-mark__r { font-size: 0.62rem; letter-spacing: 0.08em; } }
   .hero__caption { text-align: center; font-size: 0.88rem; color: #9fb0cc; margin-top: 8px; }
-  .hero__promise { margin: clamp(32px, 5vw, 56px) 0 0; padding: 18px 0; border-top: 1px solid rgb(255 255 255 / 12%); font: 500 clamp(1rem, 0.9rem + 0.6vw, 1.35rem) var(--font-display); letter-spacing: 0.06em; color: var(--gold-300); text-align: center; }
+  .hero__promise { margin: clamp(32px, 5vw, 56px) 0 0; padding: 18px 0; border-top: 1px solid rgb(255 255 255 / 12%); font: 500 clamp(1rem, 0.9rem + 0.6vw, 1.35rem) var(--font-display); letter-spacing: 0.06em; color: var(--accent-300); text-align: center; }
   @media (max-width: 900px) {
     .hero__grid { grid-template-columns: 1fr; }
     .hero__art { order: -1; max-width: 520px; width: 100%; margin-inline: auto; }
-    .hero__caption { display: none; }
+    .hero-mark { position: relative; width: 100%; padding-bottom: 36px; }
+  .hero-mark :global(.hero-mark__svg) { width: 100%; height: auto; }
+  .hero-mark__l, .hero-mark__r { position: absolute; bottom: 0; translate: -50% 0; font: 600 0.78rem/1 var(--font-body); letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-300); }
+  .hero-mark__l { left: 33%; } .hero-mark__r { left: 67%; }
+  @media (max-width: 520px) { .hero-mark__l, .hero-mark__r { font-size: 0.62rem; letter-spacing: 0.08em; } }
+  .hero__caption { display: none; }
   }
   @media (max-width: 480px) { .hero-search__row { flex-direction: column; } }
 
@@ -194,14 +207,14 @@ const areas = [
   .who__item { display: grid; grid-template-columns: minmax(9ch, 0.8fr) 1.6fr auto; gap: 16px; align-items: baseline; padding: 20px 8px; text-decoration: none; color: var(--ink-2); transition: background 160ms; }
   .who__item:hover { background: var(--paper); color: var(--ink); text-decoration: none; }
   .who__who { font: 600 1.2rem/1.2 var(--font-display); color: var(--blue-900); }
-  .who__go { color: var(--gold-700); font-size: 1.2rem; transition: transform 160ms var(--ease); }
+  .who__go { color: var(--accent-700); font-size: 1.2rem; transition: transform 160ms var(--ease); }
   .who__item:hover .who__go { transform: translateX(4px); }
   @media (min-width: 760px) { .who li:nth-child(odd) { border-right: 1px solid var(--line); } }
   @media (max-width: 520px) { .who__item { grid-template-columns: 1fr auto; } .who__need { grid-column: 1; } .who__go { grid-row: 1; grid-column: 2; } }
 
   .hl { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 16px; }
   .hl__item { position: relative; background: var(--white); border: 1px solid var(--line-2); border-radius: var(--radius); padding: 22px; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; transition: border-color 160ms, transform 200ms var(--ease); }
-  .hl__item:hover { border-color: var(--gold-500); transform: translateY(-2px); }
+  .hl__item:hover { border-color: var(--accent-500); transform: translateY(-2px); }
   .hl__item h3 { margin: 4px 0 0; font-size: 1.12rem; }
   .hl__item h3 a { color: var(--blue-900); text-decoration: none; }
   .hl__item h3 a::after { content: ''; position: absolute; inset: 0; }
