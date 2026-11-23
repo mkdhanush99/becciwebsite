@@ -1,11 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
 import LetterStory from '../components/LetterStory.astro';
-import BrandMedia from '../components/BrandMedia.astro';
 import { site, audiences, advisors, events, news, stats } from '../data/site';
-import { PHOTOS } from '../data/media';
-import { opportunities, CATEGORY_META, CATEGORY_ORDER, OBC_SCOPE_LABEL } from '../data/opportunities';
-import { computeStatus, STATUS_LABEL, deadlineText, todayISO } from '../lib/status';
+import { opportunities, portals, CATEGORY_META, CATEGORY_ORDER, OBC_SCOPE_LABEL } from '../data/opportunities';
+import { computeStatus, STATUS_LABEL, deadlineText, todayISO, formatDate } from '../lib/status';
 
 const today = todayISO();
 const open = opportunities
@@ -13,6 +11,8 @@ const open = opportunities
   .filter((x) => x.st !== 'closed' && x.st !== 'awaiting-notice')
   .sort((a, b) => (a.o.closingDate ?? '9999').localeCompare(b.o.closingDate ?? '9999'));
 const [featured, ...rest] = open;
+const lastChecked = opportunities.map((o) => o.lastVerified).sort().at(-1);
+const register = open.slice(0, 3);
 const pillars = [
   { title: 'Open opportunities', text: 'Schemes, scholarships, loans, tenders and jobs, each checked against its official source.', href: '/opportunities', link: 'Find opportunities' },
   { title: 'Connect entrepreneurs', text: 'Events, wings and sector committees that put business owners in the same room.', href: '/wings', link: 'Wings and sectors' },
@@ -34,59 +34,84 @@ const tiers = [
 ---
 <Base title="Home">
   <section class="h-hero on-dark" data-enter>
+    <div class="h-hero__bg" aria-hidden="true"></div>
     <div class="wrap h-hero__grid">
       <div class="h-hero__copy">
-        
         <h1>Where Community <span>Meets Commerce</span></h1>
         <p class="h-hero__lede">{site.supporting}</p>
         <form class="h-search" action="/opportunities" method="get" role="search">
           <label for="hero-q" class="h-search__label">Find schemes, scholarships, loans, tenders and jobs</label>
           <div class="h-search__row">
-            <input id="hero-q" name="q" type="search" class="input" placeholder="Try “loan”, “scholarship” or “tender”" />
-            <button class="btn btn--accent" type="submit">Search</button>
+            <svg class="h-search__icon" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m13.5 13.5 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <input id="hero-q" name="q" type="search" class="input" placeholder="Try “loan” or “scholarship”" />
+            <button class="btn" type="submit">Search</button>
           </div>
-          <ul class="h-cats" aria-label="Browse by category">
-            {CATEGORY_ORDER.map((c) => <li><a href={CATEGORY_META[c].path}>{CATEGORY_META[c].label}</a></li>)}
-          </ul>
         </form>
+        <ul class="h-cats" aria-label="Browse by category">
+          {CATEGORY_ORDER.map((c) => <li><a href={CATEGORY_META[c].path}>{CATEGORY_META[c].label}</a></li>)}
+        </ul>
         <div class="h-hero__actions">
-          <a class="btn btn--accent" href="/membership#join">Join as a Member</a>
-          <a class="btn btn--ghost" href="/about">About the chamber</a>
+          <a class="btn btn--light" href="/membership#join">Join as a Member</a>
+          <a class="h-hero__link" href="/about">About the chamber</a>
         </div>
       </div>
-      <div class="h-hero__media">
-        <BrandMedia src={PHOTOS.homeHero.src} alt={PHOTOS.homeHero.alt} ratio="4 / 5" eager />
-      </div>
+
+      <aside class="h-reg" aria-labelledby="reg-title">
+        <div class="h-reg__head">
+          <h2 id="reg-title">Open now</h2>
+          <span class="h-reg__live">Checked {formatDate(lastChecked)}</span>
+        </div>
+        <ol class="h-reg__list">
+          {register.map(({ o, st }) => (
+            <li>
+              <div class="h-reg__meta"><span class={`status status--${st}`}>{STATUS_LABEL[st]}</span><span class="h-reg__cat">{CATEGORY_META[o.categories[0]].label}</span></div>
+              <h3><a href={`/opportunities/${o.slug}`}>{o.title}</a></h3>
+              <p>{o.authority.split(',')[0]}</p>
+              <p class="h-reg__when">{deadlineText(o, today)}</p>
+            </li>
+          ))}
+        </ol>
+        <a class="h-reg__all" href="/opportunities">See all {opportunities.length} records and {portals.length} official portals</a>
+      </aside>
     </div>
-    <div class="wrap h-promise"><p>{site.promise}</p></div>
+    <div class="wrap h-facts">
+      <p class="h-promise">{site.promise}</p>
+      <ul>
+        <li><strong>{opportunities.length}</strong> verified records</li>
+        <li><strong>{portals.length}</strong> official portals</li>
+        <li>Central OBC and State BC lists kept separate</li>
+      </ul>
+    </div>
   </section>
 
-  <section class="h-paths" aria-labelledby="paths-title">
+  <section class="section h-paths" aria-labelledby="paths-title">
     <div class="wrap">
-      <h2 id="paths-title" class="h-paths__title">I am…</h2>
+      <div class="section-head">
+        <h2 id="paths-title">I am…</h2>
+        <p>Pick the line that fits you. Each one opens the part of BECCI built for it.</p>
+      </div>
       <ul class="h-paths__list">
-        {audiences.map((a) => (
-          <li><a href={a.href}><strong>{a.who}</strong><span>{a.need}</span></a></li>
+        {audiences.map((a, i) => (
+          <li><a href={a.href}><span class="h-paths__n">{String(i + 1).padStart(2, '0')}</span><strong>{a.who}</strong><span class="h-paths__need">{a.need}</span><span class="h-paths__go" aria-hidden="true">→</span></a></li>
         ))}
       </ul>
     </div>
   </section>
 
-  <section class="section" aria-labelledby="open-title">
+  <section class="section section--white" aria-labelledby="open-title">
     <div class="wrap">
       <div class="section-head">
-        <div><h2 id="open-title">Opportunities you can apply for</h2></div>
+        <h2 id="open-title">Opportunities you can apply for</h2>
         <a class="link-arrow" href="/opportunities">All opportunities and official portals</a>
       </div>
       <div class="h-open">
         {featured && (
-          <article class="h-open__feature">
-            <span class={`status status--${featured.st}`}>{STATUS_LABEL[featured.st]}</span>
+          <article class="h-open__feature on-dark">
+            <div class="h-open__meta"><span class={`status status--${featured.st}`}>{STATUS_LABEL[featured.st]}</span><span class="h-open__scope">{OBC_SCOPE_LABEL[featured.o.obcScope]}</span></div>
             <h3><a href={`/opportunities/${featured.o.slug}`}>{featured.o.title}</a></h3>
-            <p class="muted small">{featured.o.authority}</p>
+            <p class="h-open__auth">{featured.o.authority}</p>
             <p>{featured.o.summary}</p>
             <p class="h-open__deadline">{deadlineText(featured.o, today)}</p>
-            <span class={`scope scope--${featured.o.obcScope}`}>{OBC_SCOPE_LABEL[featured.o.obcScope]}</span>
           </article>
         )}
         <ol class="h-open__list">
@@ -105,19 +130,18 @@ const tiers = [
   <LetterStory />
 
   <section class="section" aria-labelledby="does-title">
-    <div class="wrap h-does">
-      <div class="h-does__intro">
-        
+    <div class="wrap">
+      <div class="section-head">
         <h2 id="does-title">From a first idea to an established enterprise</h2>
-        <p class="lede">BECCI is a national chamber for OBC entrepreneurs. It began in Telangana and Andhra Pradesh and is building towards a national presence.</p>
-        <ul class="h-does__more" aria-label="More from BECCI">
-          {more.map((m) => <li><a href={m.href}>{m.label}</a>{m.note && <span class="nav-note">{m.note}</span>}</li>)}
-        </ul>
+        <p>BECCI is a national chamber for OBC entrepreneurs. It began in Telangana and Andhra Pradesh and is building towards a national presence.</p>
       </div>
-      <ul class="h-does__list">
-        {pillars.map((p) => (
-          <li><h3>{p.title}</h3><p>{p.text}</p><a class="link-arrow" href={p.href}>{p.link}</a></li>
+      <ul class="h-does">
+        {pillars.map((p, i) => (
+          <li class:list={[i === 0 && 'h-does__lead on-dark']}><h3>{p.title}</h3><p>{p.text}</p><a class="link-arrow" href={p.href}>{p.link}</a></li>
         ))}
+      </ul>
+      <ul class="h-more" aria-label="More from BECCI">
+        {more.map((m) => <li><a href={m.href}>{m.label}{m.note && <span class="nav-note">{m.note}</span>}</a></li>)}
       </ul>
     </div>
   </section>
@@ -125,117 +149,188 @@ const tiers = [
   <section class="section section--white" aria-labelledby="join-title">
     <div class="wrap">
       <div class="section-head">
-        <div><h2 id="join-title">Become part of the chamber</h2></div>
+        <h2 id="join-title">Become part of the chamber</h2>
         <p>For Bahujan entrepreneurs, professionals, students and first-generation founders whose community is in the Central OBC list for their State or a State BC/OBC list.</p>
       </div>
       <ol class="h-tiers">
-        {tiers.map((t) => <li><h3>{t.name} Membership</h3><p>{t.text}</p></li>)}
+        {tiers.map((t, i) => <li><span class="h-tiers__step">Level {i + 1}</span><h3>{t.name} Membership</h3><p>{t.text}</p></li>)}
       </ol>
       <div class="h-member__foot">
-        <a class="btn btn--accent" href="/membership#join">Join as a Member</a>
+        <a class="btn" href="/membership#join">Join as a Member</a>
         <p class="small muted">Categories are proposed. Fees and final benefits will be confirmed before applications open.</p>
       </div>
     </div>
   </section>
 
   <section class="section h-close" aria-labelledby="close-title">
-    <div class="wrap h-close__grid">
-      <div>
-        
-        <h2 id="close-title">Open doors for entrepreneurs at scale</h2>
-        <p>Government departments, banks, MSME bodies, educational institutions, incubators and corporates can create opportunities that ordinary networking cannot.</p>
-        <a class="btn btn--accent" href="/partnerships">Partner with BECCI</a>
+    <div class="wrap">
+      <div class="h-close__panel on-dark">
+        <div>
+          <h2 id="close-title">Open doors for entrepreneurs at scale</h2>
+          <p>Government departments, banks, MSME bodies, educational institutions, incubators and corporates can create opportunities that ordinary networking cannot.</p>
+          <a class="btn btn--light" href="/partnerships">Partner with BECCI</a>
+        </div>
+        <ul class="h-close__links">
+          <li><a href="/events"><strong>Event calendar</strong><span>{events.length ? `${events.length} announced` : 'No events announced yet'}</span></a></li>
+          <li><a href="/news"><strong>News Desk</strong><span>{news.length ? `${news.length} announcements` : 'No announcements yet'}</span></a></li>
+          <li><a href="/knowledge"><strong>Knowledge Centre</strong><span>Guides and resources</span></a></li>
+          <li><a href="/leadership"><strong>Leadership</strong><span>{advisors.length ? `${advisors.length} advisors` : 'Profiles coming soon'}</span></a></li>
+        </ul>
       </div>
-      <ul class="h-close__links">
-        <li><a href="/events"><strong>Event calendar</strong><span>{events.length ? `${events.length} announced` : 'No events announced yet'}</span></a></li>
-        <li><a href="/news"><strong>News Desk</strong><span>{news.length ? `${news.length} announcements` : 'No announcements yet'}</span></a></li>
-        <li><a href="/knowledge"><strong>Knowledge Centre</strong><span>Guides and resources</span></a></li>
-        <li><a href="/leadership"><strong>Leadership</strong><span>{advisors.length ? `${advisors.length} advisors` : 'Profiles coming soon'}</span></a></li>
-      </ul>
     </div>
     {stats.length > 0 && <ul class="wrap h-stats">{stats.map((s) => <li><strong>{s.value}</strong><span>{s.label}</span><small>{s.period} · {s.basis}</small></li>)}</ul>}
   </section>
 </Base>
 
 <style>
-  .h-hero { background: var(--midnight); color: var(--on-dark-2); padding-top: clamp(var(--s-6), 5vw, var(--s-8)); overflow: hidden; display: flex; flex-direction: column; justify-content: center; }
-  @media (min-width: 961px) and (min-height: 700px) { .h-hero { min-height: calc(100svh - var(--header-h)); } }
+  /* ── Hero ── */
+  .h-hero { position: relative; isolation: isolate; overflow: hidden; background: var(--midnight); color: var(--on-dark-2); padding-top: clamp(var(--s-7), 6vw, var(--s-8)); }
+  .h-hero__bg { position: absolute; inset: 0; z-index: -1;
+    background:
+      radial-gradient(48% 60% at 88% 8%, rgb(34 184 230 / 38%), transparent 70%),
+      radial-gradient(60% 70% at 70% 100%, rgb(33 82 232 / 55%), transparent 70%),
+      radial-gradient(40% 50% at 0% 0%, rgb(27 79 168 / 45%), transparent 70%),
+      linear-gradient(180deg, #071a44 0%, var(--midnight) 100%); }
+  .h-hero__bg::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgb(255 255 255 / 4%) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / 4%) 1px, transparent 1px); background-size: 56px 56px; mask-image: linear-gradient(180deg, #000 0%, transparent 85%); }
   .h-hero__grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(var(--s-6), 5vw, var(--s-8)); align-items: center; }
-  .h-hero h1 { color: #fff; font-size: clamp(2.5rem, 1.5rem + 3.6vw, 4rem); font-weight: 500; line-height: 1.04; letter-spacing: -0.02em; margin-bottom: var(--s-5); }
-  .h-hero h1 span { display: block; }
-  .h-hero__lede { font-size: var(--fs-md); color: var(--on-dark); max-width: 46ch; margin-bottom: var(--s-6); }
-  .h-search { border-top: 1px solid rgb(255 255 255 / 14%); padding-top: var(--s-5); margin-bottom: var(--s-6); }
-  .h-search__label { display: block; font-size: var(--fs-sm); font-weight: 500; color: var(--on-dark-2); margin-bottom: var(--s-3); }
-  .h-search__row { display: flex; gap: var(--s-2); }
-  .h-search .input { border-color: transparent; min-height: 56px; font-size: var(--fs-md); }
-  .h-search .btn { min-height: 56px; padding: 0 var(--s-6); }
-  .h-cats { display: flex; flex-wrap: wrap; gap: 0 var(--s-5); list-style: none; padding: 0; margin: var(--s-3) 0 0; }
-  .h-cats a { display: inline-flex; align-items: center; min-height: 44px; color: #fff; font-weight: 500; text-decoration: underline; text-decoration-color: rgb(255 255 255 / 35%); text-underline-offset: 6px; }
-  .h-cats a:hover { color: #fff; text-decoration-color: #fff; }
-  .h-hero__actions { display: flex; flex-wrap: wrap; gap: var(--s-3); }
-  .h-promise p { margin: clamp(var(--s-6), 5vw, var(--s-7)) 0 0; padding: var(--s-5) 0; border-top: 1px solid rgb(255 255 255 / 10%); font: 400 var(--fs-base)/1 var(--font-display); letter-spacing: 0.02em; color: var(--on-dark-2); }
-  @media (max-width: 960px) { .h-hero__grid { grid-template-columns: 1fr; } .h-hero__media { display: none; } }
-  @media (max-width: 520px) { .h-search__row { flex-direction: column; } .h-search .btn { width: 100%; } .h-hero .eyebrow { display: none; } .h-hero__lede { margin-bottom: var(--s-5); } .h-search { padding-top: var(--s-4); margin-bottom: var(--s-5); } .h-hero__actions .btn--ghost { display: none; } .h-promise p { margin-top: var(--s-5); } }
+  .h-hero h1 { color: #fff; font-size: clamp(2.5rem, 1.3rem + 4vw, 4.5rem); font-weight: 600; line-height: 1.02; letter-spacing: -0.03em; margin-bottom: var(--s-5); }
+  .h-hero h1 span { display: block; color: #8fdcf7; }
+  .h-hero__lede { font-size: var(--fs-md); color: #c3d1e8; max-width: 46ch; margin-bottom: var(--s-6); }
 
-  .h-paths { background: var(--white); border-bottom: var(--hair); }
-  .h-paths .wrap { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 10fr); gap: var(--s-6); padding-block: var(--s-7); align-items: start; }
-  .h-paths__title { font-size: var(--fs-xl); margin: var(--s-4) 0 0; }
-  .h-paths__list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--s-6); border-top: var(--hair); }
-  .h-paths__list li { border-bottom: var(--hair); }
-  .h-paths__list a { display: flex; flex-direction: column; gap: var(--s-1); height: 100%; padding: var(--s-5) 0; color: var(--slate); text-decoration: none; font-size: var(--fs-sm); }
-  .h-paths__list strong { font-size: var(--fs-md); font-weight: 600; color: var(--midnight); letter-spacing: -0.01em; display: flex; justify-content: space-between; gap: var(--s-2); transition: color var(--dur); }
-  .h-paths__list strong::after { content: '→'; color: var(--sapphire); transition: transform var(--dur) var(--ease); }
-  .h-paths__list a:hover strong { color: var(--sapphire); }
-  .h-paths__list a:hover strong::after { transform: translateX(4px); }
-  @media (max-width: 960px) { .h-paths .wrap { grid-template-columns: 1fr; gap: var(--s-3); } .h-paths__list { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 600px) { .h-paths__list { grid-template-columns: 1fr; } .h-paths__list a { padding: var(--s-4) 0; } }
+  .h-search { margin-bottom: var(--s-4); max-width: 600px; }
+  .h-search__label { display: block; font-size: var(--fs-sm); font-weight: 500; color: #c3d1e8; margin-bottom: var(--s-3); }
+  .h-search__row { position: relative; display: flex; align-items: center; gap: var(--s-2); padding: 6px; background: #fff; border-radius: 14px; box-shadow: 0 24px 48px -20px rgb(0 0 0 / 55%), 0 0 0 6px rgb(255 255 255 / 8%); }
+  .h-search__icon { position: absolute; left: 20px; color: var(--slate); pointer-events: none; }
+  .h-search .input { flex: 1; min-width: 0; border: 0; background: transparent; min-height: 52px; padding-left: 48px; font-size: var(--fs-md); box-shadow: none; }
+  .h-search .input:focus-visible { outline: none; }
+  .h-search__row:focus-within { box-shadow: 0 24px 48px -20px rgb(0 0 0 / 55%), 0 0 0 4px var(--cyan); }
+  .h-search .btn { min-height: 52px; padding: 0 var(--s-6); border-radius: 10px; }
 
-  .h-open { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--s-6); align-items: start; }
-  .h-open__feature { position: relative; background: var(--white); border: var(--hair); border-radius: var(--radius); padding: var(--s-6); display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-3); transition: border-color var(--dur); }
-  .h-open__feature:hover { border-color: var(--sapphire); }
-  .h-open__feature h3 { font-size: var(--fs-lg); line-height: 1.25; margin: 0; }
+  .h-cats { display: flex; flex-wrap: wrap; gap: var(--s-2); list-style: none; padding: 0; margin: 0 0 var(--s-7); }
+  .h-cats a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 var(--s-4); border-radius: 999px; border: 1px solid rgb(255 255 255 / 18%); background: rgb(255 255 255 / 6%); color: #fff; font-size: var(--fs-sm); font-weight: 500; text-decoration: none; transition: background var(--dur), border-color var(--dur); }
+  .h-cats a:hover { color: #fff; background: rgb(34 184 230 / 18%); border-color: var(--cyan); }
+
+  .h-hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3) var(--s-5); }
+  .h-hero__link { display: inline-flex; align-items: center; min-height: 44px; color: #fff; font-weight: 600; text-decoration: underline; text-decoration-color: rgb(255 255 255 / 35%); text-underline-offset: 6px; }
+  .h-hero__link:hover { color: #fff; text-decoration-color: var(--cyan); }
+  :global(.btn--light) { --bg: #fff; --bd: #fff; --fg: var(--midnight); }
+  :global(.btn--light:hover) { --bg: var(--cyan-soft); --bd: var(--cyan-soft); --fg: var(--midnight); }
+
+  /* Register panel: real records, the hero's image */
+  .h-reg { background: rgb(255 255 255 / 97%); color: var(--ink); border-radius: 20px; padding: var(--s-5); box-shadow: 0 40px 80px -32px rgb(0 0 0 / 60%), 0 0 0 1px rgb(255 255 255 / 30%); }
+  .h-reg__head { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); padding-bottom: var(--s-4); border-bottom: var(--hair); }
+  .h-reg__head h2 { font-size: var(--fs-md); margin: 0; }
+  .h-reg__live { display: inline-flex; align-items: center; gap: 8px; font-size: var(--fs-label); font-weight: 600; color: var(--cyan-ink); }
+  .h-reg__live::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 0 4px var(--cyan-soft); }
+  .h-reg__list { list-style: none; margin: 0; padding: 0; }
+  .h-reg__list li { position: relative; padding: var(--s-4) 0; border-bottom: var(--hair); }
+  .h-reg__meta { display: flex; align-items: center; justify-content: space-between; gap: var(--s-2); }
+  .h-reg__cat { font-size: var(--fs-label); font-weight: 600; color: var(--slate); }
+  .h-reg h3 { font-size: var(--fs-base); line-height: 1.35; margin: var(--s-2) 0 2px; }
+  .h-reg h3 a { color: var(--midnight); text-decoration: none; }
+  .h-reg h3 a::after { content: ''; position: absolute; inset: 0; }
+  .h-reg h3 a:hover { color: var(--royal); }
+  .h-reg p { margin: 0; font-size: var(--fs-sm); color: var(--slate); }
+  .h-reg .h-reg__when { color: var(--ink); font-weight: 600; margin-top: 2px; }
+  .h-reg__all { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); min-height: 48px; margin-top: var(--s-3); font-size: var(--fs-sm); font-weight: 600; color: var(--royal); text-decoration: none; }
+  .h-reg__all::after { content: '→'; transition: transform var(--dur) var(--ease); }
+  .h-reg__all:hover::after { transform: translateX(4px); }
+
+  .h-facts { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s-3) var(--s-6); margin-top: clamp(var(--s-7), 6vw, var(--s-8)); padding-block: var(--s-5); border-top: 1px solid rgb(255 255 255 / 12%); }
+  .h-promise { margin: 0; font-weight: 500; letter-spacing: 0.02em; color: #fff; }
+  .h-facts ul { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-6); list-style: none; margin: 0; padding: 0; font-size: var(--fs-sm); color: #a9bad6; }
+  .h-facts strong { color: #8fdcf7; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+  @media (max-width: 960px) { .h-hero__grid { grid-template-columns: 1fr; } .h-reg { max-width: 560px; } .h-cats { margin-bottom: var(--s-6); } }
+  @media (max-width: 520px) {
+    .h-hero h1 { font-size: 2.5rem; }
+    .h-hero__lede { margin-bottom: var(--s-5); }
+    .h-search__row { flex-wrap: wrap; }
+    .h-search .btn { width: 100%; }
+    .h-search__icon { top: 22px; }
+    .h-cats { gap: var(--s-2); }
+    .h-reg { padding: var(--s-4); border-radius: 16px; }
+    .h-reg__list li:nth-child(3) { display: none; }
+    .h-facts { flex-direction: column; align-items: flex-start; }
+    .h-hero__actions .btn--light { display: none; }
+    .h-cats a { min-height: 40px; padding: 0 var(--s-3); }
+    .h-cats { margin-bottom: var(--s-5); }
+  }
+
+  /* ── Paths ── */
+  .h-paths__list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-4); }
+  .h-paths__list a { position: relative; display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto auto 1fr; column-gap: var(--s-4); height: 100%; padding: var(--s-5); background: var(--white); border: 1px solid var(--silver-200); border-radius: 16px; color: var(--slate); text-decoration: none; font-size: var(--fs-sm); transition: border-color var(--dur), box-shadow var(--dur), transform var(--dur) var(--ease); }
+  .h-paths__list a:hover { border-color: var(--royal); box-shadow: 0 16px 32px -20px rgb(33 82 232 / 45%); transform: translateY(-2px); color: var(--slate); }
+  .h-paths__n { grid-column: 1; font-size: var(--fs-label); font-weight: 600; color: var(--royal); letter-spacing: 0.04em; font-variant-numeric: tabular-nums; margin-bottom: var(--s-4); }
+  .h-paths__list strong { grid-column: 1; font-size: var(--fs-lg); font-weight: 600; color: var(--midnight); letter-spacing: -0.01em; line-height: 1.2; margin-bottom: var(--s-2); }
+  .h-paths__need { grid-column: 1; }
+  .h-paths__go { grid-column: 2; grid-row: 1 / 3; align-self: start; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; background: var(--silver-100); color: var(--royal); font-size: 1.125rem; transition: background var(--dur), color var(--dur), transform var(--dur) var(--ease); }
+  .h-paths__list a:hover .h-paths__go { background: var(--royal); color: #fff; transform: translateX(2px); }
+  @media (max-width: 960px) { .h-paths__list { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .h-paths__list { grid-template-columns: 1fr; gap: var(--s-2); } .h-paths__list a { padding: var(--s-4); align-items: center; } .h-paths__n { display: none; } .h-paths__list strong { font-size: var(--fs-md); margin-bottom: 2px; } .h-paths__go { grid-row: 1 / 3; align-self: center; width: 36px; height: 36px; } }
+
+  /* ── Opportunities ── */
+  .h-open { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--s-6); align-items: stretch; }
+  .h-open__feature { position: relative; overflow: hidden; border-radius: 20px; padding: clamp(var(--s-5), 3vw, var(--s-7)); display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-3); color: #c3d1e8;
+    background: radial-gradient(80% 70% at 100% 0%, rgb(34 184 230 / 40%), transparent 60%), linear-gradient(155deg, var(--royal) 0%, var(--sapphire-deep) 55%, var(--midnight) 100%); }
+  .h-open__feature h3 { font-size: var(--fs-xl); line-height: 1.2; margin: var(--s-2) 0 0; color: #fff; }
   .h-open__feature p { margin: 0; }
-  .h-open h3 a { color: var(--midnight); text-decoration: none; }
+  .h-open__feature .h-open__auth { color: #a9c3f0; font-size: var(--fs-sm); }
+  .h-open__feature h3 a { color: #fff; text-decoration: none; }
+  .h-open__feature h3 a:hover { color: #fff; text-decoration: underline; }
+  .h-open__scope { font-size: var(--fs-label); font-weight: 600; color: #fff; padding: 5px 8px; border-radius: 4px; background: rgb(255 255 255 / 14%); }
+  .h-open__deadline { margin-top: auto !important; padding-top: var(--s-4); font-weight: 600; color: #fff; }
   .h-open h3 a::after { content: ''; position: absolute; inset: 0; }
-  .h-open h3 a:hover { color: var(--sapphire); }
-  .h-open__deadline { font-weight: 600; color: var(--ink); }
   .h-open__list { list-style: none; padding: 0; margin: 0; border-top: var(--hair); }
-  .h-open__list li { position: relative; padding: var(--s-5) 0; border-bottom: var(--hair); }
+  .h-open__list li { position: relative; padding: var(--s-5) var(--s-3); border-bottom: var(--hair); border-radius: 8px; transition: background var(--dur); }
+  .h-open__list li:hover { background: var(--ivory); }
   .h-open__list h3 { margin: var(--s-3) 0 var(--s-1); font-size: var(--fs-md); }
+  .h-open__list h3 a { color: var(--midnight); text-decoration: none; }
+  .h-open__list h3 a:hover { color: var(--royal); }
   .h-open__list p { margin: 0; }
   .h-open__meta { display: flex; flex-wrap: wrap; gap: var(--s-2); }
   @media (max-width: 960px) { .h-open { grid-template-columns: 1fr; } }
 
-  .h-does { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(var(--s-6), 6vw, var(--s-9)); }
-  .h-does__more { list-style: none; padding: 0; margin: var(--s-6) 0 0; display: grid; gap: var(--s-2); }
-  .h-does__more li { display: flex; align-items: center; gap: var(--s-3); min-height: 32px; }
-  .h-does__more a { font-weight: 500; }
-  .h-does__list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; border-top: var(--hair); }
-  .h-does__list li { padding: var(--s-5) var(--s-5) var(--s-6) 0; border-bottom: var(--hair); display: flex; flex-direction: column; }
-  .h-does__list li:nth-child(odd) { border-right: var(--hair); }
-  .h-does__list li:nth-child(even) { padding-left: var(--s-5); }
-  .h-does__list h3 { font-size: var(--fs-lg); }
-  .h-does__list p { color: var(--slate); flex: 1; }
-  @media (max-width: 960px) { .h-does { grid-template-columns: 1fr; } }
-  @media (max-width: 600px) { .h-does__list { grid-template-columns: 1fr; } .h-does__list li, .h-does__list li:nth-child(even) { padding: var(--s-5) 0; border-right: 0; } }
+  /* ── What BECCI does: bento ── */
+  .h-does { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1.3fr 1fr 1fr; grid-template-rows: auto auto; gap: var(--s-4); }
+  .h-does li { display: flex; flex-direction: column; padding: var(--s-6); background: var(--white); border: 1px solid var(--silver-200); border-radius: 20px; }
+  .h-does h3 { font-size: var(--fs-lg); }
+  .h-does p { color: var(--slate); flex: 1; }
+  .h-does .link-arrow { color: var(--royal); }
+  .h-does li:nth-child(4) { grid-column: 2 / 4; }
+  .h-does__lead { grid-row: 1 / 3; border: 0 !important; justify-content: flex-end; min-height: 360px; color: #c3d1e8;
+    background: radial-gradient(70% 60% at 100% 0%, rgb(34 184 230 / 35%), transparent 65%), linear-gradient(160deg, var(--midnight-2), var(--midnight)) !important; }
+  .h-does__lead h3 { color: #fff; font-size: var(--fs-2xl); max-width: 12ch; }
+  .h-does__lead p { color: #c3d1e8; flex: 0; max-width: 36ch; }
+  .h-does__lead .link-arrow { color: #8fdcf7; }
+  .h-does__lead .link-arrow:hover { color: #fff; }
+  .h-more { display: flex; flex-wrap: wrap; gap: var(--s-2); list-style: none; padding: 0; margin: var(--s-5) 0 0; }
+  .h-more a { display: inline-flex; align-items: center; gap: var(--s-2); min-height: 44px; padding: 0 var(--s-4); border-radius: 999px; background: var(--white); border: 1px solid var(--silver-200); color: var(--midnight); font-size: var(--fs-sm); font-weight: 500; text-decoration: none; transition: border-color var(--dur), color var(--dur); }
+  .h-more a:hover { border-color: var(--royal); color: var(--royal); }
+  @media (max-width: 960px) { .h-does { grid-template-columns: 1fr 1fr; } .h-does__lead { grid-column: 1 / -1; grid-row: auto; min-height: 280px; } .h-does li:nth-child(4) { grid-column: 1 / -1; } }
+  @media (max-width: 600px) { .h-does { grid-template-columns: 1fr; } .h-does li { padding: var(--s-5); } .h-does__lead { min-height: 240px; } }
 
-  .h-tiers { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: var(--hair); border-radius: var(--radius); overflow: hidden; }
-  .h-tiers li { padding: var(--s-6); }
-  .h-tiers li + li { border-left: var(--hair); }
+  /* ── Membership ── */
+  .h-tiers { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-4); }
+  .h-tiers li { padding: var(--s-6); border-radius: 20px; background: var(--ivory); border: 1px solid var(--silver-200); }
+  .h-tiers__step { display: inline-flex; font-size: var(--fs-label); font-weight: 600; color: var(--royal); background: var(--sapphire-soft); padding: 5px 10px; border-radius: 999px; margin-bottom: var(--s-5); }
   .h-tiers h3 { font-size: var(--fs-lg); }
   .h-tiers p { color: var(--slate); margin: 0; }
   .h-member__foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-4) var(--s-5); margin-top: var(--s-6); }
   .h-member__foot p { margin: 0; }
-  @media (max-width: 760px) { .h-tiers { grid-template-columns: 1fr; } .h-tiers li + li { border-left: 0; border-top: var(--hair); } }
+  @media (max-width: 760px) { .h-tiers { grid-template-columns: 1fr; gap: var(--s-3); } .h-tiers li { padding: var(--s-5); } .h-tiers__step { margin-bottom: var(--s-3); } }
 
-  .h-close__grid { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: clamp(var(--s-6), 6vw, var(--s-9)); align-items: start; }
-  .h-close p { color: var(--slate); max-width: 48ch; margin-bottom: var(--s-5); }
-  .h-close__links { list-style: none; padding: 0; margin: 0; border-top: var(--hair); }
-  .h-close__links li { border-bottom: var(--hair); }
-  .h-close__links a { display: flex; justify-content: space-between; align-items: center; gap: var(--s-4); min-height: 64px; color: var(--midnight); text-decoration: none; }
-  .h-close__links strong { font-size: var(--fs-md); font-weight: 600; }
-  .h-close__links span { color: var(--slate); font-size: var(--fs-sm); text-align: right; }
-  .h-close__links a:hover strong { color: var(--sapphire); text-decoration: underline; }
-  @media (max-width: 860px) { .h-close__grid { grid-template-columns: 1fr; } }
+  /* ── Close ── */
+  .h-close__panel { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: clamp(var(--s-6), 5vw, var(--s-8)); align-items: center; padding: clamp(var(--s-6), 5vw, var(--s-8)); border-radius: 28px; color: #c3d1e8;
+    background: radial-gradient(60% 80% at 100% 100%, rgb(34 184 230 / 45%), transparent 65%), linear-gradient(135deg, var(--royal) 0%, var(--sapphire-deep) 60%, var(--midnight-2) 100%); }
+  .h-close__panel h2 { color: #fff; max-width: 16ch; }
+  .h-close__panel p { color: #d5e0f3; max-width: 46ch; margin-bottom: var(--s-6); }
+  .h-close__links { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--s-2); }
+  .h-close__links a { display: flex; justify-content: space-between; align-items: center; gap: var(--s-4); min-height: 60px; padding: 0 var(--s-5); border-radius: 12px; background: rgb(255 255 255 / 10%); border: 1px solid rgb(255 255 255 / 14%); color: #fff; text-decoration: none; transition: background var(--dur), border-color var(--dur); }
+  .h-close__links a:hover { color: #fff; background: rgb(255 255 255 / 18%); border-color: rgb(255 255 255 / 40%); }
+  .h-close__links strong { font-weight: 600; }
+  .h-close__links span { color: #c3d1e8; font-size: var(--fs-sm); text-align: right; }
+  @media (max-width: 860px) { .h-close__panel { grid-template-columns: 1fr; border-radius: 20px; } }
+  @media (max-width: 480px) { .h-close__links a { flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px; padding: var(--s-3) var(--s-4); } .h-close__links span { text-align: left; } }
   .h-stats { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--s-4); padding: 0; margin-top: var(--s-7); }
 </style>

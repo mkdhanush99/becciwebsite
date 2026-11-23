@@ -10,17 +10,22 @@
 
 /* ───────────── Tokens ───────────── */
 :root {
-  /* Colour — midnight & sapphire with silver-blue neutrals on warm ivory. No gold (client decision). */
-  --midnight: #061638; /* brand Midnight */
-  --midnight-2: #0a2352; /* brand Continuum Navy (logo colour) */
+  /* Colour — Premium Blue Fusion: royal, sapphire, cyan, midnight on cool light surfaces. No gold. */
+  --midnight: #061638;
+  --midnight-2: #0a2352;
+  --royal: #2152e8; /* vibrant royal blue: primary action */
+  --royal-deep: #1a3fc0;
   --sapphire: #1b4fa8;
   --sapphire-deep: #123a7e;
-  --sapphire-soft: #dfe8f6;
-  --silver-300: #c9d5e6;
-  --silver-200: #dde5f0;
-  --silver-100: #edf1f7;
-  --ivory: #f8f4ea;
-  --ivory-2: #f1ebdc;
+  --sapphire-soft: #e4ecfd;
+  --cyan: #22b8e6; /* accent: highlights on dark only */
+  --cyan-soft: #dff5fd;
+  --cyan-ink: #0b6f95; /* cyan that passes contrast on light */
+  --silver-300: #cfd9ea;
+  --silver-200: #e1e8f3;
+  --silver-100: #eef3fa;
+  --ivory: #f5f8fd; /* legacy name: now the cool light page surface */
+  --ivory-2: #eaf0fa;
   --white: #ffffff;
   --ink: #121826;
   --ink-2: #2a3242;
@@ -143,11 +148,11 @@ ul, ol { padding-left: 1.2em; }
 .prose li { margin-bottom: 0.4em; }
 
 /* ───────────── Buttons ───────────── */
-.btn { --bg: var(--sapphire); --fg: #fff; --bd: var(--sapphire); display: inline-flex; align-items: center; justify-content: center; gap: var(--s-2); min-height: 48px; padding: 0 var(--s-5); border-radius: var(--radius-sm); border: 1.5px solid var(--bd); background: var(--bg); color: var(--fg); font: 600 var(--fs-base)/1.1 var(--font-body); text-decoration: none; white-space: nowrap; transition: background var(--dur), border-color var(--dur), color var(--dur), transform var(--dur) var(--ease); }
-.btn:hover { --bg: var(--sapphire-deep); --bd: var(--sapphire-deep); color: var(--fg); text-decoration: none; }
+.btn { --bg: var(--royal); --fg: #fff; --bd: var(--royal); display: inline-flex; align-items: center; justify-content: center; gap: var(--s-2); min-height: 48px; padding: 0 var(--s-5); border-radius: var(--radius-sm); border: 1.5px solid var(--bd); background: var(--bg); color: var(--fg); font: 600 var(--fs-base)/1.1 var(--font-body); text-decoration: none; white-space: nowrap; transition: background var(--dur), border-color var(--dur), color var(--dur), transform var(--dur) var(--ease); }
+.btn:hover { --bg: var(--royal-deep); --bd: var(--royal-deep); color: var(--fg); text-decoration: none; }
 .btn:active { transform: scale(0.98); }
-.btn--accent { --bg: var(--sapphire); --bd: var(--sapphire); --fg: #fff; }
-.btn--ghost { --bg: transparent; --fg: var(--sapphire); --bd: var(--silver-300); }
+.btn--accent { --bg: var(--royal); --bd: var(--royal); --fg: #fff; }
+.btn--ghost { --bg: transparent; --fg: var(--royal-deep); --bd: var(--silver-300); }
 .btn--ghost:hover { --bg: var(--sapphire-soft); --bd: var(--sapphire); --fg: var(--sapphire-deep); }
 .on-dark .btn--accent, .section--blue .btn--accent, .section--midnight .btn--accent { --bg: #fff; --bd: #fff; --fg: var(--midnight); }
 .on-dark .btn--accent:hover, .section--blue .btn--accent:hover, .section--midnight .btn--accent:hover { --bg: var(--sapphire-soft); --bd: var(--sapphire-soft); --fg: var(--midnight); }
@@ -163,14 +168,12 @@ ul, ol { padding-left: 1.2em; }
 .icon-btn { width: 44px; height: 44px; display: inline-grid; place-items: center; border-radius: var(--radius-sm); border: var(--hair); background: var(--white); color: var(--ink); }
 
 /* ───────────── Header ───────────── */
-.site-header { position: sticky; top: 0; z-index: 50; background: rgb(248 244 234 / 94%); backdrop-filter: saturate(140%) blur(8px); border-bottom: 1px solid transparent; transition: border-color var(--dur), box-shadow var(--dur); }
+.site-header { position: sticky; top: 0; z-index: 50; background: rgb(245 248 253 / 92%); backdrop-filter: saturate(140%) blur(8px); border-bottom: 1px solid transparent; transition: border-color var(--dur), box-shadow var(--dur); }
 .site-header[data-scrolled] { border-bottom-color: var(--silver-300); }
 .site-header__bar { display: flex; align-items: center; gap: var(--s-5); min-height: var(--header-h); transition: min-height var(--dur) var(--ease); }
 .site-header[data-scrolled] .site-header__bar { min-height: 64px; }
 .brand { display: inline-flex; align-items: center; gap: var(--s-3); text-decoration: none; color: var(--midnight); flex: none; }
 .brand:hover { color: var(--midnight); text-decoration: none; }
-.brand__logo { height: 34px; width: auto; }
-.site-header[data-scrolled] .brand__logo { height: 30px; }
 .becci-symbol { height: auto; }
 .brand__mark { width: 52px; height: auto; }
 .brand__word { font: 700 1.625rem/1 var(--font-display); letter-spacing: 0.04em; }

@@ -1,8 +1,5 @@
 ---
-// The official BECCI symbol: two facing Cs (Community and Commerce).
-// Never recoloured or redrawn (brand rules): navy on light grounds, white on dark.
+// Brand emblem is excluded until BECCI supplies final assets (client decision, Nov 2026).
+// Kept as a no-op so call sites stay intact; renders nothing.
 interface Props { class?: string; tone?: 'color' | 'light' | 'mono'; title?: string }
-const { class: cls = '', tone = 'color', title } = Astro.props;
-const src = tone === 'light' ? '/brand/becci-symbol-white.svg' : '/brand/becci-symbol-navy.svg';
 ---
-<img class:list={['becci-symbol', cls]} src={src} alt={title ?? ''} aria-hidden={title ? undefined : 'true'} width="210" height="106" loading="lazy" decoding="async" />

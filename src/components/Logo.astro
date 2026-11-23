@@ -1,18 +1,18 @@
 ---
-import { LOGO } from '../data/media';
-import { hasPublic } from '../lib/asset';
-import InfinityMark from './InfinityMark.astro';
+// Logo assets are excluded until BECCI supplies final artwork (client decision, Nov 2026).
+// Plain-text name only: no mark, no substitute graphic.
 interface Props { tone?: 'dark' | 'light'; class?: string }
 const { tone = 'dark', class: cls = '' } = Astro.props;
-const lightFile = LOGO.full.replace('.svg', '-light.svg');
-const file = tone === 'light' && hasPublic(lightFile) ? lightFile : hasPublic(LOGO.full) ? LOGO.full : null;
 ---
-{file ? (
-  <img class:list={['brand__logo', cls]} src={file} alt="BECCI — Bahujan Entrepreneurs Chamber for Commerce & Industry" width="140" height="34" />
-) : (
-  <span class:list={['brand__fallback', cls]}>
-    <InfinityMark class="brand__mark" tone={tone === 'light' ? 'light' : 'color'} />
-    <span class="brand__word">BECCI</span>
-  </span>
-)}
-<style is:global>.brand__fallback { display: inline-flex; align-items: center; gap: var(--s-3); }</style>
+<span class:list={['brand__text', `brand__text--${tone}`, cls]}>
+  <span class="brand__word">BECCI</span>
+  <span class="brand__full">Bahujan Entrepreneurs Chamber<br />for Commerce &amp; Industry</span>
+</span>
+<style is:global>
+  .brand__text { display: inline-flex; align-items: center; gap: var(--s-3); }
+  .brand__text .brand__word { font: 700 1.5rem/1 var(--font-display); letter-spacing: 0.02em; color: var(--midnight); }
+  .brand__full { font: 500 0.6875rem/1.25 var(--font-body); color: var(--slate); padding-left: var(--s-3); border-left: 1px solid var(--silver-300); }
+  .brand__text--light .brand__word { color: #fff; }
+  .brand__text--light .brand__full { color: var(--on-dark-2); border-left-color: rgb(255 255 255 / 20%); }
+  @media (max-width: 560px) { .brand__full { display: none; } }
+</style>
