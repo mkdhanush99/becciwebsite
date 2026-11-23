@@ -28,3 +28,10 @@ Hostinger connector was unreachable from this session (mcp.hostinger.com blocked
 
 ## Next task
 Add approved photographs and contact channel (phone/WhatsApp/email or form endpoint `PUBLIC_FORM_ENDPOINT`), then expand verified opportunity records (Milestone 3).
+
+
+## Update — Premium Blue Fusion and motion (Nov 2026)
+- Logo, emblem and mascot are removed site-wide until BECCI supplies final artwork.
+- The homepage was rebuilt around a kinetic hero, a register card that rises on scroll, a statement that lights up as you scroll, the pinned B-E-C-C-I story drum and a closing panel that grows into place.
+- The same motion language now runs on every page through PageHero, PageHead, Kinetic, Motion and global CSS. See DESIGN.md v3.
+- Checks: build, astro check (0 errors), npm test 15/15, browser QA 33/33 (story drum and reduced-motion checks added).

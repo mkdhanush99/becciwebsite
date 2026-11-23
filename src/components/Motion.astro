@@ -1,0 +1,50 @@
+---
+// Site-wide motion runtime (see DESIGN.md "Motion"). One passive scroll loop, rAF-throttled.
+// - Reveals: explicit [data-reveal] / [data-reveal-group], plus auto-tagged content blocks.
+// - [data-scrub]: words (.sw) light up as the block scrolls through the viewport.
+// - [data-grow]: panels scale up and tighten their corners as they enter.
+// - [data-rise]: element rises and scales into place.
+// Nothing runs when the visitor prefers reduced motion; CSS then shows everything statically.
+---
+<script>
+  if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+    const main = document.getElementById('main');
+    // Auto-tag reading/marketing content. Task surfaces (finder, opportunity detail) are left still.
+    if (main) {
+      const skip = (el: Element) => el.closest('[data-finder], .finder-page, .detail, [data-story], .h-hero, [data-reveal], [data-reveal-group]');
+      main.querySelectorAll('.section > .wrap > *, .section > .wrap.prose > *').forEach((el) => {
+        if (skip(el)) return;
+        if (el.matches('.grid, .card-list, ol, ul') && el.children.length > 1) el.setAttribute('data-reveal-group', '');
+        else el.setAttribute('data-reveal', '');
+      });
+      main.querySelectorAll('.section .grid').forEach((g) => { if (!skip(g.parentElement!) && !g.hasAttribute('data-reveal-group')) { g.removeAttribute('data-reveal'); g.setAttribute('data-reveal-group', ''); } });
+    }
+    document.querySelectorAll<HTMLElement>('[data-reveal-group]').forEach((g) => Array.from(g.children).forEach((c, i) => (c as HTMLElement).style.setProperty('--k', String(Math.min(i, 8)))));
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { const t = e.target; t.classList.add('is-in'); io.unobserve(t); setTimeout(() => { t.removeAttribute('data-reveal'); t.removeAttribute('data-reveal-group'); t.classList.remove('is-in'); }, 1800); } }), { rootMargin: '0px 0px -10% 0px' });
+    document.querySelectorAll('[data-reveal], [data-reveal-group]').forEach((el) => io.observe(el));
+
+    const clamp = (n: number) => Math.min(1, Math.max(0, n));
+    const rises = Array.from(document.querySelectorAll<HTMLElement>('[data-rise]'));
+    const grows = Array.from(document.querySelectorAll<HTMLElement>('[data-grow]'));
+    const scrubs = Array.from(document.querySelectorAll<HTMLElement>('[data-scrub]')).map((el) => ({ el, words: Array.from(el.querySelectorAll<HTMLElement>('.sw')), lit: -1 }));
+    if (rises.length || grows.length || scrubs.length) {
+      let queued = false;
+      const frame = () => {
+        queued = false;
+        const vh = window.innerHeight;
+        rises.forEach((el) => { const r = el.getBoundingClientRect(); el.style.setProperty('--p', clamp((vh - r.top) / (vh * 0.55)).toFixed(3)); });
+        grows.forEach((el) => { const r = el.getBoundingClientRect(); el.style.setProperty('--p', clamp((vh - r.top) / (vh * 0.7)).toFixed(3)); });
+        scrubs.forEach((s) => {
+          const r = s.el.getBoundingClientRect();
+          if (r.bottom < -vh || r.top > vh * 2) return;
+          const n = Math.round(clamp((vh * 0.85 - r.top) / (r.height + vh * 0.35)) * s.words.length);
+          if (n !== s.lit) { s.lit = n; s.words.forEach((w, i) => w.toggleAttribute('data-on', i < n)); }
+        });
+      };
+      const onScroll = () => { if (!queued) { queued = true; requestAnimationFrame(frame); } };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll, { passive: true });
+      frame();
+    }
+  }
+</script>

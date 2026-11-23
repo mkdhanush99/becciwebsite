@@ -1,0 +1,8 @@
+---
+// Kinetic text: each word rises out of a mask in sequence. The full sentence is kept for
+// assistive tech; the animated words are aria-hidden. Static when motion is reduced.
+interface Props { text: string; delay?: number }
+const { text, delay = 0 } = Astro.props;
+const words = text.split(' ');
+---
+<span class="visually-hidden">{text}</span><span class="kin" aria-hidden="true">{words.map((w, i) => <><span class="kw" style={`--i:${i + delay}`}><span>{w}</span></span>{i < words.length - 1 ? ' ' : ''}</>)}</span>

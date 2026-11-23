@@ -5,6 +5,7 @@ import Footer from '../components/Footer.astro';
 interface Props { title: string; description?: string }
 const { title, description = 'BECCI — Bahujan Entrepreneurs Chamber for Commerce & Industry. Where Community Meets Commerce.' } = Astro.props;
 const fullTitle = title === 'Home' ? 'BECCI — Where Community Meets Commerce' : `${title} · BECCI`;
+import Motion from '../components/Motion.astro';
 ---
 <!doctype html>
 <html lang="en">
@@ -32,5 +33,6 @@ const fullTitle = title === 'Home' ? 'BECCI — Where Community Meets Commerce' 
     <Header />
     <main id="main" tabindex="-1"><slot /></main>
     <Footer />
+    <Motion />
   </body>
 </html>

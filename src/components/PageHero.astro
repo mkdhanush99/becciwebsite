@@ -3,21 +3,21 @@
 //  editorial (default) — ivory, large type, hairline; for reading and directory pages.
 //  feature — midnight band; for pages that ask the visitor to act (membership, partnerships, wings).
 // No kicker above the heading (design rule); `note` shows a status such as "Coming later".
-import InfinityMark from './InfinityMark.astro';
+import Kinetic from './Kinetic.astro';
 interface Props { title: string; lede?: string; eyebrow?: string; note?: string; variant?: 'editorial' | 'feature'; crumbs?: { label: string; href?: string }[] }
 const { title, lede, note, variant = 'editorial', crumbs = [] } = Astro.props;
 const feature = variant === 'feature';
 ---
-<header class:list={['page-hero', `page-hero--${variant}`, feature && 'on-dark']} data-enter>
-  <InfinityMark class="page-hero__mark" tone={feature ? 'light' : 'color'} />
-  <div class="wrap" style="position:relative">
+<header class:list={['page-hero', `page-hero--${variant}`, feature && 'on-dark']}>
+  <div class="lux" aria-hidden="true"><span class="lux__a"></span><span class="lux__b"></span></div>
+  <div class="wrap page-hero__inner">
     {crumbs.length > 0 && (
       <nav class="crumbs" aria-label="Breadcrumb">
         <a href="/">Home</a>{crumbs.map((c) => <><span aria-hidden="true"> / </span>{c.href ? <a href={c.href}>{c.label}</a> : <span aria-current="page">{c.label}</span>}</>)}
       </nav>
     )}
-    <h1>{title}{note && <span class="page-hero__note">{note}</span>}</h1>
-    {lede && <p class="lede">{lede}</p>}
-    <slot />
+    <h1 class="kinetic-title"><Kinetic text={title} />{note && <span class="page-hero__note">{note}</span>}</h1>
+    {lede && <p class="lede m-in" style={`--i:${title.split(' ').length + 1}`}>{lede}</p>}
+    <div class="m-in" style={`--i:${title.split(' ').length + 2}`}><slot /></div>
   </div>
 </header>

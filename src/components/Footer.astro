@@ -5,7 +5,7 @@ import Logo from './Logo.astro';
 <footer class="site-footer on-dark">
   <div class="wrap">
     <div class="footer-top">
-      <p class="footer-promise">Building Businesses <span aria-hidden="true">•</span> Building Bharat</p>
+      <p class="footer-promise" data-scrub>{'Building Businesses • Building Bharat'.split(' ').map((w) => <><span class="sw">{w}</span>{' '}</>)}</p>
       <div class="footer-cta">
         <a class="btn btn--accent" href="/membership#join">Join as a Member</a>
         <a class="btn btn--ghost" href="/partnerships">Partner with BECCI</a>

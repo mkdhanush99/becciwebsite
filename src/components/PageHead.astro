@@ -1,9 +1,11 @@
 ---
+import Kinetic from './Kinetic.astro';
 // Compact page header for task pages (finder, results, detail): keeps the work above the fold.
 interface Props { title: string; lede?: string; crumbs?: { label: string; href?: string }[]; meta?: string }
 const { title, lede, crumbs = [], meta } = Astro.props;
 ---
 <header class="page-head">
+  <div class="lux lux--soft" aria-hidden="true"><span class="lux__a"></span></div>
   <div class="wrap page-head__grid">
     <div>
       {crumbs.length > 0 && (
@@ -11,14 +13,14 @@ const { title, lede, crumbs = [], meta } = Astro.props;
           <a href="/">Home</a>{crumbs.map((c) => <><span aria-hidden="true"> / </span>{c.href ? <a href={c.href}>{c.label}</a> : <span aria-current="page">{c.label}</span>}</>)}
         </nav>
       )}
-      <h1>{title}</h1>
-      {lede && <p>{lede}</p>}
+      <h1 class="kinetic-title"><Kinetic text={title} /></h1>
+      {lede && <p class="m-in" style={`--i:${title.split(' ').length + 1}`}>{lede}</p>}
     </div>
-    {meta && <p class="page-head__meta">{meta}</p>}
+    {meta && <p class="page-head__meta m-in" style={`--i:${title.split(' ').length + 2}`}>{meta}</p>}
     <slot />
   </div>
 </header>
 <style is:global>
   .page-head__grid { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: var(--s-3) var(--s-6); }
-  .page-head__meta { font-size: var(--fs-sm); color: var(--slate); max-width: 34ch; margin: 0; padding-left: var(--s-4); border-left: 2px solid var(--sapphire); }
+  .page-head__meta { font-size: var(--fs-sm); color: var(--slate); max-width: 34ch; margin: 0; padding-left: var(--s-4); border-left: 2px solid var(--cyan); }
 </style>

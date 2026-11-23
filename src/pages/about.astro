@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import BrandMedia from '../components/BrandMedia.astro';
 import InfinityMark from '../components/InfinityMark.astro';
+import Kinetic from '../components/Kinetic.astro';
 import { audiences, site } from '../data/site';
 import { PHOTOS } from '../data/media';
 import { hasPublic } from '../lib/asset';
@@ -18,12 +19,13 @@ const does = [
 ];
 ---
 <Base title="About BECCI" description="Who BECCI is, why it exists, whom it serves and how it works.">
-  <header class="a-cover" data-enter>
+  <header class="a-cover page-hero--editorial">
+    <div class="lux" aria-hidden="true"><span class="lux__a"></span><span class="lux__b"></span></div>
     <div class="wrap a-cover__grid">
       <div class="a-cover__copy">
         <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> / <span aria-current="page">About</span></nav>
-        <h1>A chamber built for Bahujan enterprise</h1>
-        <p class="lede">The Bahujan Entrepreneurs Chamber for Commerce &amp; Industry is an OBC-exclusive national Chamber of Commerce. It strengthens entrepreneurship, facilitates business connections, promotes enterprise development and creates economic opportunities for Bahujan communities.</p>
+        <h1 class="kinetic-title"><Kinetic text="A chamber built for Bahujan enterprise" /></h1>
+        <p class="lede m-in" style="--i:7">The Bahujan Entrepreneurs Chamber for Commerce &amp; Industry is an OBC-exclusive national Chamber of Commerce. It strengthens entrepreneurship, facilitates business connections, promotes enterprise development and creates economic opportunities for Bahujan communities.</p>
       </div>
       <BrandMedia class="a-cover__media" src={PHOTOS.aboutCover.src} alt={PHOTOS.aboutCover.alt} ratio="5 / 4" eager />
     </div>
@@ -127,9 +129,9 @@ const does = [
 </Base>
 
 <style>
-  .a-cover { background: var(--ivory); padding-top: clamp(var(--s-6), 5vw, var(--s-8)); border-bottom: var(--hair); }
+  .a-cover { position: relative; isolation: isolate; overflow: hidden; background: var(--ivory); padding-top: clamp(72px, 8vw, 120px); border-bottom: var(--hair); }
   .a-cover__grid { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: clamp(var(--s-6), 5vw, var(--s-8)); align-items: end; }
-  .a-cover h1 { font-size: var(--fs-4xl); line-height: 1.02; letter-spacing: -0.025em; max-width: 12ch; }
+  .a-cover h1 { font-size: clamp(2.6rem, 1rem + 5vw, 5.75rem); font-weight: 600; line-height: 0.98; letter-spacing: -0.04em; max-width: 12ch; }
   .a-cover .lede { margin-bottom: var(--s-7); }
   .a-jump { display: flex; gap: var(--s-5); overflow-x: auto; padding-block: var(--s-4); margin-top: var(--s-6); border-top: var(--hair); scrollbar-width: none; }
   .a-jump::-webkit-scrollbar { display: none; }

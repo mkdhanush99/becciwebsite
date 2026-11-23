@@ -53,3 +53,19 @@
 
 ## Known visual gaps
 The leadership, advisor, testimonial, event, news and story pages use dashed "Awaiting approved content" blocks until BECCI supplies content. Swap in the logo and font when they arrive.
+
+## v3 — Premium Blue Fusion and motion language (Nov 2026)
+
+**Brand assets:** the logo, emblem and mascot are excluded until BECCI supplies final artwork. `Logo.astro` renders the plain-text name; `InfinityMark.astro` renders nothing.
+
+**Palette:** royal `#2152E8` (primary action), sapphire `#1B4FA8`, electric `#3D7BFF` (light and glow), cyan `#22B8E6` (accent on dark; `#0B6F95` on light), midnight `#061638` / `#040D26`, cool light surface `#F5F8FD`. Lit text on dark is `#8FDCF7`. No gradient text.
+
+**Motion language** (runtime `src/components/Motion.astro`, styles in `global.css` under "Motion language"):
+- *Kinetic titles* (`Kinetic.astro`): words rise out of a mask in sequence on load (900ms, 70ms stagger). Used by PageHero, PageHead, the About cover and the homepage hero.
+- *Luminous fields* (`.lux`): blurred royal, electric and cyan light behind banners, slowly floating. Feature banners are dark; editorial banners are light with a soft glow.
+- *Curtain*: the first block after a dark banner overlaps it with a 32px rounded top edge.
+- *Reveals*: content blocks in `.section > .wrap` rise in when scrolled to, with list and grid items staggered. Task surfaces (finder, opportunity detail) stay still.
+- *Scrub* (`[data-scrub]`): oversized words light up as they pass (homepage statement, footer promise).
+- *Grow* (`[data-grow]`), *Rise* (`[data-rise]`): panels scale into place as they enter.
+- *Story drum* (`ScrollStory.astro`): the B-E-C-C-I chapters on a pinned scroll on the homepage.
+- With reduced motion turned on, or without JS, nothing animates or pins and all content is visible.
