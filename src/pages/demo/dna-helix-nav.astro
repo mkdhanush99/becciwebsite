@@ -1,0 +1,82 @@
+---
+// Client concept preview: BECCI DNA Helix Navigation (src/components/prototype/DnaHelixNav.astro).
+// Isolated preview route. Not linked from the site, not used by the production header, excluded from search engines.
+import '@/styles/global.css';
+import DnaHelixNav from '@/components/prototype/DnaHelixNav.astro';
+const states = [
+  ['', 'None'], ['about', 'About'], ['leadership', 'Leadership'], ['womens-wing', 'Women’s Wing'], ['youth', 'Youth'],
+  ['schemes', 'Schemes'], ['tenders', 'Tenders'], ['loans', 'Loans'], ['business-opportunities', 'Business Opportunities'],
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <script is:inline>document.documentElement.classList.add("js")</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>DNA Helix Navigation · BECCI concept</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body class="dna-demo">
+    <DnaHelixNav readQuery />
+
+    <main class="dna-notes">
+      <div class="dna-notes__wrap">
+        <p class="dna-notes__kicker">Design concept · Navigation header</p>
+        <h1>Two strands. One chamber.</h1>
+        <p class="dna-notes__lede">The navigation is drawn as a double helix from the client’s sketch. Community runs along the upper strand, Commerce along the lower, and the two cross between each pair of destinations. At the centre, the strands meet the official BECCI symbol: the two Cs that form the infinity.</p>
+
+        <dl class="dna-notes__grid">
+          <div><dt><span class="sw sw--ivory"></span>Upper strand · Community</dt><dd>About, Leadership, Women’s Wing, Youth. Each sits in its own lobe, under a node on the strand.</dd></div>
+          <div><dt><span class="sw sw--gold"></span>Lower strand · Commerce</dt><dd>Schemes, Tenders, Loans, Business Opportunities, paired with the community item above them, as in the sketch.</dd></div>
+          <div><dt><span class="sw sw--mark"></span>Centre crossover</dt><dd>The strands converge into the official two-C symbol (used as supplied, not redrawn). It links home.</dd></div>
+          <div><dt><span class="sw sw--line"></span>Motion</dt><dd>One slow point of light travels each strand and passes behind the symbol; base pairs brighten as it passes. Off when reduced motion is set.</dd></div>
+        </dl>
+
+        <div class="dna-notes__states">
+          <p>Preview the active state</p>
+          <div role="group" aria-label="Active destination">
+            {states.map(([k, l]) => <button type="button" data-state={k}>{l}</button>)}
+          </div>
+        </div>
+
+        <p class="dna-notes__fine">Keyboard: Tab moves through Community, then Commerce. ← → move along a strand; ↑ ↓ jump to the paired destination. Below 1080px the helix turns vertical and opens from the Menu button.</p>
+      </div>
+    </main>
+
+    <style is:global>
+      body.dna-demo { background: var(--ivory); }
+      .dna-notes { padding: 72px 0 96px; }
+      .dna-notes__wrap { width: min(100% - 2 * var(--gutter), 1040px); margin-inline: auto; }
+      .dna-notes__kicker { font: 600 0.75rem/1 var(--font-body); letter-spacing: 0.22em; text-transform: uppercase; color: #A9874C; margin-bottom: 20px; }
+      .dna-notes h1 { font-size: clamp(2rem, 1.4rem + 2.4vw, 3rem); color: #081A30; margin-bottom: 20px; }
+      .dna-notes__lede { font-size: 1.125rem; color: var(--ink-2); max-width: 62ch; line-height: 1.6; }
+      .dna-notes__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 32px; margin: 48px 0; padding-top: 32px; border-top: 1px solid rgb(8 26 48 / 12%); }
+      .dna-notes__grid dt { display: flex; align-items: center; gap: 10px; font-weight: 700; color: #081A30; margin-bottom: 8px; font-size: 0.9375rem; }
+      .dna-notes__grid dd { margin: 0; color: var(--slate); font-size: 0.9375rem; line-height: 1.55; }
+      .sw { width: 22px; height: 2px; border-radius: 2px; flex: none; }
+      .sw--ivory { background: #081A30; box-shadow: 0 0 0 1px #081A30; }
+      .sw--gold { background: #C6A15B; }
+      .sw--mark { width: 10px; height: 10px; border-radius: 50%; border: 2px solid #081A30; }
+      .sw--line { background: linear-gradient(90deg, transparent, #C6A15B); }
+      .dna-notes__states p { font: 600 0.75rem/1 var(--font-body); letter-spacing: 0.16em; text-transform: uppercase; color: var(--slate); margin-bottom: 12px; }
+      .dna-notes__states div { display: flex; flex-wrap: wrap; gap: 8px; }
+      .dna-notes__states button { font: 600 0.875rem/1 var(--font-body); color: #081A30; background: #fff; border: 1px solid rgb(8 26 48 / 16%); border-radius: 999px; padding: 10px 16px; min-height: 40px; cursor: pointer; transition: background 200ms, border-color 200ms, color 200ms; }
+      .dna-notes__states button:hover { border-color: #081A30; }
+      .dna-notes__states button[aria-pressed='true'] { background: #081A30; border-color: #081A30; color: #F7F5EF; }
+      .dna-notes__fine { margin-top: 32px; font-size: 0.875rem; color: var(--slate); }
+    </style>
+    <script>
+      const root = document.querySelector<HTMLElement & { dnaSetActive?: (k: string | null) => void }>('[data-dna]')!;
+      const buttons = [...document.querySelectorAll<HTMLButtonElement>('[data-state]')];
+      const current = new URLSearchParams(location.search).get('active') ?? '';
+      const press = (k: string) => buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.state === k)));
+      press(current);
+      buttons.forEach((b) => b.addEventListener('click', () => {
+        const k = b.dataset.state!; root.dnaSetActive?.(k || null); press(k);
+        const u = new URL(location.href); k ? u.searchParams.set('active', k) : u.searchParams.delete('active'); history.replaceState(null, '', u);
+      }));
+    </script>
+  </body>
+</html>

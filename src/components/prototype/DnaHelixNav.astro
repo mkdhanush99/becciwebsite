@@ -1,0 +1,506 @@
+---
+// PROTOTYPE — BECCI DNA Helix Navigation (client concept, Nov 2026).
+// Isolated: not used by Header.astro or any production page. Preview at /demo/dna-helix-nav.
+// Based on the client's hand-drawn sketch: two strands crossing between four pairs of destinations,
+// upper strand = Community, lower strand = Commerce, the official two-C symbol at the centre crossover.
+// The symbol is the official file (public/brand/becci-symbol-white.svg), used as supplied: never redrawn.
+import Logo from '../Logo.astro';
+import Icon from '../Icon.astro';
+
+interface Item { key: string; label: string; href: string }
+interface Props { active?: string; readQuery?: boolean }
+const { active = '', readQuery = false } = Astro.props;
+
+const community: Item[] = [
+  { key: 'about', label: 'About', href: '/about' },
+  { key: 'leadership', label: 'Leadership', href: '/leadership' },
+  { key: 'womens-wing', label: 'Women’s Wing', href: '/wings/women' },
+  { key: 'youth', label: 'Youth', href: '/wings/youth' },
+];
+const commerce: Item[] = [
+  { key: 'schemes', label: 'Schemes', href: '/schemes' },
+  { key: 'tenders', label: 'Tenders', href: '/opportunities/tenders' },
+  { key: 'loans', label: 'Loans', href: '/opportunities/finance' },
+  { key: 'business-opportunities', label: 'Business Opportunities', href: '/franchise' },
+];
+
+/* ───────── Geometry ─────────
+   Work in (u, v): u runs along the helix axis, v is the distance from the axis.
+   A "cell" is the lens between two crossings; each strand bulges to one side and swaps at every crossing.
+   The half-lobe is a flat-topped curve (the sketch's hexagon, softened): steep at the crossing, level at the node. */
+const SYMBOL_RATIO = 207 / 104.5; // official symbol viewBox
+const f = (n: number) => Math.round(n * 100) / 100;
+
+type Seg = { ua: number; ub: number };
+function lobe(ua: number, ub: number, A: number) {
+  const c = ub - ua;
+  return [
+    [ua, 0], [ua + 0.10 * c, 0.62 * A], [ua + 0.17 * c, A], [ua + 0.30 * c, A],
+    [ub - 0.30 * c, A], [ub - 0.17 * c, A], [ub - 0.10 * c, 0.62 * A], [ub, 0],
+  ] as [number, number][];
+}
+// v on the lobe at a fraction t of the cell (sampled from the béziers)
+function lobeV(c: number, A: number, t: number) {
+  const P = lobe(0, c, A); const u = t * c;
+  const bez = (p0: number[], p1: number[], p2: number[], p3: number[], s: number) =>
+    [0, 1].map((k) => (1 - s) ** 3 * p0[k] + 3 * (1 - s) ** 2 * s * p1[k] + 3 * (1 - s) * s * s * p2[k] + s ** 3 * p3[k]);
+  const segs = [[P[0], P[1], P[2], P[3]], [P[4], P[5], P[6], P[7]]];
+  if (u >= P[3][0] && u <= P[4][0]) return A;
+  const seg = u < P[3][0] ? segs[0] : segs[1];
+  let best = 0, bd = Infinity;
+  for (let i = 0; i <= 400; i++) { const [x, y] = bez(seg[0], seg[1], seg[2], seg[3], i / 400); const d = Math.abs(x - u); if (d < bd) { bd = d; best = y; } }
+  return best;
+}
+
+interface Geo {
+  map: (u: number, v: number) => [number, number];
+  cells: Seg[]; A: number; gapA: number; gapB: number; tail: number; uStart: number; uEnd: number;
+}
+// side: +1 / -1 for each cell, per strand
+function strandPath(g: Geo, sides: number[], opts: { tails?: boolean; through?: boolean; from?: number; to?: number } = {}) {
+  const { map, cells, A } = g;
+  const P = (u: number, v: number) => map(u, v).map(f).join(' ');
+  const from = opts.from ?? 0, to = opts.to ?? cells.length - 1;
+  let d = '';
+  cells.forEach((cell, i) => {
+    if (i < from || i > to) return;
+    const pts = lobe(cell.ua, cell.ub, A).map(([u, v]) => [u, v * sides[i]] as [number, number]);
+    if (i === from) {
+      if (opts.tails && i === 0) {
+        const c = cell.ub - cell.ua; const dx = 0.10 * c, dy = 0.62 * A; const k = g.tail / Math.hypot(dx, dy);
+        d += `M${P(cell.ua - dx * k, -dy * k * sides[0])} L${P(pts[0][0], pts[0][1])} `;
+      } else d += `M${P(pts[0][0], pts[0][1])} `;
+    } else if (opts.through) d += `L${P(pts[0][0], pts[0][1])} `;
+    else if (cells[i - 1].ub !== cell.ua) d += `M${P(pts[0][0], pts[0][1])} `;
+    d += `C${P(...pts[1])} ${P(...pts[2])} ${P(...pts[3])} L${P(...pts[4])} C${P(...pts[5])} ${P(...pts[6])} ${P(...pts[7])} `;
+    if (opts.tails && i === cells.length - 1 && i === to) {
+      const c = cell.ub - cell.ua; const dx = 0.10 * c, dy = 0.62 * A; const k = g.tail / Math.hypot(dx, dy);
+      d += `L${P(cell.ub + dx * k, dy * k * sides[i])}`;
+    }
+  });
+  return d.trim();
+}
+function envelope(g: Geo, i: number, side: number, closed = false) {
+  const { map, cells, A } = g; const P = (u: number, v: number) => map(u, v).map(f).join(' ');
+  const p = lobe(cells[i].ua, cells[i].ub, A).map(([u, v]) => [u, v * side] as [number, number]);
+  return `M${P(...p[0])} C${P(...p[1])} ${P(...p[2])} ${P(...p[3])} L${P(...p[4])} C${P(...p[5])} ${P(...p[6])} ${P(...p[7])}${closed ? 'Z' : ''}`;
+}
+const sidesA = [1, -1, 1, -1]; // strand A: up, down, (through the symbol) up, down
+const sidesB = sidesA.map((s) => -s);
+
+/* Desktop: horizontal helix */
+const W = 1280, H = 208, cy = 104, A = 62;
+const EH = 74, EW = EH * SYMBOL_RATIO, CX = W / 2, KISS = 16;
+const x0 = 34, x4 = W - 34, x2L = CX - EW / 2 - KISS, x2R = CX + EW / 2 + KISS;
+const c = (x2L - x0) / 2;
+const H_geo: Geo = {
+  map: (u, v) => [u, cy - v], A, tail: 30, gapA: x2L, gapB: x2R, uStart: x0, uEnd: x4,
+  cells: [{ ua: x0, ub: x0 + c }, { ua: x0 + c, ub: x2L }, { ua: x2R, ub: x2R + c }, { ua: x2R + c, ub: x4 }],
+};
+const crossings = [x0 + c, x2R + c]; // inner crossings (the centre one is the symbol)
+const strandA = strandPath(H_geo, sidesA, { tails: true });
+const strandB = strandPath(H_geo, sidesB, { tails: true });
+const lightA = strandPath(H_geo, sidesA, { tails: true, through: true });
+const lightB = strandPath(H_geo, sidesB, { tails: true, through: true });
+// Base-pair rungs near each crossing (kept clear of the labels)
+const rungs = H_geo.cells.flatMap((cell) => [0.04, 0.08, 0.12, 0.16, 0.84, 0.88, 0.92, 0.96].map((t) => {
+  const v = lobeV(cell.ub - cell.ua, A, t); const x = cell.ua + t * (cell.ub - cell.ua);
+  return { x: f(x), y1: f(cy - v + 3), y2: f(cy + v - 3), d: f(x / W) };
+}));
+const tailDot = (side: number, end: 'start' | 'end') => {
+  const dx = 0.10 * c, dy = 0.62 * A, k = 30 / Math.hypot(dx, dy);
+  return end === 'start' ? [f(x0 - dx * k), f(cy + dy * k * side)] : [f(x4 + dx * k), f(cy + dy * k * side)];
+};
+const dots = [tailDot(1, 'start'), tailDot(-1, 'start'), tailDot(1, 'end'), tailDot(-1, 'end')];
+
+const items = [
+  ...community.map((it, i) => ({ ...it, row: 'community' as const, i, side: 1 })),
+  ...commerce.map((it, i) => ({ ...it, row: 'commerce' as const, i, side: -1 })),
+].map((it) => {
+  const cell = H_geo.cells[it.i]; const cw = cell.ub - cell.ua; const mid = (cell.ua + cell.ub) / 2;
+  return {
+    ...it,
+    hl: envelope(H_geo, it.i, it.side), fill: envelope(H_geo, it.i, it.side, true),
+    node: [f(mid), f(cy - A * it.side)],
+    box: { left: ((cell.ua + 0.13 * cw) / W) * 100, width: ((0.74 * cw) / W) * 100,
+      top: ((it.side > 0 ? cy - A + 5 : cy + 5) / H) * 100, height: ((A - 10) / H) * 100 },
+  };
+});
+const pct = (n: number) => `${f(n)}%`;
+const emblemBox = { left: pct(((CX - EW / 2) / W) * 100), width: pct((EW / W) * 100), top: pct(((cy - EH / 2) / H) * 100), height: pct((EH / H) * 100) };
+
+/* Compact: vertical helix (below 1080px) */
+const VW = 360, vA = 15, vc = 62, vEH = 40, vEW = vEH * SYMBOL_RATIO, vKiss = 12, vx = VW / 2, vy0 = 22;
+const vy2T = vy0 + 2 * vc, vy2B = vy2T + vEH + 2 * vKiss, vy4 = vy2B + 2 * vc, VH = vy4 + 22;
+const V_geo: Geo = {
+  map: (u, v) => [vx - v, u], A: vA, tail: 14, gapA: vy2T, gapB: vy2B, uStart: vy0, uEnd: vy4,
+  cells: [{ ua: vy0, ub: vy0 + vc }, { ua: vy0 + vc, ub: vy2T }, { ua: vy2B, ub: vy2B + vc }, { ua: vy2B + vc, ub: vy4 }],
+};
+const vStrandA = strandPath(V_geo, sidesA, { tails: true });
+const vStrandB = strandPath(V_geo, sidesB, { tails: true });
+const vItems = items.map((it) => {
+  const cell = V_geo.cells[it.i]; const mid = (cell.ua + cell.ub) / 2;
+  return { ...it, vhl: envelope(V_geo, it.i, it.side), vnode: [f(vx - vA * it.side), f(mid)], vtop: pct(((cell.ua + 4) / VH) * 100), vh: pct(((vc - 8) / VH) * 100) };
+});
+const vEmblem = { left: pct(((vx - vEW / 2) / VW) * 100), width: pct((vEW / VW) * 100), top: pct(((vy2T + vKiss) / VH) * 100), height: pct((vEH / VH) * 100) };
+---
+<header class="dna" data-dna data-active={active} data-read-query={readQuery ? '' : undefined}>
+  <div class="dna__bar dna__wrap">
+    <a class="dna__brand" href="/" aria-label="BECCI home"><Logo tone="light" /></a>
+    <div class="dna__actions">
+      <a class="dna__icon" href="/opportunities" aria-label="Search BECCI"><Icon name="search" size={18} /></a>
+      <a class="dna__login" href="/membership#member-login">Member login</a>
+      <a class="dna__join" href="/membership#join">Join BECCI</a>
+      <button class="dna__menu" type="button" aria-expanded="false" aria-controls="dna-compact" data-dna-menu>
+        <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6h14M3 10h14M3 14h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        Menu
+      </button>
+    </div>
+  </div>
+
+  <!-- Desktop helix -->
+  <nav class="dna__helix dna__wrap" aria-label="Main">
+    <div class="dna__stage" style={`aspect-ratio:${W}/${H}`}>
+      <svg class="dna__svg" viewBox={`0 0 ${W} ${H}`} aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="dna-tone" gradientUnits="userSpaceOnUse" x1="0" y1={cy - A} x2="0" y2={cy + A}>
+            <stop offset="0" stop-color="#F7F5EF" stop-opacity="0.92" />
+            <stop offset="0.44" stop-color="#F7F5EF" stop-opacity="0.62" />
+            <stop offset="0.56" stop-color="#C6A15B" stop-opacity="0.66" />
+            <stop offset="1" stop-color="#C6A15B" stop-opacity="0.95" />
+          </linearGradient>
+          <linearGradient id="dna-fade" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2={W} y2="0">
+            <stop offset="0" stop-color="#fff" stop-opacity="0" />
+            <stop offset={f(x0 / W)} stop-color="#fff" stop-opacity="1" />
+            <stop offset={f(x4 / W)} stop-color="#fff" stop-opacity="1" />
+            <stop offset="1" stop-color="#fff" stop-opacity="0" />
+          </linearGradient>
+          <mask id="dna-ends" maskUnits="userSpaceOnUse" x="0" y="0" width={W} height={H}>
+            <rect width={W} height={H} fill="url(#dna-fade)" />
+          </mask>
+          <mask id="dna-light-mask" maskUnits="userSpaceOnUse" x="0" y="0" width={W} height={H}>
+            <rect width={W} height={H} fill="url(#dna-fade)" />
+            <rect x={x2L + 3} y="0" width={x2R - x2L - 6} height={H} fill="#000" />
+          </mask>
+          <radialGradient id="dna-halo" cx="50%" cy="50%" r="50%">
+            <stop offset="0" stop-color="#174A78" stop-opacity="0.55" />
+            <stop offset="0.6" stop-color="#10365C" stop-opacity="0.22" />
+            <stop offset="1" stop-color="#10365C" stop-opacity="0" />
+          </radialGradient>
+          <linearGradient id="dna-lobe-up" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#C6A15B" stop-opacity="0.16" />
+            <stop offset="1" stop-color="#C6A15B" stop-opacity="0" />
+          </linearGradient>
+          <linearGradient id="dna-lobe-down" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0" stop-color="#C6A15B" stop-opacity="0.16" />
+            <stop offset="1" stop-color="#C6A15B" stop-opacity="0" />
+          </linearGradient>
+          <filter id="dna-glow" x="-20%" y="-60%" width="140%" height="220%">
+            <feGaussianBlur stdDeviation="3.2" />
+          </filter>
+          <clipPath id="dna-weave">
+            {crossings.slice(1).map((x) => <circle cx={x} cy={cy} r="20" />)}
+          </clipPath>
+        </defs>
+
+        <ellipse class="dna__halo" cx={CX} cy={cy} rx={EW * 0.86} ry={EH * 0.95} fill="url(#dna-halo)" />
+
+        <!-- Axis (the sketch's centre line) -->
+        <g class="dna__axis" stroke="#174A78" stroke-width="1">
+          <line x1={x0} y1={cy} x2={x2L - 6} y2={cy} />
+          <line x1={x2R + 6} y1={cy} x2={x4} y2={cy} />
+        </g>
+
+        <!-- Lobe fills for hover / active -->
+        {items.map((it) => <path class="dna__lobe" data-k={it.key} d={it.fill} fill={it.side > 0 ? 'url(#dna-lobe-up)' : 'url(#dna-lobe-down)'} />)}
+
+        <!-- Base pairs -->
+        <g class="dna__rungs" stroke="#A9874C" stroke-width="1" stroke-linecap="round">
+          {rungs.map((r) => <line x1={r.x} y1={r.y1} x2={r.x} y2={r.y2} style={`--d:${r.d}`} />)}
+        </g>
+
+        <!-- Strands: B, then A over it, then B over A at alternate crossings (the weave) -->
+        <g class="dna__strands" mask="url(#dna-ends)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path class="dna__strand dna__strand--b" d={strandB} stroke="url(#dna-tone)" pathLength="1" />
+          <path d={strandA} stroke="#081A30" stroke-width="7" />
+          <path class="dna__strand dna__strand--a" d={strandA} stroke="url(#dna-tone)" pathLength="1" />
+          <g clip-path="url(#dna-weave)">
+            <path d={strandB} stroke="#081A30" stroke-width="7" />
+            <path class="dna__strand dna__strand--b" d={strandB} stroke="url(#dna-tone)" pathLength="1" />
+          </g>
+        </g>
+
+        <!-- Travelling light: passes behind the symbol and re-emerges -->
+        <g class="dna__light" mask="url(#dna-light-mask)" fill="none" stroke-linecap="round">
+          <path class="dna__glow dna__glow--a" d={lightA} pathLength="1000" stroke="#C6A15B" stroke-width="5" filter="url(#dna-glow)" />
+          <path class="dna__beam dna__beam--a" d={lightA} pathLength="1000" stroke="#F3E3BE" stroke-width="1.6" />
+          <path class="dna__glow dna__glow--b" d={lightB} pathLength="1000" stroke="#C6A15B" stroke-width="5" filter="url(#dna-glow)" />
+          <path class="dna__beam dna__beam--b" d={lightB} pathLength="1000" stroke="#F3E3BE" stroke-width="1.6" />
+        </g>
+
+        <!-- Hover / active highlight of each half-lobe -->
+        {items.map((it) => <g class="dna__hl" data-k={it.key}>
+          <path class="dna__hl-glow" d={it.hl} fill="none" stroke="#C6A15B" stroke-width="5" filter="url(#dna-glow)" />
+          <path class="dna__hl-line" d={it.hl} fill="none" stroke-width="2" stroke-linecap="round" />
+        </g>)}
+
+        <!-- Junctions into the symbol and terminal points -->
+        <g fill="#C6A15B">
+          <circle class="dna__junction" cx={x2L} cy={cy} r="2.6" />
+          <circle class="dna__junction" cx={x2R} cy={cy} r="2.6" />
+          {dots.map(([x, y]) => <circle class="dna__terminal" cx={x} cy={y} r="2" />)}
+        </g>
+
+        <!-- Nodes -->
+        {items.map((it) => <g class="dna__node" data-k={it.key} data-row={it.row} style={`transform-origin:${it.node[0]}px ${it.node[1]}px`}>
+          <circle class="dna__node-ring" cx={it.node[0]} cy={it.node[1]} r="10" fill="none" stroke="#C6A15B" stroke-width="1" />
+          <rect class="dna__node-core" x={it.node[0] - 4} y={it.node[1] - 4} width="8" height="8" transform={`rotate(45 ${it.node[0]} ${it.node[1]})`} stroke-width="1.4" />
+        </g>)}
+      </svg>
+
+      <ul class="dna__row dna__row--community" aria-label="Community">
+        {items.filter((it) => it.row === 'community').map((it) => (
+          <li><a class="dna__link" href={it.href} data-k={it.key} data-row="community" data-i={it.i}
+            style={`left:${pct(it.box.left)};width:${pct(it.box.width)};top:${pct(it.box.top)};height:${pct(it.box.height)}`}
+            aria-current={active === it.key ? 'page' : undefined}><span>{it.label}</span></a></li>
+        ))}
+      </ul>
+      <ul class="dna__row dna__row--commerce" aria-label="Commerce">
+        {items.filter((it) => it.row === 'commerce').map((it) => (
+          <li><a class="dna__link" href={it.href} data-k={it.key} data-row="commerce" data-i={it.i}
+            style={`left:${pct(it.box.left)};width:${pct(it.box.width)};top:${pct(it.box.top)};height:${pct(it.box.height)}`}
+            aria-current={active === it.key ? 'page' : undefined}><span>{it.label}</span></a></li>
+        ))}
+      </ul>
+
+      <a class="dna__emblem" href="/" aria-label="BECCI home: Community and Commerce" style={`left:${emblemBox.left};width:${emblemBox.width};top:${emblemBox.top};height:${emblemBox.height}`}>
+        <img src="/brand/becci-symbol-white.svg" alt="" width="207" height="104.5" decoding="async" />
+      </a>
+      <span class="dna__caption dna__caption--up" aria-hidden="true" style={`left:${emblemBox.left};width:${emblemBox.width};top:${pct(((cy - A - 6) / H) * 100)}`}>Community</span>
+      <span class="dna__caption dna__caption--down" aria-hidden="true" style={`left:${emblemBox.left};width:${emblemBox.width};top:${pct(((cy + A + 6) / H) * 100)}`}>Commerce</span>
+    </div>
+  </nav>
+
+  <!-- Compact helix (narrow screens) -->
+  <nav class="dna__compact" id="dna-compact" aria-label="Main" data-dna-compact>
+    <div class="dna__vstage" style={`aspect-ratio:${VW}/${VH}`}>
+      <svg class="dna__svg" viewBox={`0 0 ${VW} ${VH}`} aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="dna-vtone" gradientUnits="userSpaceOnUse" x1={vx - vA} y1="0" x2={vx + vA} y2="0">
+            <stop offset="0" stop-color="#F7F5EF" stop-opacity="0.9" />
+            <stop offset="0.44" stop-color="#F7F5EF" stop-opacity="0.6" />
+            <stop offset="0.56" stop-color="#C6A15B" stop-opacity="0.66" />
+            <stop offset="1" stop-color="#C6A15B" stop-opacity="0.95" />
+          </linearGradient>
+        </defs>
+        <line x1={vx} y1={vy0} x2={vx} y2={vy2T - 4} stroke="#174A78" />
+        <line x1={vx} y1={vy2B + 4} x2={vx} y2={vy4} stroke="#174A78" />
+        <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path d={vStrandB} stroke="url(#dna-vtone)" stroke-width="1.4" />
+          <path d={vStrandA} stroke="#081A30" stroke-width="6" />
+          <path d={vStrandA} stroke="url(#dna-vtone)" stroke-width="1.4" />
+        </g>
+        {vItems.map((it) => <path class="dna__hl-line dna__vhl" data-k={it.key} d={it.vhl} fill="none" stroke-width="2" />)}
+        {vItems.map((it) => <g class="dna__node" data-k={it.key} data-row={it.row} style={`transform-origin:${it.vnode[0]}px ${it.vnode[1]}px`}>
+          <rect class="dna__node-core" x={it.vnode[0] - 3.5} y={it.vnode[1] - 3.5} width="7" height="7" transform={`rotate(45 ${it.vnode[0]} ${it.vnode[1]})`} stroke-width="1.3" />
+        </g>)}
+      </svg>
+      <ul class="dna__vrow" aria-label="Community">
+        {vItems.filter((it) => it.row === 'community').map((it) => (
+          <li><a class="dna__vlink dna__vlink--l" href={it.href} data-k={it.key} style={`top:${it.vtop};height:${it.vh};right:${pct(((VW - (vx - vA - 14)) / VW) * 100)}`} aria-current={active === it.key ? 'page' : undefined}><span>{it.label}</span></a></li>
+        ))}
+      </ul>
+      <ul class="dna__vrow" aria-label="Commerce">
+        {vItems.filter((it) => it.row === 'commerce').map((it) => (
+          <li><a class="dna__vlink dna__vlink--r" href={it.href} data-k={it.key} style={`top:${it.vtop};height:${it.vh};left:${pct(((vx + vA + 14) / VW) * 100)}`} aria-current={active === it.key ? 'page' : undefined}><span>{it.label}</span></a></li>
+        ))}
+      </ul>
+      <a class="dna__emblem dna__emblem--v" href="/" aria-label="BECCI home: Community and Commerce" style={`left:${vEmblem.left};width:${vEmblem.width};top:${vEmblem.top};height:${vEmblem.height}`}>
+        <img src="/brand/becci-symbol-white.svg" alt="" width="207" height="104.5" decoding="async" />
+      </a>
+    </div>
+  </nav>
+</header>
+
+<style is:global>
+  .dna {
+    /* Prototype palette (client brief). Scoped to this component; the global theme is untouched. */
+    --dna-midnight: #081A30;
+    --dna-sapphire: #174A78;
+    --dna-royal: #10365C;
+    --dna-gold: #C6A15B;
+    --dna-gold-muted: #A9874C;
+    --dna-ivory: #F7F5EF;
+    --dna-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --dna-cycle: 18s;
+    position: relative;
+    color: var(--dna-ivory);
+    background:
+      radial-gradient(60% 120% at 50% 62%, rgb(16 54 92 / 55%), transparent 70%),
+      linear-gradient(180deg, #0A1F38 0%, var(--dna-midnight) 46%, #071628 100%);
+    border-bottom: 1px solid rgb(198 161 91 / 26%);
+    font-family: var(--font-body);
+  }
+  .dna::after { /* a single hairline of light along the base */
+    content: ''; position: absolute; inset: auto 0 -1px; height: 1px;
+    background: linear-gradient(90deg, transparent, rgb(198 161 91 / 60%) 50%, transparent);
+    pointer-events: none;
+  }
+  .dna__wrap { width: min(100% - 2 * var(--gutter, 32px), 1280px); margin-inline: auto; }
+  @media (min-width: 1700px) { .dna__wrap { width: min(100% - 160px, 1600px); } .dna__link span { font-size: 1.0625rem; } .dna__caption { font-size: 0.6875rem; } }
+
+  /* Utility row */
+  .dna__bar { display: flex; align-items: center; justify-content: space-between; gap: 24px; height: 72px; border-bottom: 1px solid rgb(247 245 239 / 8%); }
+  .dna__brand { display: inline-flex; text-decoration: none; border-radius: 6px; }
+  .dna__brand .brand__full { color: rgb(247 245 239 / 66%); border-left-color: rgb(198 161 91 / 35%); }
+  .dna__actions { display: flex; align-items: center; gap: 8px; }
+  .dna__actions a, .dna__menu { color: var(--dna-ivory); text-decoration: none; font: 600 0.875rem/1 var(--font-body); letter-spacing: 0.01em; }
+  .dna__icon { display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 999px; transition: background 240ms var(--dna-ease), color 240ms; }
+  .dna__icon:hover { background: rgb(247 245 239 / 8%); color: #fff; }
+  .dna__login { padding: 14px 14px; border-radius: 999px; transition: color 240ms; }
+  .dna__login:hover { color: var(--dna-gold); }
+  .dna__join { display: inline-flex; align-items: center; height: 40px; padding: 0 20px; margin-left: 4px; border-radius: 999px; border: 1px solid rgb(198 161 91 / 70%); color: var(--dna-ivory) !important; transition: background 240ms var(--dna-ease), color 240ms, border-color 240ms; }
+  .dna__join:hover { background: var(--dna-gold); border-color: var(--dna-gold); color: var(--dna-midnight) !important; }
+  .dna__menu { display: none; align-items: center; gap: 8px; height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid rgb(247 245 239 / 18%); background: transparent; cursor: pointer; }
+
+  /* Stage */
+  .dna__helix { padding: 6px 0 14px; }
+  .dna__stage, .dna__vstage { position: relative; width: 100%; }
+  .dna__svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .dna__svg path, .dna__svg line, .dna__svg rect, .dna__svg circle { vector-effect: non-scaling-stroke; }
+  .dna__row, .dna__vrow { list-style: none; margin: 0; padding: 0; }
+
+  .dna__strand { stroke-width: 1.5; }
+  .dna__axis { opacity: 0.7; }
+  .dna__rungs line { opacity: 0.3; }
+  .dna__terminal { opacity: 0.7; }
+  .dna__light { pointer-events: none; }
+  .dna__glow, .dna__beam { stroke-dasharray: 64 936; stroke-dashoffset: 1000; opacity: 0; }
+
+  /* Nodes */
+  .dna__node { transition: transform 320ms var(--dna-ease); }
+  .dna__node-core { fill: var(--dna-midnight); transition: fill 320ms var(--dna-ease), stroke 320ms; }
+  .dna__node[data-row='community'] .dna__node-core { stroke: var(--dna-ivory); }
+  .dna__node[data-row='commerce'] .dna__node-core { stroke: var(--dna-gold); }
+  .dna__node-ring { opacity: 0; transition: opacity 320ms var(--dna-ease); }
+
+  /* Highlights */
+  .dna__hl-line { stroke: var(--dna-ivory); opacity: 0; transition: opacity 320ms var(--dna-ease), stroke 320ms; }
+  .dna__hl-glow { opacity: 0; transition: opacity 320ms var(--dna-ease); }
+  .dna__lobe { opacity: 0; transition: opacity 420ms var(--dna-ease); }
+
+  .dna [data-hot] .dna__hl-line, .dna__hl-line[data-hot] { opacity: 0.95; }
+  .dna__lobe[data-hot] { opacity: 0.55; }
+  .dna__node[data-hot] { transform: scale(1.35); }
+  .dna__node[data-hot] .dna__node-core { fill: var(--dna-ivory); stroke: var(--dna-ivory); }
+
+  .dna [data-on] .dna__hl-line, .dna__hl-line[data-on] { stroke: var(--dna-gold); opacity: 1; }
+  .dna [data-on] .dna__hl-glow { opacity: 0.55; }
+  .dna__lobe[data-on] { opacity: 1; }
+  .dna__node[data-on] .dna__node-core { fill: var(--dna-gold); stroke: var(--dna-gold); }
+  .dna__node[data-on] .dna__node-ring { opacity: 0.55; }
+
+  /* Labels */
+  .dna__link { position: absolute; display: grid; place-items: center; text-decoration: none; color: rgb(247 245 239 / 90%); border-radius: 10px; -webkit-tap-highlight-color: transparent; outline: none; }
+  .dna__link::before { /* extend the hit area to the node on the strand */ content: ''; position: absolute; inset: -14px 0 -4px; }
+  .dna__row--commerce .dna__link::before { inset: -4px 0 -14px; }
+  .dna__link span { position: relative; padding: 6px 12px; border-radius: 999px; font: 600 0.9375rem/1.2 var(--font-body); letter-spacing: 0.015em; text-align: center; text-wrap: balance; transition: color 320ms var(--dna-ease), background 320ms var(--dna-ease), box-shadow 320ms; }
+  .dna__link:hover, .dna__link:focus-visible { color: #fff; }
+  .dna__link:focus-visible span { box-shadow: 0 0 0 1.5px var(--dna-gold), 0 0 0 5px rgb(198 161 91 / 18%); }
+  .dna__link[aria-current='page'] { color: var(--dna-gold); }
+  .dna__link[aria-current='page'] span::after { content: ''; position: absolute; left: 50%; bottom: 0; width: 18px; height: 1px; margin-left: -9px; background: var(--dna-gold); }
+
+  .dna__emblem { position: absolute; display: block; border-radius: 12px; outline: none; }
+  .dna__emblem img { width: 100%; height: 100%; transition: transform 480ms var(--dna-ease), filter 480ms; filter: drop-shadow(0 0 0 rgb(198 161 91 / 0%)); }
+  .dna__emblem:hover img, .dna__emblem:focus-visible img { transform: scale(1.03); filter: drop-shadow(0 0 14px rgb(198 161 91 / 32%)); }
+  .dna__emblem:focus-visible { box-shadow: 0 0 0 1.5px var(--dna-gold), 0 0 0 6px rgb(198 161 91 / 18%); }
+  .dna__caption { position: absolute; transform: translateY(-50%); text-align: center; font: 600 0.625rem/1 var(--font-body); letter-spacing: 0.32em; text-indent: 0.32em; text-transform: uppercase; color: var(--dna-gold-muted); pointer-events: none; }
+
+  /* Compact */
+  .dna__compact { display: none; }
+  .dna__vstage { max-width: 420px; margin-inline: auto; }
+  .dna__vlink { position: absolute; display: flex; align-items: center; width: 40%; min-height: 44px; text-decoration: none; color: rgb(247 245 239 / 90%); font: 600 0.9375rem/1.25 var(--font-body); outline: none; }
+  .dna__vlink--l { justify-content: flex-end; text-align: right; }
+  .dna__vlink span { padding: 6px 10px; border-radius: 999px; }
+  .dna__vlink:focus-visible span { box-shadow: 0 0 0 1.5px var(--dna-gold); }
+  .dna__vlink[aria-current='page'] { color: var(--dna-gold); }
+
+  @media (max-width: 1079px) {
+    .dna__helix { display: none; }
+    .dna__login, .dna__icon { display: none; }
+    .dna__menu { display: inline-flex; }
+    .dna__compact { display: block; width: min(100% - 32px, 520px); margin-inline: auto; padding: 8px 0 24px; }
+    .dna__compact:not([data-open]) { display: none; }
+  }
+  @media (max-width: 560px) { .dna__join { display: none; } }
+
+  /* ───────── Motion (only when the visitor allows it) ───────── */
+  @media (prefers-reduced-motion: no-preference) {
+    .dna[data-ready] .dna__glow, .dna[data-ready] .dna__beam { animation: dna-travel var(--dna-cycle) linear infinite; }
+    .dna[data-ready] .dna__glow--b, .dna[data-ready] .dna__beam--b { animation-delay: calc(var(--dna-cycle) / -2); }
+    .dna[data-ready] .dna__rungs line { animation: dna-pulse calc(var(--dna-cycle) / 2) linear infinite; animation-delay: calc(var(--d) * var(--dna-cycle) / 2 - var(--dna-cycle) / 2); }
+    .dna[data-ready] .dna__halo { animation: dna-breathe 9s ease-in-out infinite; }
+
+    .js .dna:not([data-ready]) .dna__strand { stroke-dasharray: 1; stroke-dashoffset: 1; }
+    .dna[data-ready] .dna__strand { stroke-dasharray: 1; animation: dna-draw 1.8s var(--dna-ease) both; }
+    .js .dna:not([data-ready]) .dna__link span, .js .dna:not([data-ready]) .dna__node { opacity: 0; }
+    .dna[data-ready] .dna__link span { animation: dna-rise 900ms var(--dna-ease) both; animation-delay: calc(700ms + var(--i, 0) * 70ms); }
+    .dna[data-ready] .dna__helix .dna__emblem img { animation: dna-in 1100ms var(--dna-ease) both; animation-delay: 300ms; }
+  }
+  @keyframes dna-travel { from { stroke-dashoffset: 1000; opacity: 1; } to { stroke-dashoffset: 0; opacity: 1; } }
+  @keyframes dna-pulse { 0%, 100% { opacity: 0.28; } 6% { opacity: 0.75; } 14% { opacity: 0.28; } }
+  @keyframes dna-breathe { 0%, 100% { opacity: 0.75; } 50% { opacity: 1; } }
+  @keyframes dna-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+  @keyframes dna-rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  @keyframes dna-in { from { opacity: 0; transform: scale(0.94); } to { opacity: 1; transform: none; } }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-dna]').forEach((root) => {
+    const q = root.hasAttribute('data-read-query') ? new URLSearchParams(location.search).get('active') : null;
+    const links = [...root.querySelectorAll<HTMLAnchorElement>('.dna__link, .dna__vlink')];
+    const parts = (k: string) => root.querySelectorAll<SVGElement>(`.dna__hl[data-k="${k}"], .dna__lobe[data-k="${k}"], .dna__node[data-k="${k}"], .dna__vhl[data-k="${k}"]`);
+
+    // Active state (server prop, or ?active= on the preview page)
+    const setActive = (key: string | null) => {
+      root.querySelectorAll('[data-on]').forEach((el) => el.removeAttribute('data-on'));
+      links.forEach((a) => (a.dataset.k === key ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current')));
+      if (key) parts(key).forEach((el) => el.setAttribute('data-on', ''));
+    };
+    setActive(q ?? root.dataset.active ?? null);
+    (root as any).dnaSetActive = setActive;
+
+    // Hover and focus light the item's half of the helix
+    links.forEach((a, n) => {
+      a.querySelector('span')?.style.setProperty('--i', String(n % 8));
+      const on = () => parts(a.dataset.k!).forEach((el) => el.setAttribute('data-hot', ''));
+      const off = () => parts(a.dataset.k!).forEach((el) => el.removeAttribute('data-hot'));
+      a.addEventListener('pointerenter', on); a.addEventListener('pointerleave', off);
+      a.addEventListener('focus', on); a.addEventListener('blur', off);
+    });
+
+    // Arrow keys: ←/→ along a strand, ↑/↓ to the paired destination on the other strand
+    const desk = [...root.querySelectorAll<HTMLAnchorElement>('.dna__link')];
+    const at = (row: string, i: number) => desk.find((a) => a.dataset.row === row && Number(a.dataset.i) === i);
+    desk.forEach((a) => a.addEventListener('keydown', (e) => {
+      const row = a.dataset.row!, i = Number(a.dataset.i);
+      const other = row === 'community' ? 'commerce' : 'community';
+      const target = ({
+        ArrowRight: at(row, (i + 1) % 4), ArrowLeft: at(row, (i + 3) % 4),
+        ArrowDown: row === 'community' ? at(other, i) : undefined, ArrowUp: row === 'commerce' ? at(other, i) : undefined,
+        Home: at(row, 0), End: at(row, 3),
+      } as Record<string, HTMLAnchorElement | undefined>)[e.key];
+      if (target) { e.preventDefault(); target.focus(); }
+    }));
+
+    // Compact menu
+    const btn = root.querySelector<HTMLButtonElement>('[data-dna-menu]');
+    const panel = root.querySelector<HTMLElement>('[data-dna-compact]');
+    btn?.addEventListener('click', () => {
+      const open = btn.getAttribute('aria-expanded') !== 'true';
+      btn.setAttribute('aria-expanded', String(open)); panel?.toggleAttribute('data-open', open);
+    });
+
+    requestAnimationFrame(() => requestAnimationFrame(() => root.setAttribute('data-ready', '')));
+  });
+</script>
