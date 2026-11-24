@@ -1,32 +1,85 @@
 ---
 // Testimonials (Critique §4.4): feedback from members, entrepreneurs and partners, in their own words,
-// published only with their consent. Renders only when BECCI has supplied approved testimonials.
+// published only with their consent. Bento layout in three columns; cards reveal one after another.
+// The current entries are marked Sample placeholders until BECCI supplies approved testimonials.
 import { testimonials } from '../data/site';
 import SampleBadge from './SampleBadge.astro';
+
+// Column layout: [large, small] [three dark] [small, large]
+const tone = ['grid', 'navy', 'dark', 'dark', 'dark', 'navy', 'grid'];
+const t = testimonials.slice(0, 7).map((x, i) => ({ ...x, tone: tone[i], big: tone[i] === 'grid' }));
+const cols = t.length === 7 ? [[t[0], t[1]], [t[2], t[3], t[4]], [t[5], t[6]]] : [t];
+let n = 0;
 ---
-{testimonials.length > 0 && (
-  <section class="section section--white tst" aria-labelledby="tst-title">
+{t.length > 0 && (
+  <section class="tst" aria-labelledby="tst-title" data-tst>
     <div class="wrap">
-      <h2 id="tst-title">In their words</h2>
-      <ul class="tst__list">
-        {testimonials.map((t) => (
-          <li><figure>
-            <blockquote><p>“{t.quote}”</p></blockquote>
-            <figcaption><strong>{t.name} {t.sample && <SampleBadge />}</strong><span>{t.context}</span></figcaption>
-          </figure></li>
+      <header class="tst__head">
+        <h2 id="tst-title" class="tst__in" style="--i:0">In their words</h2>
+        <p class="tst__in" style="--i:1">What members, entrepreneurs and partners say about their journey with BECCI.</p>
+      </header>
+      <div class="tst__grid">
+        {cols.map((col, c) => (
+          <div class:list={['tst__col', `tst__col--${c}`]}>
+            {col.map((x) => (
+              <figure class:list={['tst__card', `tst__card--${x.tone}`, x.big && 'tst__card--big', 'tst__in']} style={`--i:${n++}`}>
+                {x.tone === 'grid' && <span class="tst__lines" aria-hidden="true"></span>}
+                <blockquote><p>“{x.quote}”</p></blockquote>
+                <figcaption>
+                  <span class="tst__who"><strong>{x.name}</strong><span>{x.context}</span>{x.sample && <SampleBadge />}</span>
+                  {x.photo && <img src={x.photo} alt="" width="64" height="64" loading="lazy" decoding="async" />}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   </section>
 )}
+
 <style>
-  .tst h2 { margin: 0 0 var(--s-6); }
-  .tst__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-5); }
-  .tst__list figure { height: 100%; margin: 0; display: flex; flex-direction: column; justify-content: space-between; gap: var(--s-5); padding: var(--s-6); border-radius: var(--radius); background: var(--ivory); border: 1px solid rgb(10 35 82 / 10%); }
-  .tst__list blockquote { margin: 0; }
-  .tst__list blockquote p { margin: 0; color: var(--midnight); font: 500 var(--fs-md)/1.55 var(--font-body); }
-  .tst__list figcaption { display: grid; gap: 2px; padding-top: var(--s-4); border-top: 1px solid rgb(10 35 82 / 12%); }
-  .tst__list figcaption strong { color: var(--midnight); }
-  .tst__list figcaption span { color: var(--slate); font-size: var(--fs-sm); }
-  @media (max-width: 1000px) { .tst__list { grid-template-columns: 1fr; } }
+  .tst { padding-block: clamp(64px, 8vw, 120px); background: #fff; }
+  .tst__head { max-width: 760px; margin: 0 auto clamp(32px, 4vw, 56px); text-align: center; }
+  .tst__head h2 { margin: 0 0 var(--s-2); }
+  .tst__head p { margin: 0; color: var(--slate); }
+  .tst__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .tst__col { display: flex; flex-direction: column; gap: 10px; }
+  .tst__card { position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; gap: var(--s-5); margin: 0; padding: 22px; border-radius: 10px; border: 1px solid rgb(10 35 82 / 12%); transition: transform 300ms var(--ease), box-shadow 300ms var(--ease); }
+  .tst__card:hover { transform: translateY(-2px); box-shadow: 0 18px 40px -24px rgb(6 22 56 / 45%); }
+  .tst__col--0 .tst__card--big, .tst__col--2 .tst__card--big { flex: 7; min-height: 340px; }
+  .tst__col--0 .tst__card--navy, .tst__col--2 .tst__card--navy { flex: 3; }
+  .tst__col--1 .tst__card { flex: 1; }
+  .tst__card--grid { background: var(--ivory, #f7f5ef); color: var(--midnight); }
+  .tst__card--navy { background: #0A2352; color: #fff; border-color: transparent; }
+  .tst__card--dark { background: var(--midnight, #061638); color: #fff; border-color: transparent; }
+  .tst__lines { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to right, rgb(10 35 82 / 9%) 1px, transparent 1px), linear-gradient(to bottom, rgb(10 35 82 / 9%) 1px, transparent 1px); background-size: 50px 56px; mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, #000 70%, transparent 110%); -webkit-mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, #000 70%, transparent 110%); }
+  .tst__card blockquote { position: relative; margin: 0; }
+  .tst__card blockquote p { margin: 0; font: 500 1rem/1.55 var(--font-body); }
+  .tst__card--big blockquote p { font-size: 1.125rem; }
+  .tst__card figcaption { position: relative; display: flex; justify-content: space-between; align-items: flex-end; gap: var(--s-4); }
+  .tst__who { display: grid; gap: 2px; justify-items: start; }
+  .tst__who strong { font: 700 1.125rem/1.25 var(--font-display); }
+  .tst__who > span { font-size: var(--fs-sm); opacity: 0.8; }
+  .tst__card img { flex: none; width: 64px; height: 64px; border-radius: 12px; object-fit: cover; }
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) .tst__in { opacity: 0; transform: translateY(-20px); filter: blur(10px); transition: opacity 500ms ease, transform 500ms ease, filter 500ms ease; transition-delay: calc(var(--i) * 150ms); }
+    :global(.js) .tst[data-in] .tst__in { opacity: 1; transform: none; filter: blur(0); }
+    :global(.js) .tst[data-in] .tst__card:hover { transform: translateY(-2px); }
+  }
+  @media (max-width: 1000px) {
+    .tst__grid { grid-template-columns: 1fr; }
+    .tst__col--0 .tst__card--big, .tst__col--2 .tst__card--big { min-height: 0; }
+  }
 </style>
+
+<script>
+  const s = document.querySelector<HTMLElement>('[data-tst]');
+  if (s) {
+    if (!('IntersectionObserver' in window)) s.dataset.in = '';
+    else {
+      const io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { s.dataset.in = ''; io.disconnect(); } }, { threshold: 0.15 });
+      io.observe(s);
+    }
+  }
+</script>

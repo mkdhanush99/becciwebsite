@@ -140,10 +140,14 @@ export const leadershipGroups: { title: string; people: Person[] }[] = [
   { title: 'Other Officially Constituted Positions', people: [] },
 ];
 
-export const testimonials: { quote: string; name: string; context: string; sample?: boolean }[] = keep([
-  { quote: '[Sample testimonial. A member describes, in their own words, how BECCI helped: a scheme they found, a connection that led to business, or support they received.]', name: '[Member name]', context: '[Business, city] · Sample', sample: true },
-  { quote: '[Sample testimonial from an entrepreneur or partner institution, published only with their written consent.]', name: '[Member name]', context: '[Business, city] · Sample', sample: true },
-  { quote: '[Sample testimonial. Keep it short, specific and true: what changed, and how.]', name: '[Partner name]', context: '[Institution] · Sample', sample: true },
+export const testimonials: { quote: string; name: string; context: string; photo?: string; sample?: boolean }[] = keep([
+  { quote: '[Sample testimonial. A member describes, in their own words, how BECCI helped: a scheme they found, a connection that led to business, or support they received.]', name: '[Member name]', context: '[Founder, business, city]', photo: img('person-1'), sample: true },
+  { quote: '[Sample testimonial. What changed for their enterprise, in one or two lines.]', name: '[Member name]', context: '[Proprietor, business, district]', photo: img('person-8'), sample: true },
+  { quote: '[Sample testimonial from a first-generation entrepreneur about a connection made through BECCI.]', name: '[Member name]', context: '[Director, business, city]', photo: img('person-2'), sample: true },
+  { quote: '[Sample testimonial from a partner institution, published only with its written consent.]', name: '[Partner name]', context: '[Designation, institution]', photo: img('person-4'), sample: true },
+  { quote: '[Sample testimonial from a Women\'s Wing member.]', name: '[Member name]', context: '[Founder, business, city]', photo: img('person-6'), sample: true },
+  { quote: '[Sample testimonial from a Youth Wing member or student entrepreneur.]', name: '[Member name]', context: '[Founder, startup, city]', photo: img('person-7'), sample: true },
+  { quote: '[Sample testimonial. Keep it short, specific and true: the scheme, tender, referral or guidance that made a difference, and the result it led to for the business.]', name: '[Member name]', context: '[Managing Partner, business, city]', photo: img('person-3'), sample: true },
 ]);
 // Events. Each entry gets a detail page at /events/<slug>. Add only events BECCI has confirmed.
 export interface BecciEvent {
