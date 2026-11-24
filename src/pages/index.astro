@@ -34,7 +34,7 @@ const tilePhotos = [
   { photo: photos.industry, pos: '55% 40%' },
 ];
 const pillars = story.map((t, i) => ({ letter: t.letter, word: t.name, title: t.title, text: t.text, href: t.link.href, infinity: t.letter === 'C', ...tilePhotos[i] }));
-const motto = ['बहुजन', 'हिताय,', 'बहुजन', 'सुखाय।'];
+const motto = ['Bahujana', 'Hitāya,', 'Bahujana', 'Sukhāya'];
 // The four questions every visitor should get an answer to (Critique Review §20),
 // each with what works today and what is still being set up.
 // Four content pillars. Each answers one visitor question (Critique Review §20) and says
@@ -112,17 +112,7 @@ const tiers = [
     </div>
   </section>
 
-  <section class="h-motto" aria-labelledby="motto-title" data-motto>
-    <div class="h-motto__jali" aria-hidden="true"></div>
-    <div class="wrap h-motto__in">
-      <p class="h-motto__eyebrow" id="motto-title">BECCI’s guiding principle</p>
-      <p class="h-motto__line" lang="sa" aria-label="बहुजन हिताय, बहुजन सुखाय।">
-        {motto.map((w, i) => <><span class="h-motto__w" style={`--w:${i}`} aria-hidden="true">{w}</span>{i < motto.length - 1 ? ' ' : ''}</>)}
-      </p>
-      <p class="h-motto__translit" lang="sa-Latn">Bahujana Hitāya, Bahujana Sukhāya.</p>
-      <span class="h-motto__rule" aria-hidden="true"><i></i></span>
-      <p class="h-motto__meaning">For the welfare of the many, for the happiness of the many.</p>
-    </div>
+  <section class="h-motto h-motto--cards" aria-label="The BECCI story">
     <ol class="wrap h-bc" aria-label="The BECCI story: five letters, one journey">
       {pillars.map((p, i) => (
         <li class="h-bc__item" style={`--i:${i}`}>
@@ -287,6 +277,18 @@ const tiers = [
     </div>
     {stats.length > 0 && <ul class="wrap h-stats">{stats.map((s) => <li><strong>{s.value}</strong><span>{s.label}</span><small>{s.period} · {s.basis}</small></li>)}</ul>}
   </section>
+
+  <section class="h-motto h-motto--end" aria-labelledby="motto-title" data-motto>
+    <div class="h-motto__jali" aria-hidden="true"></div>
+    <div class="wrap h-motto__in">
+      <p class="h-motto__eyebrow" id="motto-title">BECCI’s guiding principle</p>
+      <p class="h-motto__line" aria-label="Bahujana Hitāya, Bahujana Sukhāya">
+        {motto.map((w, i) => <><span class="h-motto__w" style={`--w:${i}`} aria-hidden="true">{w}</span>{i === 1 ? <br /> : i < motto.length - 1 ? ' ' : ''}</>)}
+      </p>
+      <span class="h-motto__rule" aria-hidden="true"><i></i></span>
+      <p class="h-motto__meaning">For the welfare of the many, for the happiness of the many.</p>
+    </div>
+  </section>
 </Base>
 
 <script>
@@ -409,7 +411,8 @@ const tiers = [
 
   /* Statement */
   /* BECCI card experience: Sanskrit motto in champagne gold over five art-directed photographic cards. */
-  @font-face { font-family: 'BECCI Motto'; src: url('/fonts/TiroDevanagariSanskrit-motto.woff2') format('woff2'); font-display: swap; unicode-range: U+0900-097F, U+0964; }
+  @font-face { font-family: 'BECCI Motto'; src: url('/fonts/CinzelDecorative-700-latin.woff2') format('woff2'); font-weight: 700; font-display: swap; unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: 'BECCI Motto'; src: url('/fonts/CinzelDecorative-700-latin-ext.woff2') format('woff2'); font-weight: 700; font-display: swap; unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
   .h-motto { --gold: #c6a15b; --gold-2: #a9874c; --gold-hi: #ecd6a4; --ink-night: #061329; position: relative; isolation: isolate; padding-block: calc(var(--s-9) + 40px) calc(var(--s-8) + 40px); margin-top: -40px; overflow: hidden;
     /* continues the hero's royal blue and settles into midnight, so the section emerges rather than cuts in */
     background: linear-gradient(180deg, #0A2352 0, #091f49 140px, #071a3f 300px, #061638 420px, var(--ink-night) 560px, var(--ink-night) calc(100% - 260px), #081b38 100%); }
@@ -426,9 +429,12 @@ const tiers = [
   .h-motto__eyebrow { display: inline-flex; align-items: center; gap: 16px; margin: 0 0 var(--s-6); color: var(--gold); font: 700 var(--fs-label)/1 var(--font-body); letter-spacing: 0.24em; text-transform: uppercase; }
   .h-motto__eyebrow::before, .h-motto__eyebrow::after { content: ''; width: 48px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold)); }
   .h-motto__eyebrow::after { transform: scaleX(-1); }
-  .h-motto__line { margin: 0; font: 400 clamp(3.25rem, 1rem + 5vw, 7.25rem)/1.22 'BECCI Motto', 'Kohinoor Devanagari', 'Devanagari Sangam MN', 'Noto Serif Devanagari', 'Nirmala UI', serif; letter-spacing: 0.01em; filter: drop-shadow(0 0 28px rgb(198 161 91 / 28%)) drop-shadow(0 2px 0 rgb(0 0 0 / 35%)); }
+  .h-motto--cards { padding-block: calc(var(--s-6) + 40px) var(--s-9); }
+  .h-motto--cards .h-bc { margin-top: 0; }
+  .h-motto--end { margin-top: 0; padding-block: clamp(88px, 10vw, 152px); background: linear-gradient(180deg, var(--ink-night) 0, var(--ink-night) 60%, #081A30 100%); }
+  .h-motto--end .h-motto__jali { top: 50%; translate: -50% -50%; }
+  .h-motto__line { margin: 0; font: 700 clamp(2.5rem, 0.9rem + 4.4vw, 6rem)/1.12 'BECCI Motto', 'Cinzel Decorative', 'Trajan Pro', Georgia, serif; letter-spacing: 0.02em; filter: drop-shadow(0 0 28px rgb(198 161 91 / 28%)) drop-shadow(0 2px 0 rgb(0 0 0 / 35%)); }
   .h-motto__w { display: inline-block; color: var(--gold); background: linear-gradient(176deg, var(--gold-hi) 8%, var(--gold) 46%, var(--gold-2) 78%, #8a6a35 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-  .h-motto__translit { margin: var(--s-3) 0 0; color: var(--gold); font: italic 400 clamp(1.125rem, 0.9rem + 0.5vw, 1.375rem)/1.3 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif; letter-spacing: 0.04em; opacity: 0.92; }
   .h-motto__rule { position: relative; display: block; width: min(560px, 60%); height: 1px; margin: var(--s-5) 0 var(--s-4); background: linear-gradient(90deg, transparent, var(--gold) 22%, var(--gold) 78%, transparent); transform-origin: center; }
   .h-motto__rule i { position: absolute; left: 50%; top: 50%; width: 9px; height: 9px; translate: -50% -50%; rotate: 45deg; background: var(--ink-night); border: 1px solid var(--gold); box-shadow: 0 0 12px rgb(198 161 91 / 60%); }
   .h-motto__meaning { margin: 0; color: #eee4cf; font: 500 clamp(1.125rem, 0.95rem + 0.5vw, 1.4375rem)/1.5 var(--font-body); letter-spacing: 0.01em; }
@@ -462,7 +468,6 @@ const tiers = [
 
   @media (prefers-reduced-motion: no-preference) {
     :global(.js) .h-motto__w { opacity: calc(0.12 + 0.88 * var(--on, 0)); transform: translateY(calc((1 - var(--on, 0)) * 0.16em)); filter: blur(calc((1 - var(--on, 0)) * 6px)); transition: opacity 700ms var(--ease), transform 900ms var(--ease), filter 700ms var(--ease); }
-    :global(.js) .h-motto__translit { opacity: calc(0.92 * var(--rule, 0)); transition: opacity 800ms var(--ease); }
     :global(.js) .h-motto__rule { transform: scaleX(var(--rule, 0)); transition: transform 1000ms var(--ease); }
     :global(.js) .h-motto__meaning { opacity: var(--meaning, 0); transform: translateY(calc((1 - var(--meaning, 0)) * 10px)); transition: opacity 800ms var(--ease), transform 800ms var(--ease); }
     :global(.js) .h-bc__item { opacity: 0; transform: translateY(40px); transition: opacity 900ms var(--ease), transform 1100ms var(--ease); transition-delay: calc(var(--i) * 120ms); }
