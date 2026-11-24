@@ -5,6 +5,7 @@ import Base from '../../layouts/Base.astro';
 import PageHero from '../../components/PageHero.astro';
 import { events, type BecciEvent } from '../../data/site';
 import { formatDate, todayISO } from '../../lib/status';
+import SampleBadge from '../../components/SampleBadge.astro';
 
 export function getStaticPaths() {
   return events.map((e) => ({ params: { slug: e.slug }, props: { e } }));
@@ -19,6 +20,8 @@ const facts: [string, string | undefined][] = [
   <PageHero tone="sky" illo="updates" title={e.title} lede={e.summary} crumbs={[{ label: 'Events', href: '/events' }, { label: e.title }]} />
   <section class="section"><div class="wrap ed">
     <div class="ed-main">
+      {e.sample && <p class="notice notice--warn"><SampleBadge /> This is a sample event for layout review. It has not been announced by BECCI.</p>}
+      {e.image && <img class="ed-hero" src={e.image} alt={e.sample ? 'Sample photograph (illustrative AI image)' : e.title} width="1280" height="720" decoding="async" />}
       {isPast && <p class="notice">This event has taken place. The report, photographs and videos are kept below.</p>}
       {e.description?.map((para) => <p>{para}</p>)}
       {e.speakers?.length ? (<><h2>Speakers</h2><ul class="ed-speakers">{e.speakers.map((s) => <li><strong>{s.name}</strong>{s.role && <span>{s.role}</span>}</li>)}</ul></>) : null}
@@ -38,6 +41,7 @@ const facts: [string, string | undefined][] = [
 <style>
   .ed { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: var(--s-7); align-items: start; }
   .ed-main p { max-width: 68ch; }
+  .ed-hero { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--radius); margin-bottom: var(--s-5); }
   .ed-speakers { list-style: none; padding: 0; display: grid; gap: var(--s-3); }
   .ed-speakers li { display: grid; }
   .ed-speakers span { color: var(--slate); font-size: var(--fs-sm); }

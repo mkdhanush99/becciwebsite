@@ -111,17 +111,39 @@ export const story = [
   { letter: 'I', name: 'Impact', title: 'Creating Lasting Impact', text: 'Every enterprise that grows and every opportunity created contributes to stronger communities, economic progress and a more prosperous Bharat.', link: { label: 'Success stories', href: '/success-stories' } },
 ];
 
-export interface Person { name: string; role: string; affiliation?: string; background?: string; intro?: string; photo?: string; links?: { label: string; url: string }[] }
-export const advisors: Person[] = [];
+// ─────────────────────────────────────────────────────────────────────────────
+// SAMPLE CONTENT. Every entry marked `sample: true` is a placeholder made for layout review:
+// bracketed names, illustrative AI photographs (public/images/sample), no real people or facts.
+// Replace each with approved BECCI content, or set SHOW_SAMPLES to false to hide all of them at once.
+export const SHOW_SAMPLES = true;
+const keep = <T extends { sample?: boolean }>(xs: T[]) => xs.filter((x) => SHOW_SAMPLES || !x.sample);
+const img = (n: string) => `/images/sample/${n}.webp`;
+
+export interface Person { name: string; role: string; affiliation?: string; background?: string; intro?: string; photo?: string; links?: { label: string; url: string }[]; sample?: boolean }
+const sp = (photo: string, role: string, extra: Partial<Person> = {}): Person => ({
+  name: '[Name]', role, affiliation: '[Organisation]', photo: img(photo), sample: true,
+  background: '[Professional background: years of experience, sectors, institutions served.]',
+  intro: '[A short introduction in their own words, approved by them before publishing.]', ...extra,
+});
+export const advisors: Person[] = keep([
+  sp('person-1', 'Advisor · [Area of expertise]'),
+  sp('person-2', 'Advisor · [Area of expertise]'),
+  sp('person-8', 'Advisor · [Area of expertise]'),
+  sp('person-4', 'Advisor · [Area of expertise]'),
+]);
 export const leadershipGroups: { title: string; people: Person[] }[] = [
-  { title: 'Advisors', people: [] },
-  { title: 'National Committee', people: [] },
-  { title: 'State Committees', people: [] },
-  { title: 'Wing Presidents', people: [] },
-  { title: 'Sector Committees', people: [] },
+  { title: 'Advisors', people: advisors },
+  { title: 'National Committee', people: keep([sp('person-5', '[President], National Committee'), sp('person-3', '[General Secretary], National Committee')]) },
+  { title: 'State Committees', people: keep([sp('person-3', '[President], Telangana State Committee'), sp('person-5', '[President], Andhra Pradesh State Committee')]) },
+  { title: 'Wing Presidents', people: keep([sp('person-6', "President, Women's Wing"), sp('person-7', 'President, Youth Wing')]) },
+  { title: 'Sector Committees', people: keep([sp('person-4', 'Chair, [Sector] Committee')]) },
 ];
 
-export const testimonials: { quote: string; name: string; context: string }[] = [];
+export const testimonials: { quote: string; name: string; context: string; sample?: boolean }[] = keep([
+  { quote: '[Sample testimonial. A member describes, in their own words, how BECCI helped: a scheme they found, a connection that led to business, or support they received.]', name: '[Member name]', context: '[Business, city] · Sample', sample: true },
+  { quote: '[Sample testimonial from an entrepreneur or partner institution, published only with their written consent.]', name: '[Member name]', context: '[Business, city] · Sample', sample: true },
+  { quote: '[Sample testimonial. Keep it short, specific and true: what changed, and how.]', name: '[Partner name]', context: '[Institution] · Sample', sample: true },
+]);
 // Events. Each entry gets a detail page at /events/<slug>. Add only events BECCI has confirmed.
 export interface BecciEvent {
   slug: string; title: string; date: string; // ISO yyyy-mm-dd
@@ -129,11 +151,64 @@ export interface BecciEvent {
   description?: string[]; speakers?: { name: string; role?: string }[];
   registerUrl?: string; audience?: 'Public' | 'Members only';
   report?: string; photos?: { src: string; alt: string }[]; videoUrl?: string; // for past events
+  image?: string; sample?: boolean;
 }
-export const events: BecciEvent[] = [];
-export const news: { title: string; date: string; summary: string; url?: string }[] = [];
-export const stories: { name: string; business: string; summary: string }[] = [];
-export const resources: { title: string; type: string; url: string; summary: string }[] = [];
+export const events: BecciEvent[] = keep([
+  { slug: 'sample-networking-meet', title: '[Sample] Business networking meet', date: '2027-01-16', time: '[Time]', venue: '[Venue]', city: 'Hyderabad', type: 'Business networking meeting', audience: 'Public', image: img('event-networking'), sample: true,
+    summary: '[Sample event. Entrepreneurs meet to introduce their businesses and pass on referrals.]',
+    description: ['[Sample description: who the event is for, what happens, and what attendees take away.]', '[Agenda, registration fee if any, and what to bring.]'],
+    speakers: [{ name: '[Speaker name]', role: '[Designation, organisation]' }] },
+  { slug: 'sample-scheme-workshop', title: '[Sample] Workshop: applying for government schemes', date: '2027-02-06', time: '[Time]', venue: '[Venue]', city: 'Vijayawada', type: 'Workshop', audience: 'Public', image: img('event-workshop'), sample: true,
+    summary: '[Sample event. A practical session on preparing documents and applying for loan and subsidy schemes.]',
+    description: ['[Sample description of the workshop, the trainer and the schemes covered.]'],
+    speakers: [{ name: '[Trainer name]', role: '[Designation]' }] },
+  { slug: 'sample-past-seminar', title: '[Sample] Past seminar', date: '2026-10-18', venue: '[Venue]', city: 'Hyderabad', type: 'Seminar', image: img('event-workshop'), sample: true,
+    summary: '[Sample past event, kept in the archive with its report and photographs.]',
+    report: '[Sample report: who attended, what was discussed and what was agreed.]',
+    photos: [{ src: img('event-workshop'), alt: 'Sample photograph: participants at a seminar' }, { src: img('event-networking'), alt: 'Sample photograph: networking after the seminar' }] },
+]);
+export const news: { title: string; date: string; summary: string; url?: string; sample?: boolean }[] = keep([
+  { title: '[Sample] BECCI announcement headline', date: '2026-11-20', summary: '[Sample announcement. One or two sentences on what was announced and what it means for members.]', sample: true },
+  { title: '[Sample] Scheme update headline', date: '2026-11-12', summary: '[Sample scheme or government update, with a link to the official notice.]', sample: true },
+  { title: '[Sample] Programme news headline', date: '2026-11-02', summary: '[Sample news about a BECCI programme or wing activity.]', sample: true },
+]);
+export interface Story { name: string; business: string; summary: string; kind?: string; photo?: string; started?: string; challenge?: string; achievement?: string; lesson?: string; sample?: boolean }
+export const stories: Story[] = keep([
+  { name: '[Entrepreneur name]', business: '[Garment boutique, city]', kind: 'Women entrepreneurs', photo: img('story-boutique'), sample: true,
+    summary: '[Sample story. How a home tailoring business grew into a boutique with its own staff.]', started: '[Where they started]', challenge: '[What stood in the way]', achievement: '[What they achieved]', lesson: '[What others can learn]' },
+  { name: '[Founder name]', business: '[Technology startup, city]', kind: 'Youth entrepreneurs', photo: img('story-startup'), sample: true,
+    summary: '[Sample story. A first-generation founder who built a small software company.]', started: '[Where they started]', challenge: '[What stood in the way]', achievement: '[What they achieved]', lesson: '[What others can learn]' },
+  { name: '[Artisan name]', business: '[Pottery workshop, district]', kind: 'Traditional businesses modernised', photo: img('story-pottery'), sample: true,
+    summary: '[Sample story. A traditional potter who modernised the workshop and now sells online.]', started: '[Where they started]', challenge: '[What stood in the way]', achievement: '[What they achieved]', lesson: '[What others can learn]' },
+]);
+// Franchise and enterprise opportunities (Critique §13).
+export interface FranchiseListing { title: string; model: string; investment: string; operations: string; capabilities: string; contact: string; image?: string; sample?: boolean }
+export const franchiseListings: FranchiseListing[] = keep([
+  { title: '[Sample] Quick-service food outlet franchise', model: '[Franchise of a regional food brand: outlet, menu and supply chain provided]', investment: '[Investment range, as stated by the franchisor]', operations: '[Space, staff, hours and equipment needed]', capabilities: '[Experience or skills expected of the owner]', contact: '[Franchisor contact, after BECCI review]', image: img('franchise-food'), sample: true },
+  { title: '[Sample] Mobile and electronics service centre', model: '[Ready-to-start service business with training and parts supply]', investment: '[Investment range]', operations: '[Space, staff and equipment needed]', capabilities: '[Technical training provided or required]', contact: '[Contact, after BECCI review]', image: img('franchise-service'), sample: true },
+]);
+// Wing pages (Critique §8): office bearers and programmes.
+export const wingContent: Record<'women' | 'youth', { bearers: Person[]; programmes: { title: string; text: string; sample?: boolean }[] }> = {
+  women: {
+    bearers: keep([sp('person-6', "President, Women's Wing"), sp('person-2', "[Vice President], Women's Wing")]),
+    programmes: keep([
+      { title: '[Sample] Women entrepreneurs’ meet', text: '[Sample programme description: format, frequency and who can join.]', sample: true },
+      { title: '[Sample] Finance and schemes clinic', text: '[Sample programme description.]', sample: true },
+    ]),
+  },
+  youth: {
+    bearers: keep([sp('person-7', 'President, Youth Wing'), sp('person-3', '[Vice President], Youth Wing')]),
+    programmes: keep([
+      { title: '[Sample] Founder mentoring circle', text: '[Sample programme description: students and young founders paired with experienced members.]', sample: true },
+      { title: '[Sample] Campus entrepreneurship talks', text: '[Sample programme description.]', sample: true },
+    ]),
+  },
+};
+export const resources: { title: string; type: string; url: string; summary: string; sample?: boolean }[] = keep([
+  { title: '[Sample] Article: how to prepare a project report', type: 'Business Articles', url: '/knowledge', summary: '[Sample article summary.]', sample: true },
+  { title: '[Sample] MSME update: change in registration rules', type: 'MSME Updates', url: '/knowledge', summary: '[Sample update summary, with a link to the official notification.]', sample: true },
+  { title: '[Sample] Video: interview with a first-generation entrepreneur', type: 'Videos', url: '/knowledge', summary: '[Sample video description.]', sample: true },
+]);
 export const chapters: { name: string; level: 'National' | 'State' | 'District' | 'City'; contact?: string }[] = [];
 export const stats: { label: string; value: string; period: string; basis: string }[] = [];
 
@@ -148,6 +223,13 @@ export const serviceCategories = [
   'Mentorship', 'Project Report Preparation', 'Tax Filing and Compliance', 'Accounting and Financial Services',
   'Business Registration Assistance', 'Legal and Regulatory Guidance', 'Other Professional Services',
 ];
+
+// Service providers (Critique §16). Add only providers BECCI has an agreed arrangement with.
+// `facilitation` says plainly what BECCI does (introduces, helps prepare, negotiated terms) and what it does not.
+export const serviceProviders: { name: string; service: string; url?: string; facilitation: string; sample?: boolean }[] = keep([
+  { name: '[Sample] [Bank name]', service: 'Business loans and bank accounts', facilitation: '[Introduces members and helps them prepare documents; the bank decides on loans.]', sample: true },
+  { name: '[Sample] [Chartered accountancy firm]', service: 'Tax filing, accounting and compliance', facilitation: '[Introduces members; fees are agreed directly with the firm.]', sample: true },
+]);
 
 export const collaborators = [
   'Government Departments', 'Banks and Financial Institutions', 'MSME Organisations', 'Industry Associations',

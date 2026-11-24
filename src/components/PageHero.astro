@@ -6,6 +6,7 @@
 import Kinetic from './Kinetic.astro';
 import Spot from './Spot.astro';
 import Illo from './Illo.astro';
+import InfinityRule from './InfinityRule.astro';
 interface Props { title: string; lede?: string; eyebrow?: string; note?: string; variant?: 'editorial' | 'feature'; tone?: 'ivory' | 'ice' | 'sky' | 'cyan' | 'midnight' | 'royal'; icon?: string; illo?: 'finder' | 'chamber' | 'members' | 'updates'; crumbs?: { label: string; href?: string }[] }
 const { title, lede, note, variant = 'editorial', tone, icon, illo, crumbs = [] } = Astro.props;
 const feature = variant === 'feature';
@@ -27,4 +28,5 @@ const n = title.split(' ').length;
     </div>
     {illo ? <div class="page-hero__illo m-in" aria-hidden="true"><Illo name={illo} /></div> : icon && <Spot icon={icon} dark={feature} class="page-hero__spot m-in" />}
   </div>
+  <InfinityRule tone={feature ? 'light' : 'color'} class="page-hero__rule" />
 </header>

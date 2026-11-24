@@ -1,0 +1,14 @@
+---
+// Section divider carrying the BECCI infinity symbol between two hairlines.
+import InfinityMark from './InfinityMark.astro';
+interface Props { tone?: 'color' | 'light'; class?: string }
+const { tone = 'color', class: cls = '' } = Astro.props;
+---
+<div class:list={['inf-rule', `inf-rule--${tone}`, cls]} role="presentation"><span></span><InfinityMark tone={tone} size={36} /><span></span></div>
+<style is:global>
+  .inf-rule { display: flex; align-items: center; gap: 18px; width: min(100%, 360px); margin-inline: auto; }
+  .inf-rule span { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgb(10 35 82 / 30%)); }
+  .inf-rule span:last-child { transform: scaleX(-1); }
+  .inf-rule--light span { background: linear-gradient(90deg, transparent, rgb(255 255 255 / 35%)); }
+  .inf-rule .inf-mark { opacity: 0.9; }
+</style>

@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import Pending from '../components/Pending.astro';
 import { leadershipGroups } from '../data/site';
+import SampleBadge from '../components/SampleBadge.astro';
 const roles: Record<string, string> = {
   'Advisors': 'Experienced people from business, finance, public service and other fields who guide the chamber. Each profile will set out their background, areas of expertise and contribution to BECCI.',
   'National Committee': 'The chamber’s national leadership. It sets BECCI’s direction and is accountable for the chamber as a whole.',
@@ -34,7 +35,8 @@ const roles: Record<string, string> = {
           </div>
           {g.people.length ? (
             <ul class="l-people">{g.people.map((p) => (
-              <li><h3>{p.name}</h3><p class="muted">{p.role}{p.affiliation && ` · ${p.affiliation}`}</p>{p.intro && <p>{p.intro}</p>}
+              <li class="l-person">{p.photo && <img src={p.photo} alt={p.sample ? 'Sample portrait (illustrative AI image)' : `Photograph of ${p.name}`} width="400" height="400" loading="lazy" decoding="async" />}
+                <h3>{p.name} {p.sample && <SampleBadge />}</h3><p class="muted">{p.role}{p.affiliation && ` · ${p.affiliation}`}</p>{p.background && <p class="small">{p.background}</p>}{p.intro && <p class="small">{p.intro}</p>}
                 {p.links?.map((l) => <a class="ext" href={l.url} rel="noopener">{l.label}</a>)}</li>
             ))}</ul>
           ) : <Pending label="Profiles" icon="leadership">Published once BECCI approves names, photographs and biographies.</Pending>}
@@ -56,5 +58,8 @@ const roles: Record<string, string> = {
   .l-group__head h2 { font-size: var(--fs-xl); margin-bottom: var(--s-2); }
   .l-group__head p { color: var(--slate); max-width: 56ch; }
   .l-people { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--s-5); }
+  .l-person img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: var(--radius); margin-bottom: var(--s-3); }
+  .l-person h3 { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 4px; font-size: var(--fs-md); }
+  .l-person p { margin: 0 0 6px; }
   @media (max-width: 860px) { .l-grid { grid-template-columns: 1fr; } .l-structure { position: static; } }
 </style>

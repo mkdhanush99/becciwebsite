@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import Pending from '../components/Pending.astro';
 import { stories } from '../data/site';
+import SampleBadge from '../components/SampleBadge.astro';
 const kinds = ['Bahujan entrepreneurs', 'MSME growth', 'First-generation entrepreneurs', 'Women entrepreneurs', 'Youth entrepreneurs', 'Traditional businesses modernised', 'Growth through networking', 'Member stories'];
 ---
 <Base title="Success Stories" description="Real entrepreneurs and enterprises that reached meaningful milestones, published with their consent.">
@@ -15,8 +16,36 @@ const kinds = ['Bahujan entrepreneurs', 'MSME growth', 'First-generation entrepr
       {stories.length ? null : <Pending label="No stories published yet" icon="stories" action={{ label: "Tell BECCI about your enterprise", href: "/contact" }}>Stories are published only with the entrepreneur’s written consent and after BECCI has checked the facts.</Pending>}
     </div>
   </div></section>
+  {stories.length > 0 && (
+  <section class="section" aria-labelledby="st-list"><div class="wrap">
+    <h2 id="st-list">Stories</h2>
+    <ul class="ss-list">{stories.map((s) => (
+      <li class="ss-card">
+        {s.photo && <img src={s.photo} alt={s.sample ? 'Sample photograph (illustrative AI image)' : `${s.name} at ${s.business}`} width="1024" height="768" loading="lazy" decoding="async" />}
+        <div class="ss-body">
+          <p class="ss-kind">{s.kind} {s.sample && <SampleBadge />}</p>
+          <h3>{s.name}</h3><p class="muted small">{s.business}</p>
+          <p>{s.summary}</p>
+          <dl>{[['Where they started', s.started], ['The challenge', s.challenge], ['What they achieved', s.achievement], ['The lesson', s.lesson]].filter(([, v]) => v).map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
+        </div>
+      </li>
+    ))}</ul>
+  </div></section>
+  )}
   <section class="section section--white"><div class="wrap two-col">
     <div><h2>Have a story to share?</h2></div>
     <div class="prose"><p>If you are an OBC entrepreneur who has built something worth learning from, BECCI would like to hear from you.</p><p><a class="btn" href="/contact">Tell us your story</a></p></div>
   </div></section>
 </Base>
+<style>
+  .ss-list { list-style: none; padding: 0; margin: var(--s-5) 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-5); }
+  .ss-card { overflow: hidden; border-radius: var(--radius); background: #fff; border: 1px solid rgb(10 35 82 / 10%); }
+  .ss-card img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
+  .ss-body { padding: var(--s-5); }
+  .ss-body h3 { margin: 6px 0 2px; }
+  .ss-kind { display: flex; gap: 8px; align-items: center; margin: 0; color: var(--midnight); font-size: var(--fs-label); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+  .ss-body dl { margin: var(--s-4) 0 0; display: grid; gap: var(--s-2); }
+  .ss-body dt { font-size: var(--fs-label); font-weight: 700; color: var(--slate); }
+  .ss-body dd { margin: 0; font-size: var(--fs-sm); }
+  @media (max-width: 1000px) { .ss-list { grid-template-columns: 1fr; } }
+</style>

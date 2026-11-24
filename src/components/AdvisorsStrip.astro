@@ -1,0 +1,46 @@
+---
+// Homepage advisors strip (Critique §4.3): a slow horizontal scroll of advisor photographs with name,
+// designation and affiliation. Renders only when BECCI has supplied approved advisor profiles.
+import { advisors } from '../data/site';
+import SampleBadge from './SampleBadge.astro';
+const loop = advisors.length > 3; // scroll only when there are enough profiles to fill the row
+---
+{advisors.length > 0 && (
+  <section class="section adv" aria-labelledby="adv-title">
+    <div class="wrap adv__head">
+      <h2 id="adv-title">BECCI’s advisors</h2>
+      <a class="link-arrow" href="/leadership">Leadership and governance</a>
+    </div>
+    <div class:list={['adv__viewport', loop && 'adv__viewport--loop']}>
+      <ul class="adv__track">
+        {[...advisors, ...(loop ? advisors : [])].map((p, i) => (
+          <li class="adv__card" aria-hidden={i >= advisors.length ? 'true' : undefined}>
+            {p.photo ? <img src={p.photo} alt={i >= advisors.length ? '' : p.sample ? 'Sample portrait (illustrative AI image)' : `Photograph of ${p.name}`} width="160" height="160" loading="lazy" decoding="async" /> : <span class="adv__ph" aria-hidden="true">{p.name.split(' ').map((w) => w[0]).slice(0, 2).join('')}</span>}
+            <strong>{p.name}</strong>{p.sample && <SampleBadge />}
+            <span>{p.role}</span>
+            {p.affiliation && <span class="adv__aff">{p.affiliation}</span>}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}
+<style>
+  .adv__head { display: flex; align-items: end; justify-content: space-between; gap: var(--s-4); margin-bottom: var(--s-6); }
+  .adv__head h2 { margin: 0; }
+  .adv__viewport { overflow: hidden; }
+  .adv__viewport--loop { mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+  .adv__track { list-style: none; margin: 0; padding: 0 var(--gutter); display: flex; gap: var(--s-5); width: max-content; }
+  .adv__card { display: grid; justify-items: center; gap: 4px; width: 200px; text-align: center; }
+  .adv__card img, .adv__ph { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; margin-bottom: var(--s-3); border: 1px solid rgb(10 35 82 / 14%); }
+  .adv__ph { display: grid; place-items: center; background: var(--ice); color: var(--midnight); font: 700 2rem/1 var(--font-display); }
+  .adv__card strong { color: var(--midnight); font: 700 var(--fs-md)/1.25 var(--font-display); }
+  .adv__card span { color: var(--slate); font-size: var(--fs-sm); line-height: 1.4; }
+  .adv__aff { font-size: 0.8125rem !important; }
+  @media (prefers-reduced-motion: no-preference) {
+    .adv__viewport--loop .adv__track { animation: adv-scroll 60s linear infinite; }
+    .adv__viewport--loop:hover .adv__track, .adv__viewport--loop:focus-within .adv__track { animation-play-state: paused; }
+  }
+  @media (prefers-reduced-motion: reduce) { .adv__viewport--loop { overflow-x: auto; mask-image: none; } .adv__card[aria-hidden='true'] { display: none; } }
+  @keyframes adv-scroll { to { transform: translateX(-50%); } }
+</style>

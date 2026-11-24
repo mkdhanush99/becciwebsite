@@ -3,6 +3,7 @@ import Pending from '../../components/Pending.astro';
 import Base from '../../layouts/Base.astro';
 import PageHero from '../../components/PageHero.astro';
 import { events } from '../../data/site';
+import SampleBadge from '../../components/SampleBadge.astro';
 import { formatDate, todayISO } from '../../lib/status';
 const today = todayISO();
 const upcoming = events.filter((e) => e.date >= today).sort((a, b) => a.date.localeCompare(b.date));
@@ -22,10 +23,10 @@ const typeNotes = [
   <section class="section"><div class="wrap">
     <h2>Upcoming events</h2>
     {upcoming.length ? (
-      <ul class="ev">{upcoming.map((e) => <li class="card"><p class="small muted">{formatDate(e.date)}{e.time && ` · ${e.time}`} · {e.venue} · {e.type}{e.audience && ` · ${e.audience}`}</p><h3><a href={`/events/${e.slug}`}>{e.title}</a></h3><p>{e.summary}</p><p class="ev-act"><a class="btn btn--sm" href={`/events/${e.slug}`}>Event details</a>{e.registerUrl && <a class="btn btn--sm btn--ghost" href={e.registerUrl} rel="noopener">Register</a>}</p></li>)}</ul>
+      <ul class="ev">{upcoming.map((e) => <li class="card ev-card">{e.image && <img src={e.image} alt={e.sample ? 'Sample photograph (illustrative AI image)' : e.title} width="1280" height="720" loading="lazy" decoding="async" />}<div><p class="small muted">{e.sample && <SampleBadge />} {formatDate(e.date)}{e.time && ` · ${e.time}`} · {e.venue} · {e.type}{e.audience && ` · ${e.audience}`}</p><h3><a href={`/events/${e.slug}`}>{e.title}</a></h3><p>{e.summary}</p><p class="ev-act"><a class="btn btn--sm" href={`/events/${e.slug}`}>Event details</a>{e.registerUrl && <a class="btn btn--sm btn--ghost" href={e.registerUrl} rel="noopener">Register</a>}</p></div></li>)}</ul>
     ) : <Pending label="Event calendar" title="No upcoming events announced" heading="h3" icon="events" action={{ label: "Ask BECCI about upcoming events", href: "/contact" }}>BECCI has not announced any events yet. New events will appear here first, with the date, time, venue, speakers and how to register.</Pending>}
     <h2 style="margin-top:var(--s-7)">Past events</h2>
-    {past.length ? <ul class="ev">{past.map((e) => <li class="card"><p class="small muted">{formatDate(e.date)} · {e.venue}</p><h3><a href={`/events/${e.slug}`}>{e.title}</a></h3><p>{e.summary}</p></li>)}</ul> : <p class="muted">Past events will be kept here with their photographs, videos and reports.</p>}
+    {past.length ? <ul class="ev">{past.map((e) => <li class="card ev-card">{e.image && <img src={e.image} alt={e.sample ? 'Sample photograph (illustrative AI image)' : e.title} width="1280" height="720" loading="lazy" decoding="async" />}<div><p class="small muted">{e.sample && <SampleBadge />} {formatDate(e.date)} · {e.venue}</p><h3><a href={`/events/${e.slug}`}>{e.title}</a></h3><p>{e.summary}</p></div></li>)}</ul> : <p class="muted">Past events will be kept here with their photographs, videos and reports.</p>}
   </div></section>
   <section class="section section--white"><div class="wrap two-col">
     <div><h2>The kinds of events BECCI holds</h2><p class="muted">Some events will be open to the public and some to members only. Members-only events may show a short public announcement here.</p></div>
@@ -37,4 +38,8 @@ const typeNotes = [
   .ev-types div { padding: var(--s-3) 0; border-bottom: var(--hair); }
   .ev-types dt { font-weight: 600; color: var(--midnight); }
   .ev-types dd { margin: 0; color: var(--slate); font-size: var(--fs-sm); }.ev { list-style: none; padding: 0; display: grid; gap: var(--s-4); }
+  .ev-card { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: var(--s-5); align-items: start; }
+  .ev-card img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--radius-sm); align-self: start; }
+  .ev-card h3 { margin: 4px 0; }
+  @media (max-width: 760px) { .ev-card { grid-template-columns: 1fr; } }
   .ev-act { display: flex; flex-wrap: wrap; gap: var(--s-2); margin: var(--s-3) 0 0; }</style>

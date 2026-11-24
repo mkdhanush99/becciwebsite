@@ -4,6 +4,9 @@ import Icon from '../../components/Icon.astro';
 import Base from '../../layouts/Base.astro';
 import PageHero from '../../components/PageHero.astro';
 import Pending from '../../components/Pending.astro';
+import SampleBadge from '../../components/SampleBadge.astro';
+import { wingContent } from '../../data/site';
+const wc = wingContent.youth;
 ---
 <Base title="Youth Wing" description="The Youth Wing of BECCI: who it is for, what it offers students and young founders today, and how to take part.">
   <PageHero tone="midnight" icon="youth" variant="feature" title="Youth Wing" lede="The Youth Wing is for students, graduates, young professionals and first-time founders: the people at the very beginning of the BECCI story." crumbs={[{ label: 'Wings', href: '/wings' }, { label: "Youth Wing" }]}>
@@ -31,7 +34,10 @@ import Pending from '../../components/Pending.astro';
         </ul>
       </section>
       <section class="w-block"><h2>Objectives, programmes and office bearers</h2>
-        <Pending label="Awaiting approved content" icon="events" action={{ label: "Request a call from the team", href: "/membership#join" }}>The wing’s approved objectives, its office bearers and its first programmes will be published here. Personal phone numbers are never published.</Pending>
+        {wc.bearers.length || wc.programmes.length ? (<>
+          {wc.programmes.length > 0 && <ul class="wp-list">{wc.programmes.map((g) => <li><strong>{g.title} {g.sample && <SampleBadge />}</strong><span>{g.text}</span></li>)}</ul>}
+          {wc.bearers.length > 0 && <ul class="wb-list">{wc.bearers.map((p) => <li>{p.photo && <img src={p.photo} alt={p.sample ? 'Sample portrait (illustrative AI image)' : `Photograph of ${p.name}`} width="400" height="400" loading="lazy" decoding="async" />}<strong>{p.name} {p.sample && <SampleBadge />}</strong><span>{p.role}</span></li>)}</ul>}
+        </>) : <Pending label="Awaiting approved content" icon="events" action={{ label: "Request a call from the team", href: "/membership#join" }}>The wing’s approved objectives, its office bearers and its first programmes will be published here. Personal phone numbers are never published.</Pending>}
       </section>
       <section class="w-block"><h2>Events and initiatives</h2><p class="muted">No Youth Wing events have been announced yet. When they are, they will appear here and on the <a href="/events">event calendar</a>.</p></section>
     </div>
@@ -76,4 +82,16 @@ import Pending from '../../components/Pending.astro';
   .w-panel h2 { font-size: var(--fs-lg); }
   .w-panel p:last-child { margin: var(--s-3) 0 0; }
   @media (max-width: 860px) { .w-grid { grid-template-columns: 1fr; } .w-side { position: static; } }
+</style>
+
+<style>
+  .wp-list { list-style: none; padding: 0; margin: 0 0 var(--s-5); display: grid; gap: var(--s-3); }
+  .wp-list li { display: grid; gap: 4px; padding: var(--s-4); border-radius: var(--radius-sm); background: #fff; border: 1px solid rgb(10 35 82 / 10%); }
+  .wp-list strong { display: flex; gap: 8px; align-items: center; color: var(--midnight); }
+  .wp-list span { color: var(--slate); font-size: var(--fs-sm); }
+  .wb-list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 220px)); gap: var(--s-5); }
+  .wb-list li { display: grid; gap: 4px; }
+  .wb-list img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: var(--radius); margin-bottom: 6px; }
+  .wb-list strong { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; color: var(--midnight); }
+  .wb-list span { color: var(--slate); font-size: var(--fs-sm); }
 </style>

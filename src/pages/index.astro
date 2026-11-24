@@ -1,6 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
 import ImpactStats from '../components/ImpactStats.astro';
+import InfinityRule from '../components/InfinityRule.astro';
+import AdvisorsStrip from '../components/AdvisorsStrip.astro';
+import Testimonials from '../components/Testimonials.astro';
 import Icon from '../components/Icon.astro';
 import Illo from '../components/Illo.astro';
 import { schemeLogos } from '../data/scheme-logos';
@@ -10,6 +13,7 @@ import { opportunities, portals, CATEGORY_META, CATEGORY_ORDER, OBC_SCOPE_LABEL 
 import { computeStatus, STATUS_LABEL, deadlineText, todayISO, formatDate } from '../lib/status';
 
 const today = todayISO();
+const realCount = (xs: { sample?: boolean }[]) => xs.filter((x) => !x.sample).length;
 const open = opportunities
   .map((o) => ({ o, st: computeStatus(o, today) }))
   .filter((x) => x.st !== 'closed' && x.st !== 'awaiting-notice' && x.st !== 'unconfirmed')
@@ -137,6 +141,7 @@ const tiers = [
 
   <section class="section h-paths h-curtain" aria-labelledby="paths-title">
     <div class="wrap">
+      <InfinityRule class="h-rule" />
       <div class="h-head" data-reveal>
         <h2 id="paths-title">BECCI for…</h2>
         <p>Start from where you are today. Each path opens the part of the website that is most useful to you first.</p>
@@ -217,6 +222,8 @@ const tiers = [
 
   <ImpactStats />
 
+  <Testimonials />
+
   <section class="section" aria-labelledby="does-title">
     <div class="wrap">
       <div class="h-head" data-reveal>
@@ -258,6 +265,8 @@ const tiers = [
     </div>
   </section>
 
+  <AdvisorsStrip />
+
   <section class="section h-close" aria-labelledby="close-title">
     <div class="wrap">
       <div class="h-close__box">
@@ -266,10 +275,10 @@ const tiers = [
         <p>Government departments, banks, MSME bodies, industry associations, educational institutions, incubators and corporates can create opportunities for entrepreneurs that ordinary networking cannot. BECCI welcomes proposals for collaboration.</p>
         <div class="h-close__cta"><a class="btn" href="/partnerships">Partner with BECCI</a><a class="btn btn--ghost" href="/contact">Contact the chamber</a></div>
         <ul class="h-close__links">
-          <li><a href="/events"><Icon name="events" size={22} /><strong>Event calendar</strong><span>{events.length ? `${events.length} announced` : 'No events announced yet'}</span></a></li>
-          <li><a href="/news"><Icon name="news" size={22} /><strong>News</strong><span>{news.length ? `${news.length} announcements` : 'No announcements yet'}</span></a></li>
+          <li><a href="/events"><Icon name="events" size={22} /><strong>Event calendar</strong><span>{realCount(events) ? `${realCount(events)} announced` : events.length ? 'Sample content' : 'No events announced yet'}</span></a></li>
+          <li><a href="/news"><Icon name="news" size={22} /><strong>News</strong><span>{realCount(news) ? `${realCount(news)} announcements` : news.length ? 'Sample content' : 'No announcements yet'}</span></a></li>
           <li><a href="/knowledge"><Icon name="knowledge" size={22} /><strong>Knowledge Centre</strong><span>Guides and resources</span></a></li>
-          <li><a href="/leadership"><Icon name="leadership" size={22} /><strong>Leadership</strong><span>{advisors.length ? `${advisors.length} advisors` : 'Profiles coming soon'}</span></a></li>
+          <li><a href="/leadership"><Icon name="leadership" size={22} /><strong>Leadership</strong><span>{realCount(advisors) ? `${realCount(advisors)} advisors` : advisors.length ? 'Sample content' : 'Profiles coming soon'}</span></a></li>
         </ul>
       </div>
     </div>
@@ -314,7 +323,7 @@ const tiers = [
   .h-hero__bg::after { content: ''; position: absolute; inset: 0; background: radial-gradient(50% 60% at 80% 40%, rgb(200 210 228 / 35%), transparent 70%); }
   .h-hero__grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--s-6); align-items: center; }
   /* Headline: heavier editorial weight (ref. Bizpole's bold display), tight leading, measured tracking */
-  .kinetic { color: #fff; font-size: clamp(2.75rem, 0.8rem + 4.4vw, 5.25rem); font-weight: 700; line-height: 0.96; letter-spacing: -0.035em; margin: 0 0 var(--s-5); max-width: none; font-kerning: normal; }
+  .kinetic { color: #fff; font-size: clamp(2.75rem, 0.8rem + 4.4vw, 5.25rem); font-weight: 700; line-height: 0.96; letter-spacing: -0.015em; margin: 0 0 var(--s-5); max-width: none; font-kerning: normal; }
   .kinetic__line { display: block; white-space: nowrap; }
   .kinetic__line--lit { color: #bfe7ff; }
   .kw { display: inline-block; overflow: hidden; padding: 0.14em 0.06em 0.08em; margin: -0.14em -0.06em -0.08em; vertical-align: top; }
@@ -380,7 +389,7 @@ const tiers = [
   }
   @media (max-width: 560px) {
     .h-hero { padding-top: var(--s-6); }
-    .kinetic { font-size: clamp(2.75rem, 13.5vw, 3.75rem); line-height: 0.98; letter-spacing: -0.03em; }
+    .kinetic { font-size: clamp(2.75rem, 13.5vw, 3.75rem); line-height: 0.98; letter-spacing: -0.015em; }
     .kinetic__line { white-space: normal; }
     .h-hero__actions .btn { flex: 1 1 100%; }
     .h-hero__lede { margin-bottom: var(--s-5); }
@@ -435,7 +444,7 @@ const tiers = [
   .h-bc__num { position: absolute; top: 24px; left: 24px; color: var(--gold-hi); font: 700 0.75rem/1 var(--font-body); letter-spacing: 0.2em; }
   .h-bc__num::after { content: ''; display: inline-block; vertical-align: middle; width: 28px; height: 1px; margin-left: 10px; background: rgb(198 161 91 / 60%); }
   .h-bc__body { position: absolute; inset: auto 0 0; display: grid; padding: 0 26px 28px; }
-  .h-bc__letter { font: 700 clamp(3.5rem, 2rem + 2.6vw, 5.25rem)/0.9 var(--font-display); letter-spacing: -0.02em; color: var(--gold-hi); background: linear-gradient(180deg, #f7ecd2 0%, var(--gold) 70%, var(--gold-2) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 4px 18px rgb(0 0 0 / 45%)); }
+  .h-bc__letter { font: 700 clamp(3.5rem, 2rem + 2.6vw, 5.25rem)/0.9 var(--font-display); letter-spacing: -0.01em; color: var(--gold-hi); background: linear-gradient(180deg, #f7ecd2 0%, var(--gold) 70%, var(--gold-2) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 4px 18px rgb(0 0 0 / 45%)); }
   .h-bc__word { margin-top: 14px; padding-top: 14px; border-top: 1px solid rgb(198 161 91 / 55%); color: var(--gold); font: 700 0.75rem/1 var(--font-body); letter-spacing: 0.24em; text-transform: uppercase; }
   .h-bc__title { margin-top: 10px; color: #fff; font: 700 clamp(1.0625rem, 0.85rem + 0.35vw, 1.25rem)/1.25 var(--font-display); text-wrap: balance; }
   .h-bc__text { display: grid; grid-template-rows: 0fr; margin-top: 0; color: rgb(247 245 239 / 82%); font-size: 0.875rem; line-height: 1.5; opacity: 0; transition: grid-template-rows 600ms var(--ease), opacity 450ms var(--ease), margin-top 600ms var(--ease); }
@@ -459,12 +468,13 @@ const tiers = [
   .h-hero { border-radius: 0 0 40px 40px; }
 
   /* Curtain */
+  :global(.h-rule) { margin-bottom: var(--s-6); }
   .h-curtain { position: relative; z-index: 1; margin-top: -40px; border-radius: 40px 40px 0 0; background: var(--ivory); }
   @media (max-width: 560px) { .h-curtain { border-radius: 24px 24px 0 0; margin-top: -24px; } .h-hero { border-radius: 0 0 24px 24px; } .h-facts { flex-direction: column; align-items: flex-start; } }
 
   /* Section heads (Tines: eyebrow, large editorial heading, short lede) */
   .h-head { max-width: 760px; margin-bottom: var(--s-7); }
-  .h-head h2 { font-size: clamp(2.25rem, 1.4rem + 3vw, 4rem); font-weight: 700; letter-spacing: -0.035em; line-height: 1.02; margin-bottom: var(--s-4); }
+  .h-head h2 { font-size: clamp(2.25rem, 1.4rem + 3vw, 4rem); font-weight: 700; letter-spacing: -0.015em; line-height: 1.02; margin-bottom: var(--s-4); }
   .h-head p:not(.eyebrow) { color: var(--slate); font-size: var(--fs-md); max-width: 56ch; margin: 0; }
   .h-head--center { max-width: 620px; margin-inline: auto; text-align: center; }
   .h-head--center p:not(.eyebrow) { margin-inline: auto; }
@@ -482,7 +492,7 @@ const tiers = [
   .h-path--sapphire:hover { color: #d3e0fa; }
   .h-path__for { font: 600 0.6875rem/1 var(--font-body); letter-spacing: 0.14em; text-transform: uppercase; color: var(--royal); }
   .h-path--sapphire .h-path__for { color: #bfe7ff; }
-  .h-path strong { margin: var(--s-2) 0 var(--s-3); font: 500 var(--fs-xl)/1.1 var(--font-display); letter-spacing: -0.02em; color: var(--midnight); max-width: 12ch; }
+  .h-path strong { margin: var(--s-2) 0 var(--s-3); font: 500 var(--fs-xl)/1.1 var(--font-display); letter-spacing: -0.01em; color: var(--midnight); max-width: 12ch; }
   .h-path--sapphire strong { color: #fff; }
   .h-path__need { max-width: 30ch; }
   .h-path__go { margin-top: auto; padding-top: var(--s-5); font-weight: 600; color: var(--midnight); }
@@ -561,7 +571,7 @@ const tiers = [
   .h-tiers li:hover { transform: translateY(-3px); }
   .h-tiers__step { align-self: flex-start; font: 600 0.6875rem/1 var(--font-body); letter-spacing: 0.14em; text-transform: uppercase; color: #bfe7ff; margin-bottom: auto; padding-bottom: var(--s-6); }
   .h-tiers li:nth-child(3) .h-tiers__step { color: var(--royal); }
-  .h-tiers h3 { font-size: var(--fs-xl); font-weight: 700; letter-spacing: -0.02em; color: #fff; margin-bottom: var(--s-2); }
+  .h-tiers h3 { font-size: var(--fs-xl); font-weight: 700; letter-spacing: -0.01em; color: #fff; margin-bottom: var(--s-2); }
   .h-tiers h3 span { font-weight: 300; }
   .h-tiers li:nth-child(3) h3 { color: var(--midnight); }
   .h-tiers p { margin: 0; }
@@ -573,7 +583,7 @@ const tiers = [
   /* ── Close: Tines-style bordered call-to-action box ── */
   .h-close__box { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; padding: clamp(var(--s-6), 5vw, var(--s-8)); border-radius: 24px; background: var(--ice); border: 1px solid rgb(8 26 53 / 16%); }
   .h-close__art { width: 92px; margin-bottom: var(--s-4); }
-  .h-close__box h2 { max-width: 18ch; font-size: clamp(2rem, 1.3rem + 2.4vw, 3.25rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.05; }
+  .h-close__box h2 { max-width: 18ch; font-size: clamp(2rem, 1.3rem + 2.4vw, 3.25rem); font-weight: 700; letter-spacing: -0.015em; line-height: 1.05; }
   .h-close__box > p { max-width: 58ch; color: var(--slate); }
   .h-close__cta { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-3); margin: var(--s-3) 0 var(--s-7); }
   .h-close__cta .btn { border-radius: 999px; }
@@ -589,7 +599,7 @@ const tiers = [
   /* ── Government schemes ── */
   .h-gs { background: var(--ivory); }
   .h-gs__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(var(--s-6), 6vw, 96px); align-items: start; }
-  .h-gs h2 { font-size: clamp(2.25rem, 1.4rem + 3vw, 4rem); font-weight: 700; letter-spacing: -0.035em; line-height: 1.02; margin-bottom: var(--s-4); }
+  .h-gs h2 { font-size: clamp(2.25rem, 1.4rem + 3vw, 4rem); font-weight: 700; letter-spacing: -0.015em; line-height: 1.02; margin-bottom: var(--s-4); }
   .h-gs__copy p { color: var(--slate); font-size: var(--fs-md); max-width: 46ch; }
   .h-gs__copy .h-gs__rule { margin: var(--s-5) 0 var(--s-6); padding: var(--s-4) var(--s-5); border-radius: 14px; background: var(--white); border: 1px solid rgb(8 26 53 / 12%); color: var(--midnight); font-size: var(--fs-base); font-weight: 500; }
   .h-gs__list { list-style: none; margin: 0; padding: 0; border-top: 1px solid rgb(8 26 53 / 14%); }

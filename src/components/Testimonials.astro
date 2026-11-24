@@ -1,0 +1,32 @@
+---
+// Testimonials (Critique §4.4): feedback from members, entrepreneurs and partners, in their own words,
+// published only with their consent. Renders only when BECCI has supplied approved testimonials.
+import { testimonials } from '../data/site';
+import SampleBadge from './SampleBadge.astro';
+---
+{testimonials.length > 0 && (
+  <section class="section section--white tst" aria-labelledby="tst-title">
+    <div class="wrap">
+      <h2 id="tst-title">In their words</h2>
+      <ul class="tst__list">
+        {testimonials.map((t) => (
+          <li><figure>
+            <blockquote><p>“{t.quote}”</p></blockquote>
+            <figcaption><strong>{t.name} {t.sample && <SampleBadge />}</strong><span>{t.context}</span></figcaption>
+          </figure></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}
+<style>
+  .tst h2 { margin: 0 0 var(--s-6); }
+  .tst__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-5); }
+  .tst__list figure { height: 100%; margin: 0; display: flex; flex-direction: column; justify-content: space-between; gap: var(--s-5); padding: var(--s-6); border-radius: var(--radius); background: var(--ivory); border: 1px solid rgb(10 35 82 / 10%); }
+  .tst__list blockquote { margin: 0; }
+  .tst__list blockquote p { margin: 0; color: var(--midnight); font: 500 var(--fs-md)/1.55 var(--font-body); }
+  .tst__list figcaption { display: grid; gap: 2px; padding-top: var(--s-4); border-top: 1px solid rgb(10 35 82 / 12%); }
+  .tst__list figcaption strong { color: var(--midnight); }
+  .tst__list figcaption span { color: var(--slate); font-size: var(--fs-sm); }
+  @media (max-width: 1000px) { .tst__list { grid-template-columns: 1fr; } }
+</style>

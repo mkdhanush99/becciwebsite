@@ -4,7 +4,8 @@ import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import Pending from '../components/Pending.astro';
 import EnquiryForm from '../components/EnquiryForm.astro';
-import { serviceCategories } from '../data/site';
+import { serviceCategories, serviceProviders } from '../data/site';
+import SampleBadge from '../components/SampleBadge.astro';
 const groups: [string, string, string[]][] = [
   ['Finance', 'Opening accounts, borrowing and protecting the business.', ['Business Loans', 'Bank Accounts', 'Credit Cards', 'Insurance']],
   ['Advice and mentorship', 'Someone experienced to think a decision through with.', ['Business Consultancy', 'Business Advisory', 'Mentorship']],
@@ -25,7 +26,9 @@ const groups: [string, string, string[]][] = [
     <div class="prose">
       <p>Most services will be delivered by banks, insurers, chartered accountants, consultants and other professionals, not by BECCI itself. BECCI’s role is to connect members with suitable providers and to help them prepare.</p>
       <p>Where a service is delivered by an external provider, its listing will name the provider and say exactly what BECCI does and does not do. Any fees are set by the provider.</p>
-      <Pending label="Providers not yet confirmed" icon="services" action={{ label: "Tell us what you need", href: "#service" }}>Names of service providers and the terms of BECCI’s facilitation.</Pending>
+      {serviceProviders.length ? (
+        <ul class="sv-prov">{serviceProviders.map((p) => <li><strong>{p.url ? <a href={p.url} rel="noopener">{p.name}</a> : p.name} {p.sample && <SampleBadge />}</strong><span>{p.service}</span><span class="small muted">BECCI’s role: {p.facilitation}</span></li>)}</ul>
+      ) : <Pending label="Providers not yet confirmed" icon="services" action={{ label: "Tell us what you need", href: "#service" }}>Names of service providers and the terms of BECCI’s facilitation.</Pending>}
     </div>
   </div></section>
   <section class="section"><div class="wrap two-col">
@@ -39,3 +42,4 @@ const groups: [string, string, string[]][] = [
     ]} />
   </div></section>
 </Base>
+<style>.sv-prov { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--s-3); } .sv-prov li { display: grid; gap: 2px; padding: var(--s-4); border-radius: var(--radius-sm); background: #fff; border: 1px solid rgb(10 35 82 / 10%); }</style>

@@ -3,11 +3,12 @@ import Pending from '../components/Pending.astro';
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import { resources } from '../data/site';
+import SampleBadge from '../components/SampleBadge.astro';
 import { opportunities, portals, CATEGORY_META } from '../data/opportunities';
 
 // The library holds only material that exists and has been checked: BECCI's own guides on this website,
 // the scheme explainers, the official portals BECCI checks, and any resources BECCI publishes in data/site.ts.
-type Item = { title: string; summary: string; href: string; cat: string; kind: string; external?: boolean };
+type Item = { title: string; summary: string; href: string; cat: string; kind: string; external?: boolean; sample?: boolean };
 const guides: Item[] = [
   { title: 'How to read an opportunity listing', summary: 'What the statuses, dates, category rules and last-checked dates on every listing mean.', href: '/opportunities/about-data', cat: 'How-to guides', kind: 'BECCI guide' },
   { title: 'Central OBC and State BC/OBC lists', summary: 'How the two lists differ, and why either one is enough for BECCI membership.', href: '/membership#eligibility', cat: 'How-to guides', kind: 'BECCI guide' },
@@ -15,8 +16,8 @@ const guides: Item[] = [
 ];
 const schemeGuides: Item[] = opportunities.filter((o) => o.scheme).map((o) => ({ title: o.title, summary: o.summary, href: `/schemes/${o.slug}`, cat: 'Scheme explainers', kind: o.scheme!.ministry }));
 const portalItems: Item[] = portals.map((p) => ({ title: p.name, summary: `${p.authority} · ${p.geography}`, href: p.url, cat: `Official portals: ${CATEGORY_META[p.categories[0]].label}`, kind: 'Official portal', external: true }));
-const published: Item[] = resources.map((r) => ({ title: r.title, summary: r.summary, href: r.url, cat: r.type, kind: r.type, external: /^https?:/.test(r.url) }));
-const items = [...guides, ...schemeGuides, ...published, ...portalItems];
+const published: Item[] = resources.map((r) => ({ title: r.title, summary: r.summary, href: r.url, cat: r.type, kind: r.type, external: /^https?:/.test(r.url), sample: r.sample }));
+const items = [...published, ...guides, ...schemeGuides, ...portalItems];
 const cats = [...new Set(items.map((i) => i.cat))];
 // Topics the critique asks for that need BECCI's own publishing before they can appear.
 const awaiting = ['Business news', 'MSME updates', 'Startup news', 'New laws and regulatory changes', 'Government notifications', 'Industry developments', 'Business articles', 'Videos', 'Interviews and discussions'];
@@ -37,7 +38,7 @@ const awaiting = ['Business news', 'MSME updates', 'Startup news', 'New laws and
       {items.map((i) => (
         <li data-kitem data-cat={i.cat} data-text={`${i.title} ${i.summary} ${i.kind} ${i.cat}`.toLowerCase()}>
           <a href={i.href} rel={i.external ? 'noopener' : undefined}>
-            <span class="kc-kind">{i.cat}</span>
+            <span class="kc-kind">{i.cat} {i.sample && <SampleBadge />}</span>
             <span class="kc-title">{i.title}{i.external && <span class="kc-ext" aria-label="(official website, opens the source)"> ↗</span>}</span>
             <span class="kc-sum">{i.summary}</span>
           </a>

@@ -5,9 +5,22 @@ import { opportunities, portals } from '../../data/opportunities';
 import ScopeLegend from '../../components/ScopeLegend.astro';
 import Finder from '../../components/Finder.astro';
 import { CATEGORY_META } from '../../data/opportunities';
+import Pending from '../../components/Pending.astro';
+const privateTenders = opportunities.filter((o) => o.categories.includes('tenders') && o.tenderSource === 'private');
 const m = CATEGORY_META['tenders'];
 ---
 <Base title={m.label} description={m.blurb}>
   <PageHead meta={`${opportunities.length} verified records · ${portals.length} official portals. Every record links to its source.`} title={m.label} lede={m.blurb} crumbs={[{ label: 'Opportunities', href: '/opportunities' }, { label: m.label }]} />
   <section class="finder-page"><div class="wrap"><ScopeLegend /><Finder category="tenders" /></div></section>
+  <section class="section section--white" aria-labelledby="pt-title"><div class="wrap two-col">
+    <div>
+      <h2 id="pt-title">Private and industry tenders</h2>
+      <p class="muted">Companies, industry bodies and large buyers also run supplier tenders and vendor registrations. BECCI lists them only after checking each one with the buyer, with the closing date and how to apply.</p>
+    </div>
+    <div>
+      {privateTenders.length
+        ? <p>{privateTenders.length} private-sector {privateTenders.length === 1 ? 'tender is' : 'tenders are'} listed above. Use the <strong>Tender source</strong> filter to see them on their own.</p>
+        : <Pending label="Private tenders" title="No private tenders listed yet" heading="h3" icon="tenders" action={{ label: 'Propose a tender or vendor registration', href: '/partnerships' }}>BECCI has not yet verified any private-sector tenders. Buyers who want to reach OBC entrepreneurs can propose one through Partner with BECCI.</Pending>}
+    </div>
+  </div></section>
 </Base>

@@ -1,5 +1,9 @@
 ---
-// Brand emblem is excluded until BECCI supplies final assets (client decision, Nov 2026).
-// Kept as a no-op so call sites stay intact; renders nothing.
-interface Props { class?: string; tone?: 'color' | 'light' | 'mono'; title?: string }
+// BECCI signature: the two Cs facing each other as an infinity symbol (Community and Commerce).
+// Uses the official symbol files exactly as supplied (BECCI_Logo_R2_Final, 06_Web/logo-symbol.svg and
+// 01_Vector/symbol/BECCI_symbol_white.svg). Proportions are fixed (207 × 104.5); only the size changes.
+interface Props { class?: string; tone?: 'color' | 'light' | 'mono'; title?: string; size?: number }
+const { class: cls = '', tone = 'color', title, size = 40 } = Astro.props;
+const src = tone === 'light' ? '/brand/becci-symbol-white.svg' : '/brand/becci-symbol-navy.svg';
 ---
+<img class:list={['inf-mark', cls]} src={src} alt={title ?? ''} aria-hidden={title ? undefined : 'true'} width={size} height={Math.round(size * 104.5 / 207)} decoding="async" />

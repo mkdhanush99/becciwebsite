@@ -28,6 +28,8 @@ const facets: Facet[] = [
   facet('edu', 'Education level', (o) => o.educationLevel ?? []),
   facet('fund', 'Support type', (o) => o.fundingType ?? []),
   facet('stage', 'Business stage', (o) => o.stage ?? []),
+  facet('act', 'Business activity', (o) => o.activities ?? []),
+  facet('src', 'Tender source', (o) => (o.tenderSource ? [o.tenderSource === 'private' ? 'Private sector' : 'Government'] : [])),
 ].filter((f) => f.values.length > 0);
 facets.find((f) => f.key === 'status')?.values.sort((a, b) => statusOrder.indexOf(a.value as Status) - statusOrder.indexOf(b.value as Status));
 const dueOrder: DueBucket[] = ['within-30', 'later', 'rolling', 'none', 'past'];
@@ -138,7 +140,9 @@ const title = category ? CATEGORY_META[category].label : 'All opportunities';
                 data-scope={o.obcScope}
                 data-edu={(o.educationLevel ?? []).join('|')}
                 data-fund={(o.fundingType ?? []).join('|')}
-                data-stage={(o.stage ?? []).join('|')}>
+                data-stage={(o.stage ?? []).join('|')}
+                data-act={(o.activities ?? []).join('|')}
+                data-src={o.tenderSource ? (o.tenderSource === 'private' ? 'Private sector' : 'Government') : ''}>
                 <article class="result__card">
                   <div class="result__when">
                     <span class={`status status--${st}`} data-status-pill>{STATUS_LABEL[st]}</span>

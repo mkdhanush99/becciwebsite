@@ -72,6 +72,8 @@ export interface Opportunity extends DatedRecord {
   lastVerified: string; // last editorial check of every fact against the source
   verification: string;
   scheme?: SchemeStory;
+  activities?: string[]; // business activity the support is for, as the official source words it
+  tenderSource?: 'government' | 'private'; // tenders only: who is buying
 }
 
 export const CATEGORY_META: Record<Category, { label: string; plural: string; blurb: string; path: string }> = {
@@ -411,3 +413,17 @@ export const FEED_STATUS: Record<Category, { live: boolean; message: string }> =
   finance: { live: false, message: 'Loan and funding records are checked by hand against official pages. There is no automatic feed.' },
   schemes: { live: false, message: 'Scheme records are checked by hand against official pages. Coverage is small and growing.' },
 };
+
+// Business activity filter (Critique §11). Each value is taken from the record's own official summary;
+// records whose source names no specific activity are left untagged rather than guessed.
+const ACTIVITIES: Record<string, string[]> = {
+  'nbcfdc-individual-loan-scheme': ['Any income-generating activity'],
+  'nbcfdc-group-loan-scheme': ['Any income-generating activity'],
+  pmegp: ['Manufacturing', 'Trading', 'Services'],
+  'pm-mudra-yojana': ['Manufacturing', 'Trading', 'Services'],
+  'pm-vishwakarma': ['Traditional crafts and trades'],
+  pmfme: ['Food processing'],
+  'startup-india-seed-fund': ['Startups and innovation'],
+  'pm-svanidhi': ['Street vending'],
+};
+opportunities.forEach((o) => { if (!o.activities && ACTIVITIES[o.slug]) o.activities = ACTIVITIES[o.slug]; });

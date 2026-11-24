@@ -3,6 +3,7 @@ import Pending from '../components/Pending.astro';
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import { news } from '../data/site';
+import SampleBadge from '../components/SampleBadge.astro';
 import { formatDate } from '../lib/status';
 const topics = ['BECCI announcements', 'Government announcements', 'Business and MSME updates', 'Scheme updates', 'Programme news'];
 ---
@@ -10,7 +11,7 @@ const topics = ['BECCI announcements', 'Government announcements', 'Business and
   <PageHero tone="ivory" icon="news" title="News and announcements" lede="The News Desk is where BECCI publishes its own announcements, alongside government, scheme and MSME updates that affect its members." crumbs={[{ label: 'News Desk' }]} />
   <section class="section"><div class="wrap">
     <ul class="tag-list" aria-label="Topics covered" style="margin-bottom:var(--s-6)">{topics.map((t) => <li>{t}</li>)}</ul>
-    {news.length ? <ul>{news.map((n) => <li><p class="small muted">{formatDate(n.date)}</p><h3>{n.title}</h3><p>{n.summary}</p></li>)}</ul>
+    {news.length ? <ul>{news.map((n) => <li><p class="small muted">{formatDate(n.date)}</p><h3>{n.title} {n.sample && <SampleBadge />}</h3><p>{n.summary}</p></li>)}</ul>
       : <Pending label="News" title="No announcements published yet" heading="h2" icon="news" action={{ label: "Open the opportunity finder", href: "/opportunities" }}>BECCI’s first announcements will appear here, each with its date. Deadlines that are open now are already in the opportunity finder.</Pending>}
     <p class="small muted" style="margin-top:var(--s-6)">Looking for guides and explainers rather than news? See the <a href="/knowledge">Knowledge Centre</a>.</p>
   </div></section>
