@@ -186,7 +186,7 @@ export function CommandPalette({ items, placeholder = "Type a command or search"
                     {cur && (
                       <motion.div key={cur.it.id} initial={{ opacity: 0, y: reduce ? 0 : 14, filter: reduce ? "none" : "blur(6px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} exit={{ opacity: 0, y: reduce ? 0 : -8 }} transition={{ duration: 0.2 }}>
                         <motion.div style={{ rotateX: reduce ? 0 : rX, rotateY: reduce ? 0 : rY, transformStyle: "preserve-3d", background: GRADIENT }}
-                          className="relative grid h-28 place-items-center overflow-hidden rounded-2xl text-white shadow-[0_20px_40px_-18px_rgba(23,79,193,0.55)]">
+                          className="relative grid h-28 place-items-center overflow-hidden rounded-2xl text-white shadow-[0_20px_40px_-18px_rgba(10,35,82,0.55)]">
                           <span aria-hidden className="absolute -left-6 -top-8 size-28 rounded-full bg-white/25 blur-2xl" />
                           <span className="relative scale-[1.9]" style={{ transform: "translateZ(30px) scale(1.9)" }}>{cur.it.icon}</span>
                         </motion.div>
