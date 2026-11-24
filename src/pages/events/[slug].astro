@@ -1,0 +1,51 @@
+---
+// Event detail page. One page per confirmed event in data/site.ts `events`.
+// No events have been announced yet, so no detail pages are generated until BECCI adds one.
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import { events, type BecciEvent } from '../../data/site';
+import { formatDate, todayISO } from '../../lib/status';
+
+export function getStaticPaths() {
+  return events.map((e) => ({ params: { slug: e.slug }, props: { e } }));
+}
+const { e } = Astro.props as { e: BecciEvent };
+const isPast = e.date < todayISO();
+const facts: [string, string | undefined][] = [
+  ['Date', formatDate(e.date)], ['Time', e.time], ['Venue', [e.venue, e.city].filter(Boolean).join(', ')], ['Type', e.type], ['Open to', e.audience],
+];
+---
+<Base title={e.title} description={e.summary}>
+  <PageHero tone="sky" illo="updates" title={e.title} lede={e.summary} crumbs={[{ label: 'Events', href: '/events' }, { label: e.title }]} />
+  <section class="section"><div class="wrap ed">
+    <div class="ed-main">
+      {isPast && <p class="notice">This event has taken place. The report, photographs and videos are kept below.</p>}
+      {e.description?.map((para) => <p>{para}</p>)}
+      {e.speakers?.length ? (<><h2>Speakers</h2><ul class="ed-speakers">{e.speakers.map((s) => <li><strong>{s.name}</strong>{s.role && <span>{s.role}</span>}</li>)}</ul></>) : null}
+      {isPast && e.report && (<><h2>Event report</h2><p>{e.report}</p></>)}
+      {isPast && e.photos?.length ? <ul class="ed-photos">{e.photos.map((p) => <li><img src={p.src} alt={p.alt} loading="lazy" decoding="async" /></li>)}</ul> : null}
+      {isPast && e.videoUrl && <p><a href={e.videoUrl} rel="noopener">Watch the recording</a></p>}
+    </div>
+    <aside class="ed-side card">
+      <dl>{facts.filter(([, v]) => v).map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
+      {!isPast && (e.registerUrl
+        ? <a class="btn" href={e.registerUrl} rel="noopener">Register</a>
+        : <p class="small muted">Registration details will be published here. <a href="/contact">Ask BECCI</a>.</p>)}
+      <a class="link-arrow" href="/events">All events</a>
+    </aside>
+  </div></section>
+</Base>
+<style>
+  .ed { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: var(--s-7); align-items: start; }
+  .ed-main p { max-width: 68ch; }
+  .ed-speakers { list-style: none; padding: 0; display: grid; gap: var(--s-3); }
+  .ed-speakers li { display: grid; }
+  .ed-speakers span { color: var(--slate); font-size: var(--fs-sm); }
+  .ed-photos { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--s-3); }
+  .ed-photos img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius-sm); }
+  .ed-side { position: sticky; top: calc(var(--header-h) + 24px); display: grid; gap: var(--s-4); }
+  .ed-side dl { margin: 0; display: grid; gap: var(--s-3); }
+  .ed-side dt { color: var(--slate); font-size: var(--fs-label); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+  .ed-side dd { margin: 0; color: var(--midnight); font-weight: 600; }
+  @media (max-width: 900px) { .ed { grid-template-columns: 1fr; } .ed-side { position: static; } }
+</style>

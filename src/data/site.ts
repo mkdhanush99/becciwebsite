@@ -122,7 +122,15 @@ export const leadershipGroups: { title: string; people: Person[] }[] = [
 ];
 
 export const testimonials: { quote: string; name: string; context: string }[] = [];
-export const events: { slug: string; title: string; date: string; venue: string; type: string; summary: string; registerUrl?: string }[] = [];
+// Events. Each entry gets a detail page at /events/<slug>. Add only events BECCI has confirmed.
+export interface BecciEvent {
+  slug: string; title: string; date: string; // ISO yyyy-mm-dd
+  time?: string; venue: string; city?: string; type: string; summary: string;
+  description?: string[]; speakers?: { name: string; role?: string }[];
+  registerUrl?: string; audience?: 'Public' | 'Members only';
+  report?: string; photos?: { src: string; alt: string }[]; videoUrl?: string; // for past events
+}
+export const events: BecciEvent[] = [];
 export const news: { title: string; date: string; summary: string; url?: string }[] = [];
 export const stories: { name: string; business: string; summary: string }[] = [];
 export const resources: { title: string; type: string; url: string; summary: string }[] = [];

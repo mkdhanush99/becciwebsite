@@ -3,22 +3,106 @@ import Pending from '../components/Pending.astro';
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import { resources } from '../data/site';
-const cats = ['Business News', 'MSME Updates', 'Startup News', 'New Laws and Regulatory Changes', 'Government Notifications', 'Industry Developments', 'Business Articles', 'Educational Resources', 'Video', 'Interviews and Discussions', 'Entrepreneurship Guidance', 'Reports and Guides'];
+import { opportunities, portals, CATEGORY_META } from '../data/opportunities';
+
+// The library holds only material that exists and has been checked: BECCI's own guides on this website,
+// the scheme explainers, the official portals BECCI checks, and any resources BECCI publishes in data/site.ts.
+type Item = { title: string; summary: string; href: string; cat: string; kind: string; external?: boolean };
+const guides: Item[] = [
+  { title: 'How to read an opportunity listing', summary: 'What the statuses, dates, category rules and last-checked dates on every listing mean.', href: '/opportunities/about-data', cat: 'How-to guides', kind: 'BECCI guide' },
+  { title: 'Central OBC and State BC/OBC lists', summary: 'How the two lists differ, and why either one is enough for BECCI membership.', href: '/membership#eligibility', cat: 'How-to guides', kind: 'BECCI guide' },
+  { title: 'Government schemes, explained', summary: 'Every scheme BECCI has verified, each in six short chapters with the official source.', href: '/schemes', cat: 'How-to guides', kind: 'BECCI guide' },
+];
+const schemeGuides: Item[] = opportunities.filter((o) => o.scheme).map((o) => ({ title: o.title, summary: o.summary, href: `/schemes/${o.slug}`, cat: 'Scheme explainers', kind: o.scheme!.ministry }));
+const portalItems: Item[] = portals.map((p) => ({ title: p.name, summary: `${p.authority} · ${p.geography}`, href: p.url, cat: `Official portals: ${CATEGORY_META[p.categories[0]].label}`, kind: 'Official portal', external: true }));
+const published: Item[] = resources.map((r) => ({ title: r.title, summary: r.summary, href: r.url, cat: r.type, kind: r.type, external: /^https?:/.test(r.url) }));
+const items = [...guides, ...schemeGuides, ...published, ...portalItems];
+const cats = [...new Set(items.map((i) => i.cat))];
+// Topics the critique asks for that need BECCI's own publishing before they can appear.
+const awaiting = ['Business news', 'MSME updates', 'Startup news', 'New laws and regulatory changes', 'Government notifications', 'Industry developments', 'Business articles', 'Videos', 'Interviews and discussions'];
 ---
-<Base title="Knowledge Centre" description="Guides, regulatory updates, reports and learning for entrepreneurs and business owners.">
-  <PageHero tone="ice" icon="knowledge" title="Learn what you need to grow" lede="Practical guides, regulatory changes, government notifications, reports and videos for entrepreneurs, organised by topic and searchable. The Knowledge Centre is meant to be updated regularly, not read once." crumbs={[{ label: 'Knowledge Centre' }]} />
-  <section class="section"><div class="wrap">
-    <label class="visually-hidden" for="kq">Search the Knowledge Centre</label>
-    <input id="kq" class="input" type="search" placeholder={resources.length ? "Search guides and resources" : "Search opens when resources are published"} disabled={resources.length === 0} style="max-width:560px;margin-bottom:var(--s-5)" data-kq />
-    <ul class="tag-list" aria-label="Categories" style="margin-bottom:var(--s-6)">{cats.map((c) => <li>{c}</li>)}</ul>
-    <div data-kempty>{resources.length === 0 && <Pending label="Knowledge Centre" title="No guides published yet" heading="h2" icon="knowledge" action={{ label: "Find schemes and loans now", href: "/opportunities" }}>BECCI has not published any guides yet. Search will cover every guide, article, report and video once it does.</Pending>}</div>
-    <h2 style="margin-top:var(--s-7)">Useful today</h2>
-    <ul class="k-today">
-      <li><a href="/opportunities/about-data">How to read an opportunity listing</a>: what the statuses, dates and category rules mean.</li>
-      <li><a href="/schemes">Government schemes</a>: verified schemes with who can apply and the documents they ask for.</li>
-      <li><a href="/membership#eligibility">Central OBC and State BC/OBC lists</a>: how the two lists differ and why it matters.</li>
+<Base title="Knowledge Centre" description="Guides, scheme explainers and official portals for entrepreneurs and business owners, searchable by topic.">
+  <PageHero tone="ice" icon="knowledge" title="Learn what you need to grow" lede="Practical guides, scheme explainers and the official government portals BECCI checks, organised by topic and searchable. News, regulatory updates and videos will be added here as BECCI publishes them." crumbs={[{ label: 'Knowledge Centre' }]} />
+  <section class="section" data-kc><div class="wrap">
+    <div class="kc-bar">
+      <label class="visually-hidden" for="kq">Search the Knowledge Centre</label>
+      <input id="kq" class="input kc-q" type="search" placeholder="Search guides, schemes and portals" autocomplete="off" data-kq />
+      <p class="kc-count" aria-live="polite" data-kcount>{items.length} resources</p>
+    </div>
+    <div class="kc-cats" role="group" aria-label="Filter by topic">
+      <button type="button" class="kc-cat" aria-pressed="true" data-cat="">All</button>
+      {cats.map((c) => <button type="button" class="kc-cat" aria-pressed="false" data-cat={c}>{c}</button>)}
+    </div>
+    <ul class="kc-list" data-klist>
+      {items.map((i) => (
+        <li data-kitem data-cat={i.cat} data-text={`${i.title} ${i.summary} ${i.kind} ${i.cat}`.toLowerCase()}>
+          <a href={i.href} rel={i.external ? 'noopener' : undefined}>
+            <span class="kc-kind">{i.cat}</span>
+            <span class="kc-title">{i.title}{i.external && <span class="kc-ext" aria-label="(official website, opens the source)"> ↗</span>}</span>
+            <span class="kc-sum">{i.summary}</span>
+          </a>
+        </li>
+      ))}
     </ul>
+    <p class="kc-none" hidden data-knone>Nothing matches that search. Try a scheme name, a ministry, or a word such as “loan”, “tender” or “scholarship”.</p>
+
+    <div class="kc-await">
+      <Pending label="Knowledge Centre" title="BECCI articles, news and videos are not published yet" heading="h2" icon="knowledge" action={{ label: 'Find schemes and loans now', href: '/opportunities' }}>
+        These topics will appear here, searchable in the same way, once BECCI publishes them: {awaiting.join(', ').toLowerCase()}.
+      </Pending>
+    </div>
   </div></section>
 </Base>
 
-<style>.k-today { display: grid; gap: var(--s-2); padding-left: 1.2em; max-width: 70ch; }</style>
+<style>
+  .kc-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3) var(--s-5); margin-bottom: var(--s-4); }
+  .kc-q { flex: 1 1 420px; max-width: 560px; min-height: 52px; border-radius: 999px; padding-inline: 22px; }
+  .kc-count { margin: 0; color: var(--slate); font-size: var(--fs-sm); font-weight: 600; }
+  .kc-cats { display: flex; flex-wrap: wrap; gap: var(--s-2); margin-bottom: var(--s-6); }
+  .kc-cat { min-height: 40px; padding: 0 var(--s-4); border-radius: 999px; border: 1px solid rgb(8 26 53 / 16%); background: #fff; color: var(--midnight); font: 700 var(--fs-sm)/1 var(--font-body); cursor: pointer; transition: background var(--dur), border-color var(--dur), color var(--dur); }
+  .kc-cat:hover { border-color: var(--royal); color: var(--royal); }
+  .kc-cat[aria-pressed='true'] { background: var(--midnight); border-color: var(--midnight); color: #fff; }
+  .kc-list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-4); }
+  .kc-list a { display: grid; gap: 6px; align-content: start; height: 100%; padding: var(--s-5); border-radius: var(--radius); background: #fff; border: 1px solid rgb(8 26 53 / 10%); color: var(--midnight); text-decoration: none; transition: transform var(--dur) var(--ease), border-color var(--dur), box-shadow var(--dur); }
+  .kc-list a:hover { transform: translateY(-2px); border-color: var(--royal); box-shadow: 0 10px 24px -16px rgb(8 26 53 / 35%); }
+  .kc-kind { color: var(--cyan-ink); font: 700 0.6875rem/1.3 var(--font-body); letter-spacing: 0.1em; text-transform: uppercase; }
+  .kc-title { font: 700 var(--fs-md)/1.3 var(--font-display); }
+  .kc-ext { color: var(--royal); }
+  .kc-sum { color: var(--slate); font-size: var(--fs-sm); line-height: 1.5; }
+  .kc-none { margin: var(--s-5) 0 0; padding: var(--s-5); border-radius: var(--radius); border: 1px dashed rgb(8 26 53 / 20%); color: var(--slate); }
+  .kc-await { margin-top: var(--s-8); }
+  @media (max-width: 1000px) { .kc-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 640px) { .kc-list { grid-template-columns: 1fr; } }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-kc]');
+  if (root) {
+    const q = root.querySelector<HTMLInputElement>('[data-kq]')!;
+    const btns = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-cat]')).filter((b) => b.tagName === 'BUTTON');
+    const items = Array.from(root.querySelectorAll<HTMLLIElement>('[data-kitem]'));
+    const count = root.querySelector<HTMLElement>('[data-kcount]')!;
+    const none = root.querySelector<HTMLElement>('[data-knone]')!;
+    const params = new URLSearchParams(location.search);
+    let cat = params.get('topic') ?? '';
+    q.value = params.get('q') ?? '';
+    const apply = () => {
+      const terms = q.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+      let n = 0;
+      items.forEach((li) => {
+        const ok = (!cat || li.dataset.cat === cat) && terms.every((t) => li.dataset.text!.includes(t));
+        li.hidden = !ok; if (ok) n++;
+      });
+      btns.forEach((b) => b.setAttribute('aria-pressed', String((b.dataset.cat ?? '') === cat)));
+      count.textContent = `${n} ${n === 1 ? 'resource' : 'resources'}`;
+      none.hidden = n > 0;
+      const u = new URL(location.href);
+      q.value ? u.searchParams.set('q', q.value) : u.searchParams.delete('q');
+      cat ? u.searchParams.set('topic', cat) : u.searchParams.delete('topic');
+      history.replaceState(null, '', u);
+    };
+    q.addEventListener('input', apply);
+    btns.forEach((b) => b.addEventListener('click', () => { cat = b.dataset.cat ?? ''; apply(); }));
+    apply();
+  }
+</script>

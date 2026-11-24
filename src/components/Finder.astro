@@ -2,7 +2,7 @@
 import Icon from './Icon.astro';
 const CAT_ICON: Record<string, string> = { schemes: 'schemes', tenders: 'tenders', jobs: 'jobs', scholarships: 'scholarship', finance: 'funding' };
 import { opportunities, portals, CATEGORY_META, CATEGORY_ORDER, OBC_SCOPE_LABEL, FEED_STATUS, type Category } from '../data/opportunities';
-import { computeStatus, STATUS_LABEL, deadlineText, formatDate, todayISO, type Status } from '../lib/status';
+import { computeStatus, STATUS_LABEL, deadlineText, formatDate, todayISO, dueBucket, DUE_LABEL, type Status, type DueBucket } from '../lib/status';
 
 interface Props { category?: Category }
 const { category } = Astro.props;
@@ -20,6 +20,7 @@ const facet = (key: string, label: string, get: (o: (typeof records)[number]) =>
 };
 const facets: Facet[] = [
   facet('status', 'Status', (o) => [computeStatus(o, today)], (v) => STATUS_LABEL[v as Status]),
+  facet('due', 'Deadline', (o) => [dueBucket(o, today)], (v) => DUE_LABEL[v as DueBucket]),
   facet('aud', 'Who it is for', (o) => o.audience),
   facet('geo', 'Where it applies', (o) => o.geography),
   facet('level', 'Government', (o) => [o.level]),
@@ -28,7 +29,9 @@ const facets: Facet[] = [
   facet('fund', 'Support type', (o) => o.fundingType ?? []),
   facet('stage', 'Business stage', (o) => o.stage ?? []),
 ].filter((f) => f.values.length > 0);
-facets[0]?.values.sort((a, b) => statusOrder.indexOf(a.value as Status) - statusOrder.indexOf(b.value as Status));
+facets.find((f) => f.key === 'status')?.values.sort((a, b) => statusOrder.indexOf(a.value as Status) - statusOrder.indexOf(b.value as Status));
+const dueOrder: DueBucket[] = ['within-30', 'later', 'rolling', 'none', 'past'];
+facets.find((f) => f.key === 'due')?.values.sort((a, b) => dueOrder.indexOf(a.value as DueBucket) - dueOrder.indexOf(b.value as DueBucket));
 
 const host = (u: string) => new URL(u).hostname.replace(/^www\./, '');
 const feed = category ? FEED_STATUS[category] : null;
@@ -128,6 +131,7 @@ const title = category ? CATEGORY_META[category].label : 'All opportunities';
                 data-awaiting={o.awaitingNotice ? '1' : ''}
                 data-verified={o.lastVerified}
                 data-status={st}
+                data-due={dueBucket(o, today)}
                 data-aud={o.audience.join('|')}
                 data-geo={o.geography.join('|')}
                 data-level={o.level}
@@ -320,7 +324,7 @@ const title = category ? CATEGORY_META[category].label : 'All opportunities';
 
 
 <script>
-  import { computeStatus, STATUS_LABEL, deadlineText, todayISO } from '../lib/status';
+  import { computeStatus, STATUS_LABEL, deadlineText, todayISO, dueBucket } from '../lib/status';
 
   const root = document.querySelector<HTMLElement>('[data-finder]');
   if (root) {
@@ -354,6 +358,7 @@ const title = category ? CATEGORY_META[category].label : 'All opportunities';
         if (box) box.dataset.label = STATUS_LABEL[st];
       }
       li.querySelector('[data-deadline]')!.textContent = deadlineText(rec, today);
+      li.dataset.due = dueBucket(rec, today);
     });
 
     const selected = () => {

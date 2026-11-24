@@ -80,3 +80,21 @@ export function deadlineText(r: DatedRecord, today = todayISO()): string {
   if (n === 1) return `Closes tomorrow, ${formatDate(r.closingDate)}`;
   return `Closes ${formatDate(r.closingDate)} · ${n} days left`;
 }
+
+// Deadline filter buckets for the opportunity finder. Derived only from the dates the official source published.
+export type DueBucket = 'within-30' | 'later' | 'rolling' | 'none' | 'past';
+export const DUE_LABEL: Record<DueBucket, string> = {
+  'within-30': 'Closes within 30 days',
+  later: 'Closes in more than 30 days',
+  rolling: 'Rolling or year-round',
+  none: 'No deadline published',
+  past: 'Deadline passed',
+};
+export function dueBucket(r: DatedRecord, today = todayISO()): DueBucket {
+  if (r.closingDate) {
+    const d = (toDay(r.closingDate) - toDay(today)) / DAY;
+    if (d < 0) return 'past';
+    return d <= 30 ? 'within-30' : 'later';
+  }
+  return r.rolling ? 'rolling' : 'none';
+}
