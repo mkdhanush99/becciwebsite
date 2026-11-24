@@ -61,13 +61,13 @@ const journey = [
   <section class="section" id="why" aria-labelledby="why-title">
     <div class="wrap a-essay">
       <div>
-        <h2 id="why-title">Why BECCI exists</h2>
+        <h2 id="why-title">Background and Rationale for Establishing BECCI</h2>
       </div>
       <div class="a-essay__body">
         <p>{site.philosophy}</p>
         <p>For a first-generation founder, the hardest part of starting is often not the idea. It is knowing which scheme applies, which office to approach, who might buy from you and who has done it before. BECCI exists so that those answers come from a community that shares your starting point.</p>
         <p>The chamber is organised around a simple belief: when entrepreneurs from the same communities know each other, trust each other and trade with each other, every business among them becomes stronger.</p>
-        <blockquote class="a-quote"><p>Where Community Meets Commerce.</p><cite>BECCI’s founding idea</cite></blockquote>
+        <blockquote class="a-quote"><p>Where Community Meets Commerce</p><cite>BECCI’s founding idea</cite></blockquote>
       </div>
     </div>
   </section>
@@ -88,7 +88,7 @@ const journey = [
 
   <section class="section" id="what" aria-labelledby="what-title">
     <div class="wrap">
-      <div class="section-head"><h2 id="what-title">What BECCI does</h2><p>Six areas of work. Each says honestly whether you can use it today or whether it is still being built.</p></div>
+      <div class="section-head"><h2 id="what-title">What We Do</h2><p>Six areas of work. Each says honestly whether you can use it today or whether it is still being built.</p></div>
       <ul class="a-does bento">
         {does.map((d) => <li class="tile-li"><a href={d.href} class="tile"><span class="a-top"><span class="ibadge"><Icon name={d.icon as any} /></span><span class="a-status">{d.status}</span></span><h3>{d.t}</h3><p>{d.d}</p><span class="link-arrow">Find out more</span></a></li>)}
       </ul>
@@ -98,7 +98,7 @@ const journey = [
   <section class="section section--white" id="whom" aria-labelledby="whom-title">
     <div class="wrap a-whom">
       <div>
-        <h2 id="whom-title">Whom we serve</h2>
+        <h2 id="whom-title">Whom We Serve</h2>
         <p class="muted">BECCI serves individuals and businesses: existing and aspiring entrepreneurs, first-generation business owners, professionals, students and job seekers. Institutions take part as partners.</p>
         <p class="muted">Membership is open to people whose caste or community is recognised in the Government of India’s Central OBC list for their State, or in a State Government’s BC/OBC list. Either list is enough. The two are separate classifications.</p>
         <a class="link-arrow" href="/membership">Who can join and how</a>
@@ -111,7 +111,7 @@ const journey = [
 
   <section class="section" id="journey" aria-labelledby="journey-title">
     <div class="wrap">
-      <div class="section-head"><h2 id="journey-title">The entrepreneur development journey</h2><p>BECCI’s approach follows a business from the first idea to an established enterprise. What helps at each stage is different, so the chamber’s support is organised the same way.</p></div>
+      <div class="section-head"><h2 id="journey-title">Our Approach to Entrepreneurship and Economic Development</h2><p>BECCI’s approach follows a business from the first idea to an established enterprise. What helps at each stage is different, so the chamber’s support is organised the same way.</p></div>
       <ol class="a-journey">
         {journey.map((j, i) => (
           <li>
@@ -129,7 +129,7 @@ const journey = [
   <section class="section section--white" id="structure" aria-labelledby="structure-title">
     <div class="wrap a-structure">
       <div>
-        <h2 id="structure-title">From two States to a national chamber</h2>
+        <h2 id="structure-title">Institutional Structure and Governance</h2>
         <p>{site.origin} The chamber is organised so that it can grow without losing touch with members on the ground.</p>
         <p><strong>Governance is collective.</strong> Advisors, a National Committee, State Committees, wing presidents and sector committees each carry a defined responsibility.</p>
         <p><strong>Chapters follow geography.</strong> National, State, District and City chapters bring BECCI close to where members live and work.</p>
@@ -157,7 +157,7 @@ const journey = [
     <div class:list={["wrap a-founder", !hasFounder && "a-founder--text"]}>
       {hasFounder && <BrandMedia src={PHOTOS.founder.src} alt={PHOTOS.founder.alt} ratio="4 / 5" />}
       <div>
-        <h2 id="founder-title">Founder and founding vision</h2>
+        <h2 id="founder-title">Founder and Founding Vision</h2>
         <p>BECCI was founded on the idea that community and commerce belong together. The founder’s own account of why the chamber was started, and the responsibility it carries, will be published here in their words.</p>
         <Pending label="Awaiting approved profile" icon="leadership">Founder’s name, photograph, background and founding statement.</Pending>
         <p style="margin-top:var(--s-5)"><a class="btn" href="/membership#join">Join as a Member</a></p>

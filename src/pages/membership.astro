@@ -13,9 +13,20 @@ const tiers = [
 ---
 <Base title="Membership" description="Why join BECCI, who can join, the proposed membership categories, what is available today and how joining works.">
   <PageHero tone="midnight" illo="members" variant="feature" title="Join a chamber built for you" lede="Membership makes you part of a national chamber of OBC entrepreneurs, business owners, professionals and students: people who share your starting point and want to build businesses together. Here is who can join, what membership offers, and where things stand today." crumbs={[{ label: 'Membership' }]}>
-    <div style="display:flex;gap:var(--s-3);flex-wrap:wrap;margin-top:var(--s-5)"><a class="btn btn--accent" href="#join">Join as a Member</a><a class="btn btn--ghost" href="#member-login">Member Login</a></div>
+    <div style="display:flex;gap:var(--s-3);flex-wrap:wrap;margin-top:var(--s-5)"><a class="btn btn--accent" href="#join">Join Now</a><a class="btn btn--ghost" href="#upgrade">Upgrade Membership</a><a class="btn btn--ghost" href="#member-login">Member Login</a></div>
   </PageHero>
 
+  <nav class="m-index wrap" aria-label="Membership sections">
+    <ul>
+      <li><a href="#types">Types of Membership</a></li>
+      <li><a href="#why-title">Benefits of Each Membership</a></li>
+      <li><a href="#directory">Membership Directory</a></li>
+      <li><a href="#join">Join Now</a></li>
+      <li><a href="#upgrade">Upgrade Membership</a></li>
+      <li><a href="#member-login">Member Login</a></li>
+      <li><a href="#referral">Membership Referral Programme</a></li>
+    </ul>
+  </nav>
   <section class="m-join" id="join" aria-labelledby="join-title">
     <div class="wrap m-join__grid">
       <div>
@@ -52,7 +63,7 @@ const tiers = [
   </div></section>
 
   <section class="section section--white" id="benefits" aria-labelledby="why-title"><div class="wrap">
-    <div class="section-head"><h2 id="why-title">Why become a member</h2><p>Membership is how you move from using BECCI’s public information to being part of the chamber itself.</p></div>
+    <div class="section-head"><h2 id="why-title">Benefits of Each Membership</h2><p>Membership is how you move from using BECCI’s public information to being part of the chamber itself.</p></div>
     <ul class="m-why bento">
       <li class="tile"><span class="ibadge"><Icon name="community" /></span><h3>A network that shares your starting point</h3><p>Meet other OBC entrepreneurs and professionals through wings, sector committees, chapters and events, and do business with people you can trust.</p></li>
       <li class="tile"><span class="ibadge"><Icon name="search" /></span><h3>Opportunities matched to you</h3><p>Planned member features include scheme suggestions based on your profile and alerts when relevant opportunities open.</p></li>
@@ -87,7 +98,7 @@ const tiers = [
   </div></section>
 
   <section class="section section--white"><div class="wrap">
-    <div class="section-head"><div><h2>Proposed membership categories</h2></div>
+    <div class="section-head"><div><h2 id="types">Types of Membership</h2></div>
       <p>Three categories are proposed. Each builds on the one before it. <strong>Fees, renewal periods and final benefits have not been decided yet</strong> and will be confirmed before applications open.</p></div>
     <div class="m-tiers">
       {tiers.map((t, i) => (
@@ -121,6 +132,14 @@ const tiers = [
     ]} />
   </div></section>
   <MobileCTA href="#request-call" target="#request-call" label="Request a call" note="Online applications are not open yet. The team can explain membership on a call." />
+  <section class="section section--white" aria-labelledby="planned-title">
+    <div class="wrap m-planned">
+      <h2 id="planned-title" class="visually-hidden">Member services being set up</h2>
+      <div id="directory"><h3>Membership Directory</h3><p>A searchable directory of members and their businesses, so members can find and trade with one another. It opens with the member portal; until then, <a href="#request-call">ask the membership team</a>.</p></div>
+      <div id="upgrade"><h3>Upgrade Membership</h3><p>Members will be able to move from Free to Affiliate or Associate membership from their account. Until online accounts open, the membership team arranges upgrades on a call. <a href="#request-call">Request a call</a>.</p></div>
+      <div id="referral"><h3>Membership Referral Programme</h3><p>Every member will get a personal invitation link with their referral ID. New members who join through it are credited to the member who invited them, and BECCI will recognise the members who bring in the most new members. It opens with the member portal.</p></div>
+    </div>
+  </section>
 </Base>
 <style>
   .m-tiers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-4); }
@@ -157,4 +176,14 @@ const tiers = [
   .tier { display: flex; flex-direction: column; }
   .tier ul { padding-left: 1.1em; flex: 1; }
   .tier li { margin-bottom: var(--s-2); }
+</style>
+<style>
+  .m-index { margin-block: var(--s-6) 0; }
+  .m-index ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: var(--s-2); }
+  .m-index a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 var(--s-4); border-radius: 999px; border: 1px solid rgb(10 35 82 / 16%); background: #fff; color: var(--midnight); font-weight: 700; font-size: var(--fs-sm); text-decoration: none; }
+  .m-index a:hover { border-color: var(--midnight); }
+  .m-planned { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-6); }
+  .m-planned h3 { margin: 0 0 var(--s-2); color: var(--midnight); }
+  .m-planned p { margin: 0; color: var(--slate); }
+  @media (max-width: 900px) { .m-planned { grid-template-columns: 1fr; } }
 </style>

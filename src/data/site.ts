@@ -135,8 +135,9 @@ export const leadershipGroups: { title: string; people: Person[] }[] = [
   { title: 'Advisors', people: advisors },
   { title: 'National Committee', people: keep([sp('person-5', '[President], National Committee'), sp('person-3', '[General Secretary], National Committee')]) },
   { title: 'State Committees', people: keep([sp('person-3', '[President], Telangana State Committee'), sp('person-5', '[President], Andhra Pradesh State Committee')]) },
-  { title: 'Wing Presidents', people: keep([sp('person-6', "President, Women's Wing"), sp('person-7', 'President, Youth Wing')]) },
+  { title: 'Wings Presidents', people: keep([sp('person-6', "President, Women's Wing"), sp('person-7', 'President, Youth Wing')]) },
   { title: 'Sector Committees', people: keep([sp('person-4', 'Chair, [Sector] Committee')]) },
+  { title: 'Other Officially Constituted Positions', people: [] },
 ];
 
 export const testimonials: { quote: string; name: string; context: string; sample?: boolean }[] = keep([

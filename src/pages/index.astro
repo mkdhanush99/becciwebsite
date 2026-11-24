@@ -23,14 +23,17 @@ const lastChecked = opportunities.map((o) => o.lastVerified).sort().at(-1);
 const register = open.slice(0, 3);
 const schemeList = opportunities.filter((o) => o.categories.includes('schemes') && o.scheme);
 const featuredSchemes = ['pmegp', 'pm-mudra-yojana', 'nbcfdc-individual-loan-scheme', 'pm-vishwakarma'].map((slug) => schemeList.find((o) => o.slug === slug)!).filter(Boolean);
-// BECCI card experience: the five words of BECCI with the Sanskrit motto. Definitions are the About page's.
-const pillars = [
-  { letter: 'B', word: 'Bahujan', title: 'The many, together', text: 'The communities BECCI exists for: those on the Central OBC list for their State or on a State BC/OBC list.', href: '/about#whom', photo: photos.bahujan, pos: '50% 45%' },
-  { letter: 'E', word: 'Entrepreneurs', title: 'Skills into enterprise', text: 'Everyone who builds an enterprise, from a student with a first idea to an established business owner.', href: '/services', photo: photos.entrepreneurs, pos: '42% 40%' },
-  { letter: 'C', word: 'Chamber', title: 'A collective voice', text: 'A membership institution that represents its members and connects them with one another.', href: '/membership', photo: photos.chamber, pos: '52% 45%' },
-  { letter: 'C', word: 'Commerce', title: 'Markets and relationships', text: 'Trade, markets, referrals and the business relationships that members create together.', href: '/opportunities', photo: photos.commerce, pos: '50% 40%' },
-  { letter: 'I', word: 'Industry', title: 'Every sector', text: 'Manufacturing, services, agriculture and every other sector in which members work.', href: '/partnerships', photo: photos.industry, pos: '55% 40%' },
+// BECCI card experience: the five tiles of the Critique Review ("The BECCI Story – Five Letters, One Journey"),
+// with the letter, its meaning, the tile title and the story statement exactly as the client wrote them (data/site.ts `story`).
+// The infinity symbol sits on the two C tiles, joining Community and Commerce.
+const tilePhotos = [
+  { photo: photos.entrepreneurs, pos: '42% 40%' },
+  { photo: photos.chamber, pos: '52% 45%' },
+  { photo: photos.bahujan, pos: '50% 45%' },
+  { photo: photos.commerce, pos: '50% 40%' },
+  { photo: photos.industry, pos: '55% 40%' },
 ];
+const pillars = story.map((t, i) => ({ letter: t.letter, word: t.name, title: t.title, text: t.text, href: t.link.href, infinity: t.letter === 'C', ...tilePhotos[i] }));
 const motto = ['बहुजन', 'हिताय,', 'बहुजन', 'सुखाय।'];
 // The four questions every visitor should get an answer to (Critique Review §20),
 // each with what works today and what is still being set up.
@@ -67,9 +70,9 @@ const tiers = [
     <div class="h-hero__bg" aria-hidden="true"></div>
     <div class="wrap h-hero__grid">
       <div class="h-hero__copy">
-        <h1 class="kinetic" aria-label="Where Community Meets Commerce.">
+        <h1 class="kinetic" aria-label="Where Community Meets Commerce">
           <span class="kinetic__line" aria-hidden="true"><span class="kw" style="--i:0"><span>Where</span></span> <span class="kw" style="--i:1"><span>Community</span></span></span>
-          <span class="kinetic__line kinetic__line--lit" aria-hidden="true"><span class="kw" style="--i:2"><span>Meets</span></span> <span class="kw" style="--i:3"><span>Commerce.</span></span></span>
+          <span class="kinetic__line kinetic__line--lit" aria-hidden="true"><span class="kw" style="--i:2"><span>Meets</span></span> <span class="kw" style="--i:3"><span>Commerce</span></span></span>
         </h1>
         <p class="h-hero__lede h-in" style="--i:4">{site.supporting}</p>
         <div class="h-hero__actions h-in" style="--i:5">
@@ -120,7 +123,7 @@ const tiers = [
       <span class="h-motto__rule" aria-hidden="true"><i></i></span>
       <p class="h-motto__meaning">For the welfare of the many, for the happiness of the many.</p>
     </div>
-    <ol class="wrap h-bc" aria-label="What the five letters of BECCI stand for">
+    <ol class="wrap h-bc" aria-label="The BECCI story: five letters, one journey">
       {pillars.map((p, i) => (
         <li class="h-bc__item" style={`--i:${i}`}>
           <a class="h-bc__card" href={p.href}>
@@ -128,7 +131,7 @@ const tiers = [
             <span class="h-bc__frame" aria-hidden="true"></span>
             <span class="h-bc__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
             <span class="h-bc__body">
-              <span class="h-bc__letter" aria-hidden="true">{p.letter}</span>
+              <span class="h-bc__letter" aria-hidden="true">{p.letter}{p.infinity && <img class="h-bc__inf" src="/brand/becci-symbol-white.svg" alt="" width="46" height="23" />}</span>
               <span class="h-bc__word">{p.word}</span>
               <span class="h-bc__title">{p.title}</span>
               <span class="h-bc__text"><span>{p.text}</span></span>
@@ -435,7 +438,7 @@ const tiers = [
   .h-bc__card { position: relative; display: block; aspect-ratio: 3 / 4.6; overflow: hidden; border-radius: 6px; color: #fff; text-decoration: none; isolation: isolate; background: #0b1a33;
     box-shadow: 0 0 0 1px rgb(198 161 91 / 32%), 0 30px 60px -30px rgb(0 0 0 / 70%), 0 12px 24px -16px rgb(0 0 0 / 55%);
     transition: transform 600ms var(--ease), box-shadow 600ms var(--ease); outline-offset: 6px; }
-  .h-bc__card img { position: absolute; inset: 0; z-index: -3; width: 100%; height: 100%; object-fit: cover; filter: saturate(0.86) contrast(1.08) brightness(0.92); transform: scale(1.02); transition: transform 1200ms var(--ease), filter 700ms var(--ease); }
+  .h-bc__card > img { position: absolute; inset: 0; z-index: -3; width: 100%; height: 100%; object-fit: cover; filter: saturate(0.86) contrast(1.08) brightness(0.92); transform: scale(1.02); transition: transform 1200ms var(--ease), filter 700ms var(--ease); }
   /* cinematic grade: warm gold light from the top, navy depth at the base */
   .h-bc__card::before { content: ''; position: absolute; inset: 0; z-index: -2; background: radial-gradient(90% 55% at 50% 0%, rgb(236 214 164 / 18%), transparent 60%), linear-gradient(180deg, rgb(6 19 41 / 55%) 0%, rgb(6 19 41 / 0%) 22%, rgb(6 19 41 / 0%) 40%, rgb(6 19 41 / 62%) 62%, rgb(6 19 41 / 94%) 84%, rgb(6 19 41 / 98%) 100%); mix-blend-mode: normal; }
   /* a gold sheen that crosses once on hover */
@@ -445,12 +448,13 @@ const tiers = [
   .h-bc__num::after { content: ''; display: inline-block; vertical-align: middle; width: 28px; height: 1px; margin-left: 10px; background: rgb(198 161 91 / 60%); }
   .h-bc__body { position: absolute; inset: auto 0 0; display: grid; padding: 0 26px 28px; }
   .h-bc__letter { font: 700 clamp(3.5rem, 2rem + 2.6vw, 5.25rem)/0.9 var(--font-display); letter-spacing: -0.01em; color: var(--gold-hi); background: linear-gradient(180deg, #f7ecd2 0%, var(--gold) 70%, var(--gold-2) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 4px 18px rgb(0 0 0 / 45%)); }
-  .h-bc__word { margin-top: 14px; padding-top: 14px; border-top: 1px solid rgb(198 161 91 / 55%); color: var(--gold); font: 700 0.75rem/1 var(--font-body); letter-spacing: 0.24em; text-transform: uppercase; }
+  .h-bc__inf { display: inline-block; width: 46px; height: auto; margin-left: 12px; vertical-align: middle; opacity: 0.9; filter: drop-shadow(0 0 10px rgb(198 161 91 / 50%)); -webkit-text-fill-color: initial; }
+  .h-bc__word { margin-top: 14px; padding-top: 14px; border-top: 1px solid rgb(198 161 91 / 55%); color: var(--gold); font: 700 0.75rem/1 var(--font-body); letter-spacing: 0.12em; line-height: 1.35; text-transform: uppercase; }
   .h-bc__title { margin-top: 10px; color: #fff; font: 700 clamp(1.0625rem, 0.85rem + 0.35vw, 1.25rem)/1.25 var(--font-display); text-wrap: balance; }
   .h-bc__text { display: grid; grid-template-rows: 0fr; margin-top: 0; color: rgb(247 245 239 / 82%); font-size: 0.875rem; line-height: 1.5; opacity: 0; transition: grid-template-rows 600ms var(--ease), opacity 450ms var(--ease), margin-top 600ms var(--ease); }
   .h-bc__text > span { min-height: 0; overflow: hidden; }
   .h-bc__card:hover, .h-bc__card:focus-visible { transform: translateY(-8px); box-shadow: 0 0 0 1px rgb(198 161 91 / 70%), 0 40px 70px -30px rgb(0 0 0 / 80%), 0 0 40px -10px rgb(198 161 91 / 35%); color: #fff; text-decoration: none; }
-  .h-bc__card:hover img, .h-bc__card:focus-visible img { transform: scale(1.08); filter: saturate(0.95) contrast(1.1) brightness(0.72); }
+  .h-bc__card:hover > img, .h-bc__card:focus-visible > img { transform: scale(1.08); filter: saturate(0.95) contrast(1.1) brightness(0.72); }
   .h-bc__card:hover::after, .h-bc__card:focus-visible::after { transform: translateX(60%); }
   .h-bc__card:hover .h-bc__frame, .h-bc__card:focus-visible .h-bc__frame { border-color: rgb(198 161 91 / 60%); inset: 8px; }
   .h-bc__card:hover .h-bc__text, .h-bc__card:focus-visible .h-bc__text { grid-template-rows: 1fr; opacity: 1; margin-top: 10px; }
