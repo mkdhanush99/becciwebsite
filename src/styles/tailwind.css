@@ -14,12 +14,12 @@
   --foreground: var(--ink, #121826);
   --card: #ffffff;
   --card-foreground: var(--ink, #121826);
-  --primary: var(--royal, #174fc1);
+  --primary: var(--royal, #0A2352);
   --primary-foreground: #ffffff;
   --muted: var(--silver-100, #eef2f8);
   --muted-foreground: var(--slate, #414b5d);
   --border: var(--silver-300, #cfd9e8);
-  --ring: var(--royal, #174fc1);
+  --ring: var(--royal, #0A2352);
   --radius: 14px;
   font-family: var(--font-body, 'Quicksand', system-ui, sans-serif);
   color: var(--foreground);

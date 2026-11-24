@@ -311,7 +311,7 @@ const tiers = [
   /* ── Hero: saturated royal surface with a drawing grid, copy left, illustrated stage right ── */
   .h-hero { position: relative; z-index: 2; isolation: isolate; overflow: hidden; background: var(--royal); color: #dbe6fb; padding-top: clamp(var(--s-7), 6vw, 96px); }
   .h-hero__bg { position: absolute; inset: 0; z-index: -1; background-image: linear-gradient(rgb(255 255 255 / 9%) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / 9%) 1px, transparent 1px); background-size: 72px 72px; background-position: -1px -1px; mask-image: linear-gradient(180deg, #000 60%, transparent); }
-  .h-hero__bg::after { content: ''; position: absolute; inset: 0; background: radial-gradient(50% 60% at 80% 40%, rgb(101 185 242 / 35%), transparent 70%); }
+  .h-hero__bg::after { content: ''; position: absolute; inset: 0; background: radial-gradient(50% 60% at 80% 40%, rgb(200 210 228 / 35%), transparent 70%); }
   .h-hero__grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--s-6); align-items: center; }
   /* Headline: heavier editorial weight (ref. Bizpole's bold display), tight leading, measured tracking */
   .kinetic { color: #fff; font-size: clamp(2.75rem, 0.8rem + 4.4vw, 5.25rem); font-weight: 700; line-height: 0.96; letter-spacing: -0.035em; margin: 0 0 var(--s-5); max-width: none; font-kerning: normal; }
@@ -354,7 +354,7 @@ const tiers = [
   .h-art { position: relative; min-height: 520px; }
   .h-art__scene { position: absolute; inset: 14% -6% 0 6%; }
   .h-art__live { position: absolute; top: 6%; right: 2%; z-index: 3; display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: var(--midnight); color: #fff; font-size: var(--fs-label); font-weight: 600; box-shadow: 3px 3px 0 rgb(8 26 53 / 40%); }
-  .h-art__live::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 0 3px rgb(66 200 216 / 35%); }
+  .h-art__live::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 0 3px rgb(200 210 228 / 35%); }
   .h-card { position: absolute; z-index: 2; width: min(272px, 56%); padding: var(--s-4); background: #fff; color: var(--ink); border: 1px solid var(--midnight); border-radius: 16px; box-shadow: 6px 6px 0 var(--midnight); }
   .h-card--0 { top: 0; left: 0; }
   .h-card--1 { bottom: 0; right: 0; }
@@ -400,11 +400,11 @@ const tiers = [
   @font-face { font-family: 'BECCI Motto'; src: url('/fonts/TiroDevanagariSanskrit-motto.woff2') format('woff2'); font-display: swap; unicode-range: U+0900-097F, U+0964; }
   .h-motto { --gold: #c6a15b; --gold-2: #a9874c; --gold-hi: #ecd6a4; --ink-night: #061329; position: relative; isolation: isolate; padding-block: calc(var(--s-9) + 40px) calc(var(--s-8) + 40px); margin-top: -40px; overflow: hidden;
     /* continues the hero's royal blue and settles into midnight, so the section emerges rather than cuts in */
-    background: linear-gradient(180deg, #123f9c 0, #0d2c6c 90px, #0a2152 200px, #071833 380px, var(--ink-night) 560px, var(--ink-night) calc(100% - 260px), #081b38 100%); }
+    background: linear-gradient(180deg, #0A2352 0, #091f49 140px, #071a3f 300px, #061638 420px, var(--ink-night) 560px, var(--ink-night) calc(100% - 260px), #081b38 100%); }
   .h-motto::before { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; background:
       radial-gradient(34% 26% at 50% 30%, rgb(198 161 91 / 18%), transparent 72%),
       radial-gradient(70% 30% at 50% 78%, rgb(198 161 91 / 9%), transparent 70%),
-      radial-gradient(60% 22% at 50% 100%, rgb(40 105 232 / 16%), transparent 70%); }
+      radial-gradient(60% 22% at 50% 100%, rgb(10 35 82 / 16%), transparent 70%); }
   /* A faint jali (lattice) behind the motto, the traditional Indian screen, drawn in gold at very low opacity. */
   .h-motto__jali { position: absolute; z-index: -1; left: 50%; top: 40px; width: 980px; height: 560px; translate: -50% 0; opacity: 0.09; pointer-events: none;
     background: radial-gradient(circle at 50% 50%, transparent 9px, var(--gold) 9.5px, var(--gold) 10.5px, transparent 11px) 0 0 / 28px 28px,
@@ -473,7 +473,7 @@ const tiers = [
   /* ── Audience paths: colour-blocked "BECCI for" cards ── */
   .h-paths__list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-4); }
   .h-path { --bg: var(--ice); --art: var(--sapphire-soft); position: relative; display: flex; flex-direction: column; height: 100%; min-height: 300px; padding: var(--s-5) var(--s-5) var(--s-5); overflow: hidden; background: var(--bg); border: 1px solid rgb(8 26 53 / 14%); border-radius: 18px; color: var(--slate); text-decoration: none; font-size: var(--fs-sm); transition: transform 260ms var(--ease), box-shadow 260ms var(--ease); }
-  .h-path--cyan { --bg: var(--cyan-soft); --art: #b5ecf2; }
+  .h-path--cyan { --bg: var(--cyan-soft); --art: #dfe5ee; }
   .h-path--sky { --bg: var(--sky-tint); --art: #bcdaf7; }
   .h-path--white { --bg: #fff; --art: var(--ice); }
   .h-path--sapphire { --bg: var(--royal); --art: var(--sapphire); color: #d3e0fa; }
@@ -504,7 +504,7 @@ const tiers = [
   .h-open__feature { position: relative; border-radius: 18px; padding: clamp(var(--s-5), 3vw, var(--s-7)); display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-3); color: #d3e0fa; background: var(--royal); border: 1px solid var(--midnight); box-shadow: 10px 10px 0 var(--sky-tint), 10px 10px 0 1px rgb(8 26 53 / 30%); background-image: linear-gradient(rgb(255 255 255 / 7%) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / 7%) 1px, transparent 1px); background-size: 36px 36px; }
   .h-open__feature h3 { font-size: var(--fs-xl); line-height: 1.2; margin: var(--s-2) 0 0; color: #fff; }
   .h-open__feature p { margin: 0; }
-  .h-open__feature .h-open__auth { color: #bcd0f5; font-size: var(--fs-sm); }
+  .h-open__feature .h-open__auth { color: #cfd8e6; font-size: var(--fs-sm); }
   .h-open__feature h3 a { color: #fff; text-decoration: none; }
   .h-open__feature h3 a:hover { color: #fff; text-decoration: underline; }
   .h-open__scope { font-size: var(--fs-label); font-weight: 600; color: #fff; padding: 5px 8px; border-radius: 4px; background: rgb(255 255 255 / 16%); }

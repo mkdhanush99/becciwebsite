@@ -6,8 +6,8 @@ type Scene = 'finder' | 'chamber' | 'members' | 'updates' | 'hero' | 'arch';
 interface Props { name: Scene; class?: string }
 const { name, class: cls = '' } = Astro.props;
 
-const K = '#081a35'; // ink
-const R = '#174fc1', S = '#2869e8', Y = '#65b9f2', C = '#42c8d8', I = '#eaf3fc', T = '#dcecfb', Cs = '#dcf4f7', W = '#ffffff', V = '#f7f5ef';
+const K = '#061638'; // ink
+const R = '#0A2352', S = '#16336b', Y = '#c8d2e4', C = '#c8d2e4', I = '#f1f3f8', T = '#e9edf4', Cs = '#eef1f6', W = '#ffffff', V = '#f7f5ef';
 const st = `stroke="${K}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"`;
 // A floating island: side wall + top ellipse
 const island = (cx: number, cy: number, rx: number, ry: number, h: number, top = I, side = S) =>

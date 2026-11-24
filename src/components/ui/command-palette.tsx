@@ -31,8 +31,8 @@ export interface CommandPaletteProps {
 }
 
 // BECCI brand: royal blue action colour, sapphire, sky light on dark.
-const LIGHT = "#65b9f2"
-const GRADIENT = "linear-gradient(120deg,#123f9c,#174fc1 45%,#2869e8)"
+const LIGHT = "#c8d2e4"
+const GRADIENT = "linear-gradient(120deg,#061638,#0A2352 45%,#16336b)"
 
 /** Subsequence match. Returns the matched indexes and a score (lower is better), or null. */
 function fuzzy(text: string, q: string): { idx: number[]; score: number } | null {
@@ -49,7 +49,7 @@ function fuzzy(text: string, q: string): { idx: number[]; score: number } | null
 function Lit({ text, idx }: { text: string; idx: number[] }) {
   if (!idx.length) return <>{text}</>
   const set = new Set(idx)
-  return <>{Array.from(text).map((c, i) => (set.has(i) ? <span key={i} className="font-bold text-primary underline decoration-[#65b9f2] decoration-2 underline-offset-[3px]">{c}</span> : c))}</>
+  return <>{Array.from(text).map((c, i) => (set.has(i) ? <span key={i} className="font-bold text-primary underline decoration-[#c8d2e4] decoration-2 underline-offset-[3px]">{c}</span> : c))}</>
 }
 
 function KeyCap({ children, down, label }: { children: React.ReactNode; down: boolean; label?: string }) {
@@ -138,7 +138,7 @@ export function CommandPalette({ items, placeholder = "Type a command or search"
       <AnimatePresence>
         {open && (
           <motion.div className="fixed inset-0 z-50 grid place-items-start justify-items-center px-4 pt-[9vh]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.18 }}>
-            <motion.div aria-hidden onClick={close} className="absolute inset-0 bg-[#081a35]/55 backdrop-blur-md" />
+            <motion.div aria-hidden onClick={close} className="absolute inset-0 bg-[#061638]/55 backdrop-blur-md" />
             <motion.div role="dialog" aria-modal="true" aria-label="Search BECCI" onKeyDown={onKey}
               onPointerMove={(e) => { const b = e.currentTarget.getBoundingClientRect(); px.set(e.clientX - b.left); py.set(e.clientY - b.top) }}
               initial={{ opacity: 0, scale: reduce ? 1 : 0.9, y: reduce ? 0 : -24, rotateX: reduce ? 0 : 12 }} animate={{ opacity: 1, scale: 1, y: 0, rotateX: 0 }} exit={{ opacity: 0, scale: reduce ? 1 : 0.96, y: reduce ? 0 : -10 }}

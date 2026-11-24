@@ -118,13 +118,13 @@ const year = new Date().getFullYear();
 
 <style is:global>
   .cf {
-    --cf-night: #081A30; --cf-gold: #C6A15B; --cf-gold-2: #A9874C; --cf-sapphire: #174A78; --cf-ivory: #F7F5EF;
+    --cf-night: #081A30; --cf-gold: #C6A15B; --cf-gold-2: #A9874C; --cf-sapphire: #0A2352; --cf-ivory: #F7F5EF;
     position: relative; overflow: hidden; isolation: isolate; padding: 0;
     background: var(--cf-night); color: rgb(247 245 239 / 72%); font-size: var(--fs-sm);
   }
   /* soft sapphire atmosphere where the page hands over to the footer */
   .cf::before { content: ''; position: absolute; inset: 0 0 auto; height: 420px; z-index: -1; pointer-events: none;
-    background: radial-gradient(70% 100% at 50% 0%, rgb(23 74 120 / 42%), transparent 72%); }
+    background: radial-gradient(70% 100% at 50% 0%, rgb(10 35 82 / 42%), transparent 72%); }
 
   /* ── Zone A ── */
   .cf-nav { padding-top: clamp(72px, 8vw, 120px); }
@@ -149,9 +149,9 @@ const year = new Date().getFullYear();
 
   /* ── Zone B ── */
   .cf-stage { position: relative; margin-top: clamp(var(--s-6), 5vw, 72px); padding-top: clamp(32px, 4vw, 56px); text-align: center; overflow: hidden; }
-  .cf-haze { position: absolute; inset: 0; z-index: -2; background: linear-gradient(180deg, transparent 0%, rgb(23 74 120 / 18%) 45%, rgb(23 74 120 / 0%) 100%); }
+  .cf-haze { position: absolute; inset: 0; z-index: -2; background: linear-gradient(180deg, transparent 0%, rgb(10 35 82 / 18%) 45%, rgb(10 35 82 / 0%) 100%); }
   .cf-glow { position: absolute; left: -25%; right: -25%; bottom: -62%; height: 140%; z-index: -1; pointer-events: none; transform-origin: 50% 100%;
-    background: radial-gradient(closest-side, rgb(250 240 214 / 95%) 0%, rgb(232 207 150 / 88%) 12%, rgb(198 161 91 / 78%) 27%, rgb(169 135 76 / 52%) 42%, rgb(23 74 120 / 30%) 62%, rgb(8 26 48 / 0%) 82%); }
+    background: radial-gradient(closest-side, rgb(250 240 214 / 95%) 0%, rgb(232 207 150 / 88%) 12%, rgb(198 161 91 / 78%) 27%, rgb(169 135 76 / 52%) 42%, rgb(10 35 82 / 30%) 62%, rgb(8 26 48 / 0%) 82%); }
   .cf-glow::after { content: ''; position: absolute; inset: 30% 34% 38%; background: radial-gradient(closest-side, rgb(255 250 236 / 70%), rgb(255 246 222 / 0%)); }
   .cf-dust { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
   .cf-dust i { position: absolute; left: var(--x); top: var(--y); width: var(--s); height: var(--s); border-radius: 50%; opacity: var(--o);
