@@ -1,11 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
-import ScrollStory from '../components/ScrollStory.astro';
 import ImpactStats from '../components/ImpactStats.astro';
 import Icon from '../components/Icon.astro';
 import Illo from '../components/Illo.astro';
 import { schemeLogos } from '../data/scheme-logos';
-import { site, audiences, advisors, events, news, stats } from '../data/site';
+import { site, audiences, advisors, events, news, stats, story } from '../data/site';
+import { photos, srcset } from '../data/photos';
 import { opportunities, portals, CATEGORY_META, CATEGORY_ORDER, OBC_SCOPE_LABEL } from '../data/opportunities';
 import { computeStatus, STATUS_LABEL, deadlineText, todayISO, formatDate } from '../lib/status';
 
@@ -19,8 +19,15 @@ const lastChecked = opportunities.map((o) => o.lastVerified).sort().at(-1);
 const register = open.slice(0, 3);
 const schemeList = opportunities.filter((o) => o.categories.includes('schemes') && o.scheme);
 const featuredSchemes = ['pmegp', 'pm-mudra-yojana', 'nbcfdc-individual-loan-scheme', 'pm-vishwakarma'].map((slug) => schemeList.find((o) => o.slug === slug)!).filter(Boolean);
-const statement = 'Community and Commerce have not been sufficiently connected. BECCI brings them together, so connections turn into businesses and businesses turn into opportunities.';
-const words = (t: string) => t.split(' ');
+// BECCI card experience: the five words of BECCI with the Sanskrit motto. Definitions are the About page's.
+const pillars = [
+  { letter: 'B', word: 'Bahujan', title: 'The many, together', text: 'The communities BECCI exists for: those on the Central OBC list for their State or on a State BC/OBC list.', href: '/about#whom', photo: photos.bahujan, pos: '58% 42%' },
+  { letter: 'E', word: 'Entrepreneurs', title: 'Skills into enterprise', text: 'Everyone who builds an enterprise, from a student with a first idea to an established business owner.', href: '/services', photo: photos.entrepreneurs, pos: '36% 46%' },
+  { letter: 'C', word: 'Chamber', title: 'A collective voice', text: 'A membership institution that represents its members and connects them with one another.', href: '/membership', photo: photos.chamber, pos: '50% 64%' },
+  { letter: 'C', word: 'Commerce', title: 'Markets and relationships', text: 'Trade, markets, referrals and the business relationships that members create together.', href: '/opportunities', photo: photos.commerce, pos: '64% 40%' },
+  { letter: 'I', word: 'Industry', title: 'Every sector', text: 'Manufacturing, services, agriculture and every other sector in which members work.', href: '/partnerships', photo: photos.industry, pos: '74% 46%' },
+];
+const motto = ['बहुजन', 'हिताय,', 'बहुजन', 'सुखाय।'];
 // The four questions every visitor should get an answer to (Critique Review §20),
 // each with what works today and what is still being set up.
 // Four content pillars. Each answers one visitor question (Critique Review §20) and says
@@ -98,18 +105,34 @@ const tiers = [
     </div>
   </section>
 
-  <section class="h-statement on-dark" aria-label="Why BECCI exists">
-    <div class="wrap">
-      <p class="h-statement__text" data-scrub>{words(statement).map((w, i) => <><span class="sw" style={`--w:${i}`}>{w}</span>{' '}</>)}</p>
-      <div class="h-facts">
-        <p class="h-promise">{site.promise}</p>
-        <ul>
-          <li>Began in Telangana and Andhra Pradesh</li>
-          <li>Building a national presence</li>
-          <li><a href="/about">About BECCI</a></li>
-        </ul>
-      </div>
+  <section class="h-motto" aria-labelledby="motto-title" data-motto>
+    <div class="h-motto__jali" aria-hidden="true"></div>
+    <div class="wrap h-motto__in">
+      <p class="h-motto__eyebrow" id="motto-title">BECCI’s guiding principle</p>
+      <p class="h-motto__line" lang="sa" aria-label="बहुजन हिताय, बहुजन सुखाय।">
+        {motto.map((w, i) => <><span class="h-motto__w" style={`--w:${i}`} aria-hidden="true">{w}</span>{i < motto.length - 1 ? ' ' : ''}</>)}
+      </p>
+      <p class="h-motto__translit" lang="sa-Latn">Bahujana Hitāya, Bahujana Sukhāya.</p>
+      <span class="h-motto__rule" aria-hidden="true"><i></i></span>
+      <p class="h-motto__meaning">For the welfare of the many, for the happiness of the many.</p>
     </div>
+    <ol class="wrap h-bc" aria-label="What the five letters of BECCI stand for">
+      {pillars.map((p, i) => (
+        <li class="h-bc__item" style={`--i:${i}`}>
+          <a class="h-bc__card" href={p.href}>
+            <img src={`${p.photo.src}-800.webp`} srcset={srcset(p.photo)} sizes="(max-width: 1100px) 46vw, 20vw" alt={p.photo.alt} width="800" height="533" style={`object-position:${p.pos}`} loading="lazy" decoding="async" />
+            <span class="h-bc__frame" aria-hidden="true"></span>
+            <span class="h-bc__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <span class="h-bc__body">
+              <span class="h-bc__letter" aria-hidden="true">{p.letter}</span>
+              <span class="h-bc__word">{p.word}</span>
+              <span class="h-bc__title">{p.title}</span>
+              <span class="h-bc__text"><span>{p.text}</span></span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ol>
   </section>
 
   <section class="section h-paths h-curtain" aria-labelledby="paths-title">
@@ -194,8 +217,6 @@ const tiers = [
 
   <ImpactStats />
 
-  <ScrollStory />
-
   <section class="section" aria-labelledby="does-title">
     <div class="wrap">
       <div class="h-head" data-reveal>
@@ -255,6 +276,35 @@ const tiers = [
     {stats.length > 0 && <ul class="wrap h-stats">{stats.map((s) => <li><strong>{s.value}</strong><span>{s.label}</span><small>{s.period} · {s.basis}</small></li>)}</ul>}
   </section>
 </Base>
+
+<script>
+  // Motto: words light up as the line crosses the viewport; the five cards rise once when in view.
+  // Transforms, opacity and filter only. Nothing runs with reduced motion; CSS then shows the final state.
+  if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+    const motto = document.querySelector<HTMLElement>('[data-motto]');
+    if (motto) {
+      const words = Array.from(motto.querySelectorAll<HTMLElement>('.h-motto__w'));
+      let queued = false;
+      const frame = () => {
+        queued = false;
+        const r = motto.getBoundingClientRect(), vh = window.innerHeight;
+        const p = Math.min(1, Math.max(0, (vh * 0.85 - r.top) / (vh * 0.55)));
+        words.forEach((w, i) => w.style.setProperty('--on', p > 0.12 + i * 0.13 ? '1' : '0'));
+        motto.style.setProperty('--rule', p > 0.62 ? '1' : '0');
+        motto.style.setProperty('--meaning', p > 0.7 ? '1' : '0');
+      };
+      const onScroll = () => { if (!queued) { queued = true; requestAnimationFrame(frame); } };
+      addEventListener('scroll', onScroll, { passive: true });
+      addEventListener('resize', onScroll, { passive: true });
+      frame();
+    }
+    const deck = document.querySelector<HTMLElement>('.h-bc');
+    if (deck && 'IntersectionObserver' in window) {
+      const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { deck.setAttribute('data-in', ''); io.disconnect(); } }), { threshold: 0.15 });
+      io.observe(deck);
+    } else deck?.setAttribute('data-in', '');
+  }
+</script>
 
 
 <style>
@@ -346,14 +396,66 @@ const tiers = [
   }
 
   /* Statement */
-  .h-statement { position: relative; background: #061329; padding-block: calc(var(--s-8) + 40px) var(--s-8); margin-top: -40px; overflow: hidden; }
-  .h-statement::before { content: ''; position: absolute; inset: 0 0 auto; height: 60%; background: radial-gradient(50% 60% at 50% 0%, rgb(40 105 232 / 30%), transparent 70%); pointer-events: none; }
-  .h-statement__text { position: relative; font: 500 clamp(2rem, 0.8rem + 4.4vw, 5rem)/1.05 var(--font-display); letter-spacing: -0.035em; color: #fff; margin: 0; max-width: 20ch; text-wrap: balance; }
-  @media (prefers-reduced-motion: no-preference) { :global(.js) .h-statement .sw[data-on]:nth-last-child(-n + 16) { color: var(--sky); } }
-  .h-facts { position: relative; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s-3) var(--s-6); margin-top: var(--s-8); padding-top: var(--s-5); border-top: 1px solid rgb(255 255 255 / 12%); }
-  .h-promise { margin: 0; font-weight: 500; letter-spacing: 0.02em; color: #fff; }
-  .h-facts ul { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-6); list-style: none; margin: 0; padding: 0; font-size: var(--fs-sm); color: #a9bad6; }
-  .h-facts a { display: inline-flex; align-items: center; min-height: 44px; color: #fff; }
+  /* BECCI card experience: Sanskrit motto in champagne gold over five art-directed photographic cards. */
+  @font-face { font-family: 'BECCI Motto'; src: url('/fonts/TiroDevanagariSanskrit-motto.woff2') format('woff2'); font-display: swap; unicode-range: U+0900-097F, U+0964; }
+  .h-motto { --gold: #c6a15b; --gold-2: #a9874c; --gold-hi: #ecd6a4; --ink-night: #061329; position: relative; isolation: isolate; padding-block: calc(var(--s-9) + 40px) calc(var(--s-8) + 40px); margin-top: -40px; overflow: hidden;
+    /* continues the hero's royal blue and settles into midnight, so the section emerges rather than cuts in */
+    background: linear-gradient(180deg, #123f9c 0, #0d2c6c 90px, #0a2152 200px, #071833 380px, var(--ink-night) 560px, var(--ink-night) calc(100% - 260px), #081b38 100%); }
+  .h-motto::before { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; background:
+      radial-gradient(34% 26% at 50% 30%, rgb(198 161 91 / 18%), transparent 72%),
+      radial-gradient(70% 30% at 50% 78%, rgb(198 161 91 / 9%), transparent 70%),
+      radial-gradient(60% 22% at 50% 100%, rgb(40 105 232 / 16%), transparent 70%); }
+  /* A faint jali (lattice) behind the motto, the traditional Indian screen, drawn in gold at very low opacity. */
+  .h-motto__jali { position: absolute; z-index: -1; left: 50%; top: 40px; width: 980px; height: 560px; translate: -50% 0; opacity: 0.09; pointer-events: none;
+    background: radial-gradient(circle at 50% 50%, transparent 9px, var(--gold) 9.5px, var(--gold) 10.5px, transparent 11px) 0 0 / 28px 28px,
+                radial-gradient(circle at 0 0, transparent 9px, var(--gold) 9.5px, var(--gold) 10.5px, transparent 11px) 0 0 / 28px 28px;
+    -webkit-mask: radial-gradient(closest-side, #000 30%, transparent); mask: radial-gradient(closest-side, #000 30%, transparent); }
+  .h-motto__in { position: relative; display: grid; justify-items: center; text-align: center; }
+  .h-motto__eyebrow { display: inline-flex; align-items: center; gap: 16px; margin: 0 0 var(--s-6); color: var(--gold); font: 700 var(--fs-label)/1 var(--font-body); letter-spacing: 0.24em; text-transform: uppercase; }
+  .h-motto__eyebrow::before, .h-motto__eyebrow::after { content: ''; width: 48px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold)); }
+  .h-motto__eyebrow::after { transform: scaleX(-1); }
+  .h-motto__line { margin: 0; font: 400 clamp(3.25rem, 1rem + 5vw, 7.25rem)/1.22 'BECCI Motto', 'Kohinoor Devanagari', 'Devanagari Sangam MN', 'Noto Serif Devanagari', 'Nirmala UI', serif; letter-spacing: 0.01em; filter: drop-shadow(0 0 28px rgb(198 161 91 / 28%)) drop-shadow(0 2px 0 rgb(0 0 0 / 35%)); }
+  .h-motto__w { display: inline-block; color: var(--gold); background: linear-gradient(176deg, var(--gold-hi) 8%, var(--gold) 46%, var(--gold-2) 78%, #8a6a35 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .h-motto__translit { margin: var(--s-3) 0 0; color: var(--gold); font: italic 400 clamp(1.125rem, 0.9rem + 0.5vw, 1.375rem)/1.3 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif; letter-spacing: 0.04em; opacity: 0.92; }
+  .h-motto__rule { position: relative; display: block; width: min(560px, 60%); height: 1px; margin: var(--s-5) 0 var(--s-4); background: linear-gradient(90deg, transparent, var(--gold) 22%, var(--gold) 78%, transparent); transform-origin: center; }
+  .h-motto__rule i { position: absolute; left: 50%; top: 50%; width: 9px; height: 9px; translate: -50% -50%; rotate: 45deg; background: var(--ink-night); border: 1px solid var(--gold); box-shadow: 0 0 12px rgb(198 161 91 / 60%); }
+  .h-motto__meaning { margin: 0; color: #eee4cf; font: 500 clamp(1.125rem, 0.95rem + 0.5vw, 1.4375rem)/1.5 var(--font-body); letter-spacing: 0.01em; }
+
+  /* Five cards */
+  .h-bc { list-style: none; padding: 0; margin-top: clamp(64px, 6vw, 96px); display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: clamp(12px, 1.1vw, 20px); }
+  .h-bc__card { position: relative; display: block; aspect-ratio: 3 / 4.6; overflow: hidden; border-radius: 6px; color: #fff; text-decoration: none; isolation: isolate; background: #0b1a33;
+    box-shadow: 0 0 0 1px rgb(198 161 91 / 32%), 0 30px 60px -30px rgb(0 0 0 / 70%), 0 12px 24px -16px rgb(0 0 0 / 55%);
+    transition: transform 600ms var(--ease), box-shadow 600ms var(--ease); outline-offset: 6px; }
+  .h-bc__card img { position: absolute; inset: 0; z-index: -3; width: 100%; height: 100%; object-fit: cover; filter: saturate(0.86) contrast(1.08) brightness(0.92); transform: scale(1.02); transition: transform 1200ms var(--ease), filter 700ms var(--ease); }
+  /* cinematic grade: warm gold light from the top, navy depth at the base */
+  .h-bc__card::before { content: ''; position: absolute; inset: 0; z-index: -2; background: radial-gradient(90% 55% at 50% 0%, rgb(236 214 164 / 18%), transparent 60%), linear-gradient(180deg, rgb(6 19 41 / 55%) 0%, rgb(6 19 41 / 0%) 22%, rgb(6 19 41 / 0%) 40%, rgb(6 19 41 / 62%) 62%, rgb(6 19 41 / 94%) 84%, rgb(6 19 41 / 98%) 100%); mix-blend-mode: normal; }
+  /* a gold sheen that crosses once on hover */
+  .h-bc__card::after { content: ''; position: absolute; inset: -20% -60%; z-index: -1; background: linear-gradient(105deg, transparent 42%, rgb(236 214 164 / 16%) 50%, transparent 58%); transform: translateX(-60%); transition: transform 1100ms var(--ease); pointer-events: none; }
+  .h-bc__frame { position: absolute; inset: 10px; border: 1px solid rgb(198 161 91 / 26%); border-radius: 3px; pointer-events: none; transition: border-color 600ms var(--ease), inset 600ms var(--ease); }
+  .h-bc__num { position: absolute; top: 24px; left: 24px; color: var(--gold-hi); font: 700 0.75rem/1 var(--font-body); letter-spacing: 0.2em; }
+  .h-bc__num::after { content: ''; display: inline-block; vertical-align: middle; width: 28px; height: 1px; margin-left: 10px; background: rgb(198 161 91 / 60%); }
+  .h-bc__body { position: absolute; inset: auto 0 0; display: grid; padding: 0 26px 28px; }
+  .h-bc__letter { font: 700 clamp(3.5rem, 2rem + 2.6vw, 5.25rem)/0.9 var(--font-display); letter-spacing: -0.02em; color: var(--gold-hi); background: linear-gradient(180deg, #f7ecd2 0%, var(--gold) 70%, var(--gold-2) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 4px 18px rgb(0 0 0 / 45%)); }
+  .h-bc__word { margin-top: 14px; padding-top: 14px; border-top: 1px solid rgb(198 161 91 / 55%); color: var(--gold); font: 700 0.75rem/1 var(--font-body); letter-spacing: 0.24em; text-transform: uppercase; }
+  .h-bc__title { margin-top: 10px; color: #fff; font: 700 clamp(1.0625rem, 0.85rem + 0.35vw, 1.25rem)/1.25 var(--font-display); text-wrap: balance; }
+  .h-bc__text { display: grid; grid-template-rows: 0fr; margin-top: 0; color: rgb(247 245 239 / 82%); font-size: 0.875rem; line-height: 1.5; opacity: 0; transition: grid-template-rows 600ms var(--ease), opacity 450ms var(--ease), margin-top 600ms var(--ease); }
+  .h-bc__text > span { min-height: 0; overflow: hidden; }
+  .h-bc__card:hover, .h-bc__card:focus-visible { transform: translateY(-8px); box-shadow: 0 0 0 1px rgb(198 161 91 / 70%), 0 40px 70px -30px rgb(0 0 0 / 80%), 0 0 40px -10px rgb(198 161 91 / 35%); color: #fff; text-decoration: none; }
+  .h-bc__card:hover img, .h-bc__card:focus-visible img { transform: scale(1.08); filter: saturate(0.95) contrast(1.1) brightness(0.72); }
+  .h-bc__card:hover::after, .h-bc__card:focus-visible::after { transform: translateX(60%); }
+  .h-bc__card:hover .h-bc__frame, .h-bc__card:focus-visible .h-bc__frame { border-color: rgb(198 161 91 / 60%); inset: 8px; }
+  .h-bc__card:hover .h-bc__text, .h-bc__card:focus-visible .h-bc__text { grid-template-rows: 1fr; opacity: 1; margin-top: 10px; }
+  @media (hover: none) { .h-bc__text { grid-template-rows: 1fr; opacity: 1; margin-top: 10px; } }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) .h-motto__w { opacity: calc(0.12 + 0.88 * var(--on, 0)); transform: translateY(calc((1 - var(--on, 0)) * 0.16em)); filter: blur(calc((1 - var(--on, 0)) * 6px)); transition: opacity 700ms var(--ease), transform 900ms var(--ease), filter 700ms var(--ease); }
+    :global(.js) .h-motto__translit { opacity: calc(0.92 * var(--rule, 0)); transition: opacity 800ms var(--ease); }
+    :global(.js) .h-motto__rule { transform: scaleX(var(--rule, 0)); transition: transform 1000ms var(--ease); }
+    :global(.js) .h-motto__meaning { opacity: var(--meaning, 0); transform: translateY(calc((1 - var(--meaning, 0)) * 10px)); transition: opacity 800ms var(--ease), transform 800ms var(--ease); }
+    :global(.js) .h-bc__item { opacity: 0; transform: translateY(40px); transition: opacity 900ms var(--ease), transform 1100ms var(--ease); transition-delay: calc(var(--i) * 120ms); }
+    :global(.js) .h-bc[data-in] .h-bc__item { opacity: 1; transform: none; }
+  }
+  @media (max-width: 1100px) { .h-bc { grid-template-columns: repeat(2, minmax(0, 1fr)); } .h-motto__jali { width: 100%; } }
   .h-hero { border-radius: 0 0 40px 40px; }
 
   /* Curtain */
