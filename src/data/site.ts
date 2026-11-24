@@ -36,6 +36,28 @@ export interface NavGroup {
   feature?: { eyebrow: string; title: string; text: string; href: string; cta: string };
 }
 
+// Header tabs (client's Website improvement blueprint, §4): twelve tabs in two groups, Community and Commerce,
+// joined by the BECCI infinity symbol. Descriptions are the blueprint's own words.
+export interface NavTab { label: string; href: string; desc: string; icon: string }
+export const navTabs: { community: NavTab[]; commerce: NavTab[] } = {
+  community: [
+    { label: 'About', href: '/about', desc: 'Introduction, Vision, Mission, What We Do', icon: 'community' },
+    { label: 'Leadership', href: '/leadership', desc: 'Founder, Advisors, Committees', icon: 'leadership' },
+    { label: 'Membership', href: '/membership', desc: 'Types, benefits, directory, upgrades', icon: 'membership' },
+    { label: 'Wings', href: '/wings', desc: "Women's Wing, Youth Wing", icon: 'women' },
+    { label: 'Knowledge', href: '/knowledge', desc: 'News, articles, laws, videos', icon: 'knowledge' },
+    { label: 'Events', href: '/events', desc: 'Conferences, workshops, networking events', icon: 'events' },
+  ],
+  commerce: [
+    { label: 'Biz Connect', href: '/biz-connect', desc: 'Networking, referrals, business volume', icon: 'chapters' },
+    { label: 'Marketplace', href: '/marketplace', desc: 'Directory, buying, selling, B2B', icon: 'entrepreneur' },
+    { label: 'Schemes', href: '/schemes', desc: 'Central and State schemes', icon: 'schemes' },
+    { label: 'Opportunities', href: '/opportunities', desc: 'Tenders, jobs, procurement', icon: 'tenders' },
+    { label: 'Franchise', href: '/franchise', desc: 'Franchise models and business ownership', icon: 'franchise' },
+    { label: 'Services', href: '/services', desc: 'Finance, insurance, consultancy, mentorship, compliance', icon: 'funding' },
+  ],
+};
+
 // Mega-navigation: four visual panels (client brief, Nov 2026). Each panel has its own
 // colour, illustration and feature card; "more" holds the secondary links for that area.
 export const nav: NavGroup[] = [
