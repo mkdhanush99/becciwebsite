@@ -3,6 +3,8 @@ import { nav } from '../data/site';
 import Logo from './Logo.astro';
 import Icon from './Icon.astro';
 import Illo from './Illo.astro';
+import HeaderSearch from './HeaderSearch';
+import '../styles/tailwind.css';
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const isCurrent = (href: string) => (href === '/' ? path === '/' : path === href.split('#')[0] && !href.includes('#'));
 const inGroup = (g: (typeof nav)[number]) => [...(g.children ?? []), ...(g.more ?? [])].some((c) => { const h = c.href.split('#')[0]; return path === h || path.startsWith(h + '/'); });
@@ -48,7 +50,7 @@ const chevron = '<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="tr
             </div>
           </li>
         ))}
-        <li class="nav-search"><a href="/opportunities" aria-label="Search opportunities"><Icon name="search" size={18} /></a></li>
+        <li class="nav-search"><a href="/opportunities" aria-label="Search BECCI" aria-keyshortcuts="Control+K Meta+K" data-search-open><Icon name="search" size={18} /></a></li>
       </ul>
     </nav>
     <div class="header-actions">
@@ -67,7 +69,7 @@ const chevron = '<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="tr
           <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 4l12 12M16 4 4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
         </button>
       </div>
-      <a class="m-search" href="/opportunities"><Icon name="search" size={20} />Search opportunities</a>
+      <a class="m-search" href="/opportunities" data-search-open><Icon name="search" size={20} />Search pages and schemes</a>
       {nav.map((g, i) => (
         <details class={`m-grp m-grp--${g.tone}`} open={i === 0}>
           <summary><span class="m-grp__dot" aria-hidden="true"></span>{g.label}</summary>
@@ -82,6 +84,7 @@ const chevron = '<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="tr
     </div>
   </dialog>
 </header>
+<HeaderSearch client:idle />
 <script>
   const header = document.querySelector('[data-header]');
   const onScroll = () => header?.toggleAttribute('data-scrolled', window.scrollY > 8);

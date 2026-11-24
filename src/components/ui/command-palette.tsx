@@ -24,6 +24,10 @@ export interface CommandPaletteProps {
   defaultOpen?: boolean
   triggerLabel?: string
   className?: string
+  /** Do not render the built-in trigger button; open with ⌘K / Ctrl+K or openEvent instead. */
+  hideTrigger?: boolean
+  /** A window event name that opens the palette, e.g. "becci:search". */
+  openEvent?: string
 }
 
 // BECCI brand: royal blue action colour, sapphire, sky light on dark.
@@ -55,7 +59,7 @@ function KeyCap({ children, down, label }: { children: React.ReactNode; down: bo
   )
 }
 
-export function CommandPalette({ items, placeholder = "Type a command or search", defaultOpen = false, triggerLabel = "Search", className }: CommandPaletteProps) {
+export function CommandPalette({ items, placeholder = "Type a command or search", defaultOpen = false, triggerLabel = "Search", className, hideTrigger = false, openEvent }: CommandPaletteProps) {
   const reduce = !!useReducedMotion()
   const uid = React.useId()
   const [open, setOpen] = React.useState(defaultOpen)
@@ -65,6 +69,7 @@ export function CommandPalette({ items, placeholder = "Type a command or search"
   const trigger = React.useRef<HTMLButtonElement>(null)
   const input = React.useRef<HTMLInputElement>(null)
   const listRef = React.useRef<HTMLUListElement>(null)
+  const returnTo = React.useRef<HTMLElement | null>(null)
 
   const results = React.useMemo(() => {
     const scored = items.map((it) => {
@@ -84,12 +89,22 @@ export function CommandPalette({ items, placeholder = "Type a command or search"
   const flat = results.flatMap((g) => g.rows)
   const cur = flat[Math.min(active, flat.length - 1)]
 
-  const close = React.useCallback(() => { setOpen(false); setQ(""); setActive(0); setTimeout(() => trigger.current?.focus(), 0) }, [])
+  const close = React.useCallback(() => { setOpen(false); setQ(""); setActive(0); setTimeout(() => (returnTo.current ?? trigger.current)?.focus(), 0) }, [])
   React.useEffect(() => {
     const h = (e: KeyboardEvent) => { if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); setOpen((o) => !o) } }
     window.addEventListener("keydown", h); return () => window.removeEventListener("keydown", h)
   }, [])
-  React.useEffect(() => { if (open) setTimeout(() => input.current?.focus(), 30) }, [open])
+  React.useEffect(() => {
+    if (!openEvent) return
+    const h = () => setOpen(true)
+    window.addEventListener(openEvent, h); return () => window.removeEventListener(openEvent, h)
+  }, [openEvent])
+  React.useEffect(() => {
+    if (!open) return
+    const el = document.activeElement
+    returnTo.current = el instanceof HTMLElement && el !== document.body ? el : null
+    setTimeout(() => input.current?.focus(), 30)
+  }, [open])
   React.useEffect(() => { setActive(0) }, [q])
   React.useEffect(() => { listRef.current?.querySelector(`[data-i="${active}"]`)?.scrollIntoView({ block: "nearest" }) }, [active])
 
@@ -114,11 +129,11 @@ export function CommandPalette({ items, placeholder = "Type a command or search"
 
   return (
     <div data-theme="becci" className={className}>
-      <button ref={trigger} type="button" onClick={() => setOpen(true)} aria-haspopup="dialog" aria-expanded={open}
+      {!hideTrigger && <button ref={trigger} type="button" onClick={() => setOpen(true)} aria-haspopup="dialog" aria-expanded={open}
         className="group inline-flex min-h-11 cursor-pointer items-center gap-3 rounded-xl border border-border bg-card px-3.5 font-sans text-sm font-bold text-muted-foreground shadow-sm outline-none transition-colors hover:border-primary/50 hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
         <Search className="size-4" aria-hidden /> {triggerLabel}
         <span className="ml-6 flex gap-1" aria-hidden><KeyCap down={false}><Command className="size-3" /></KeyCap><KeyCap down={false}>K</KeyCap></span>
-      </button>
+      </button>}
 
       <AnimatePresence>
         {open && (
