@@ -1,0 +1,44 @@
+/*
+ * Tailwind for React components in src/components/ui (shadcn structure).
+ * Imported only by pages that mount those components. No preflight, so the site's own CSS is untouched.
+ * Utilities are generated only from src/components/ui.
+ */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities) source(none);
+@source "../components/ui";
+
+/* shadcn tokens, mapped to the BECCI palette. Scoped so they never override the site's own variables. */
+[data-theme="becci"] {
+  --background: var(--ivory, #f7f5ef);
+  --foreground: var(--ink, #121826);
+  --card: #ffffff;
+  --card-foreground: var(--ink, #121826);
+  --primary: var(--royal, #174fc1);
+  --primary-foreground: #ffffff;
+  --muted: var(--silver-100, #eef2f8);
+  --muted-foreground: var(--slate, #414b5d);
+  --border: var(--silver-300, #cfd9e8);
+  --ring: var(--royal, #174fc1);
+  --radius: 14px;
+  font-family: var(--font-body, 'Quicksand', system-ui, sans-serif);
+  color: var(--foreground);
+}
+[data-theme="becci"] *, [data-theme="becci"] *::before, [data-theme="becci"] *::after { box-sizing: border-box; border: 0 solid; }
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --font-sans: var(--font-body, 'Quicksand', system-ui, sans-serif);
+}
+
+/* The search field shows focus with the gradient line under it, so the site's focus ring is not drawn twice. */
+[data-theme="becci"] input[role="combobox"]:focus-visible { outline: none; box-shadow: none; }
