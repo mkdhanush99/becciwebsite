@@ -10,7 +10,7 @@ import { schemeLogos } from '../data/scheme-logos';
 import { site, audiences, advisors, events, news, stats, story } from '../data/site';
 import { photos, srcset } from '../data/photos';
 import { opportunities, portals, CATEGORY_META, CATEGORY_ORDER, OBC_SCOPE_LABEL } from '../data/opportunities';
-import { computeStatus, STATUS_LABEL, deadlineText, todayISO, formatDate } from '../lib/status';
+import { computeStatus, STATUS_LABEL, deadlineText, todayISO } from '../lib/status';
 
 const today = todayISO();
 const realCount = (xs: { sample?: boolean }[]) => xs.filter((x) => !x.sample).length;
@@ -19,8 +19,6 @@ const open = opportunities
   .filter((x) => x.st !== 'closed' && x.st !== 'awaiting-notice' && x.st !== 'unconfirmed')
   .sort((a, b) => (a.o.closingDate ?? '9999').localeCompare(b.o.closingDate ?? '9999'));
 const [featured, ...rest] = open;
-const lastChecked = opportunities.map((o) => o.lastVerified).sort().at(-1);
-const register = open.slice(0, 3);
 const schemeList = opportunities.filter((o) => o.categories.includes('schemes') && o.scheme);
 const featuredSchemes = ['pmegp', 'pm-mudra-yojana', 'nbcfdc-individual-loan-scheme', 'pm-vishwakarma'].map((slug) => schemeList.find((o) => o.slug === slug)!).filter(Boolean);
 // BECCI card experience: the five tiles of the Critique Review ("The BECCI Story – Five Letters, One Journey"),
@@ -92,18 +90,12 @@ const tiers = [
           {CATEGORY_ORDER.map((c) => <li><a href={CATEGORY_META[c].path}>{CATEGORY_META[c].label}</a></li>)}
         </ul>
       </div>
-      <div class="h-art" aria-labelledby="reg-title">
-        <div class="h-art__scene"><Illo name="hero" /></div>
-        <h2 id="reg-title" class="visually-hidden">Open now</h2>
-        <span class="h-art__live">Open now · checked {formatDate(lastChecked)}</span>
-        {register.slice(0, 2).map(({ o, st }, i) => (
-          <article class={`h-card h-card--${i}`}>
-            <div class="h-card__meta"><span class={`status status--${st}`}>{STATUS_LABEL[st]}</span><span class="h-card__cat">{CATEGORY_META[o.categories[0]].label}</span></div>
-            <h3><a href={`/opportunities/${o.slug}`}>{o.title}</a></h3>
-            <p>{o.authority.split(',')[0]}</p>
-            <p class="h-card__when">{deadlineText(o, today)}</p>
-          </article>
-        ))}
+      <div class="h-film" aria-hidden="true">
+        <!-- BECCI brand film (client file, Nov 2026): the infinity forms from light and resolves into the logo.
+             Shown with screen blending so its black ground disappears into the hero; no frame, no controls. -->
+        <video class="h-film__v" muted playsinline loop preload="metadata" poster="/video/becci-infinity-poster.webp" width="960" height="576" data-film>
+          <source src="/video/becci-infinity.mp4" type="video/mp4" />
+        </video>
       </div>
     </div>
     <div class="h-sources" aria-label="Official sources BECCI checks">
@@ -292,6 +284,13 @@ const tiers = [
 </Base>
 
 <script>
+  // Brand film: plays muted while the hero is on screen; with reduced motion it stays on its final frame (the poster).
+  const film = document.querySelector<HTMLVideoElement>('[data-film]');
+  if (film && window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+    const play = () => film.play().catch(() => {});
+    if ('IntersectionObserver' in window) new IntersectionObserver((es) => es.forEach((e) => (e.isIntersecting ? play() : film.pause()))).observe(film);
+    else play();
+  }
   // Motto: words light up as the line crosses the viewport; the five cards rise once when in view.
   // Transforms, opacity and filter only. Nothing runs with reduced motion; CSS then shows the final state.
   if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
@@ -339,13 +338,9 @@ const tiers = [
   @media (prefers-reduced-motion: no-preference) {
     :global(.js) .kw > span { transform: translateY(105%) rotate(4deg); animation: rise 900ms cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: calc(120ms + var(--i) * 90ms); }
     :global(.js) .h-in { opacity: 0; transform: translateY(16px); animation: fadeUp 700ms var(--ease) forwards; animation-delay: calc(var(--i) * 80ms); }
-    :global(.js) .h-card { opacity: 0; animation: cardIn 900ms cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-    :global(.js) .h-card--0 { animation-delay: 700ms; } :global(.js) .h-card--1 { animation-delay: 850ms; }
-    .h-card { transition: transform 300ms var(--ease), box-shadow 300ms var(--ease); }
     }
   @keyframes rise { to { transform: none; } }
   @keyframes fadeUp { to { opacity: 1; transform: none; } }
-  @keyframes cardIn { from { opacity: 0; translate: 0 40px; } to { opacity: 1; translate: 0 0; } }
 
   .h-search { width: min(100%, 520px); margin-bottom: var(--s-3); }
   .h-search__row { position: relative; display: flex; align-items: center; gap: var(--s-2); padding: 6px; background: #fff; border-radius: 999px; border: 1px solid var(--midnight); box-shadow: none; }
@@ -365,22 +360,12 @@ const tiers = [
   :global(.btn--light:hover) { --bg: var(--cyan-soft); --bd: var(--cyan-soft); --fg: var(--midnight); }
 
   /* Stage: illustration with live opportunity cards layered over it */
-  .h-art { position: relative; min-height: 520px; }
-  .h-art__scene { position: absolute; inset: 14% -6% 0 6%; }
-  .h-art__live { position: absolute; top: 6%; right: 2%; z-index: 3; display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: var(--midnight); color: #fff; font-size: var(--fs-label); font-weight: 600; box-shadow: 3px 3px 0 rgb(8 26 53 / 40%); }
-  .h-art__live::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 0 3px rgb(200 210 228 / 35%); }
-  .h-card { position: absolute; z-index: 2; width: min(272px, 56%); padding: var(--s-4); background: #fff; color: var(--ink); border: 1px solid var(--midnight); border-radius: 16px; box-shadow: 6px 6px 0 var(--midnight); }
-  .h-card--0 { top: 0; left: 0; }
-  .h-card--1 { bottom: 0; right: 0; }
-  .h-card:hover { transform: translateY(-2px); box-shadow: 8px 10px 0 var(--midnight); }
-  .h-card__meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2); }
-  .h-card__cat { margin-left: auto; font-size: var(--fs-label); font-weight: 600; color: var(--slate); }
-  .h-card h3 { font-size: var(--fs-base); line-height: 1.3; margin: var(--s-2) 0 2px; }
-  .h-card h3 a { color: var(--midnight); text-decoration: none; }
-  .h-card h3 a::after { content: ''; position: absolute; inset: 0; }
-  .h-card h3 a:hover { color: var(--royal); }
-  .h-card p { margin: 0; font-size: var(--fs-sm); color: var(--slate); }
-  .h-card .h-card__when { color: var(--ink); font-weight: 600; margin-top: 2px; }
+  /* Brand film fused into the hero: screen blending drops the film's black ground, a soft radial mask removes
+     every edge, so the light of the infinity and logo appears to sit directly on the hero's grid. */
+  .h-film { position: relative; align-self: center; margin-right: calc(-1 * var(--gutter)); pointer-events: none; }
+  .h-film::before { content: ''; position: absolute; inset: 12% 8%; border-radius: 50%; background: radial-gradient(closest-side, rgb(120 160 230 / 14%), transparent); filter: blur(30px); }
+  .h-film__v { position: relative; display: block; width: 124%; max-width: none; height: auto; margin-left: -18%; mix-blend-mode: screen;
+    -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 62%, transparent 100%); mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 62%, transparent 100%); }
 
   .h-sources { position: relative; margin-top: var(--s-6); padding: var(--s-4) 0 calc(var(--s-6) + 40px); overflow: hidden; border-top: 1px solid rgb(255 255 255 / 16%); }
   .h-sources__label { margin: 0 auto var(--s-3); font-size: var(--fs-label); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #c5d6f6; }
@@ -389,8 +374,7 @@ const tiers = [
 
   @media (max-width: 1000px) {
     .h-hero__grid { grid-template-columns: minmax(0, 1fr); }
-    .h-art { min-height: 0; aspect-ratio: 640 / 520; max-width: 640px; width: 100%; margin-inline: auto; }
-    .h-art__scene { inset: 0; }
+    .h-film { order: -1; max-width: 720px; width: 100%; margin: calc(-1 * var(--s-5)) auto calc(-1 * var(--s-6)); } .h-film__v { width: 100%; margin-left: 0; }
   }
   @media (max-width: 560px) {
     .h-hero { padding-top: var(--s-6); }
@@ -402,11 +386,7 @@ const tiers = [
     .h-search .btn { width: 100%; border-radius: 14px; }
     :global(.h-search__icon) { top: 20px; }
     .h-cats a { padding: 0 var(--s-3); }
-    .h-art { aspect-ratio: auto; display: grid; gap: var(--s-3); padding-top: 64%; }
-    .h-art__scene { inset: 0 -6% auto -6%; }
-    .h-card { position: relative; inset: auto; width: 100%; rotate: none; box-shadow: 4px 4px 0 var(--midnight); }
-    .h-card--1 { display: none; }
-    .h-art__live { top: 0; right: 0; }
+    .h-film { margin: calc(-1 * var(--s-5)) calc(-1 * var(--gutter)) calc(-1 * var(--s-4)); }
   }
 
   /* Statement */
