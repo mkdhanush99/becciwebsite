@@ -21,11 +21,11 @@ const schemeList = opportunities.filter((o) => o.categories.includes('schemes') 
 const featuredSchemes = ['pmegp', 'pm-mudra-yojana', 'nbcfdc-individual-loan-scheme', 'pm-vishwakarma'].map((slug) => schemeList.find((o) => o.slug === slug)!).filter(Boolean);
 // BECCI card experience: the five words of BECCI with the Sanskrit motto. Definitions are the About page's.
 const pillars = [
-  { letter: 'B', word: 'Bahujan', title: 'The many, together', text: 'The communities BECCI exists for: those on the Central OBC list for their State or on a State BC/OBC list.', href: '/about#whom', photo: photos.bahujan, pos: '58% 42%' },
-  { letter: 'E', word: 'Entrepreneurs', title: 'Skills into enterprise', text: 'Everyone who builds an enterprise, from a student with a first idea to an established business owner.', href: '/services', photo: photos.entrepreneurs, pos: '36% 46%' },
-  { letter: 'C', word: 'Chamber', title: 'A collective voice', text: 'A membership institution that represents its members and connects them with one another.', href: '/membership', photo: photos.chamber, pos: '50% 64%' },
-  { letter: 'C', word: 'Commerce', title: 'Markets and relationships', text: 'Trade, markets, referrals and the business relationships that members create together.', href: '/opportunities', photo: photos.commerce, pos: '64% 40%' },
-  { letter: 'I', word: 'Industry', title: 'Every sector', text: 'Manufacturing, services, agriculture and every other sector in which members work.', href: '/partnerships', photo: photos.industry, pos: '74% 46%' },
+  { letter: 'B', word: 'Bahujan', title: 'The many, together', text: 'The communities BECCI exists for: those on the Central OBC list for their State or on a State BC/OBC list.', href: '/about#whom', photo: photos.bahujan, pos: '50% 45%' },
+  { letter: 'E', word: 'Entrepreneurs', title: 'Skills into enterprise', text: 'Everyone who builds an enterprise, from a student with a first idea to an established business owner.', href: '/services', photo: photos.entrepreneurs, pos: '42% 40%' },
+  { letter: 'C', word: 'Chamber', title: 'A collective voice', text: 'A membership institution that represents its members and connects them with one another.', href: '/membership', photo: photos.chamber, pos: '52% 45%' },
+  { letter: 'C', word: 'Commerce', title: 'Markets and relationships', text: 'Trade, markets, referrals and the business relationships that members create together.', href: '/opportunities', photo: photos.commerce, pos: '50% 40%' },
+  { letter: 'I', word: 'Industry', title: 'Every sector', text: 'Manufacturing, services, agriculture and every other sector in which members work.', href: '/partnerships', photo: photos.industry, pos: '55% 40%' },
 ];
 const motto = ['बहुजन', 'हिताय,', 'बहुजन', 'सुखाय।'];
 // The four questions every visitor should get an answer to (Critique Review §20),
@@ -120,7 +120,7 @@ const tiers = [
       {pillars.map((p, i) => (
         <li class="h-bc__item" style={`--i:${i}`}>
           <a class="h-bc__card" href={p.href}>
-            <img src={`${p.photo.src}-800.webp`} srcset={srcset(p.photo)} sizes="(max-width: 1100px) 46vw, 20vw" alt={p.photo.alt} width="800" height="533" style={`object-position:${p.pos}`} loading="lazy" decoding="async" />
+            <img src={`${p.photo.src}-640.webp`} srcset={srcset(p.photo)} sizes="(max-width: 1100px) 46vw, 20vw" alt={p.photo.alt} width="1024" height="1280" style={`object-position:${p.pos}`} loading="lazy" decoding="async" />
             <span class="h-bc__frame" aria-hidden="true"></span>
             <span class="h-bc__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
             <span class="h-bc__body">
