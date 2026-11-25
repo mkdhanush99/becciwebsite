@@ -105,6 +105,7 @@ const tiers = [
         <div class:list={['tile tier', i === 0 && 'tile--ice', i === 1 && 'tile--sky', i === 2 && 'tile--royal']}><span class="tier__n">Level {i + 1}</span><h3>{t.name}</h3><ul>{t.points.map((p) => <li>{p}</li>)}</ul>{t.name !== 'Free Membership' && <p class="small muted">Fee: to be announced</p>}</div>
       ))}
     </div>
+    <p class="small muted" style="margin-top:var(--s-5)">Before applying, read the <a href="/membership-terms">Membership Terms and Conditions</a>, <a href="/membership-fees">Membership Fees</a> and the <a href="/refund-policy">Refund and Cancellation Policy</a>.</p>
     <p class="small muted" style="margin-top:var(--s-5)">Biz Connect, BECCI's structured business networking programme, is planned as a separate membership with its own fee. <a href="/biz-connect">About Biz Connect</a>.</p>
   </div></section>
 

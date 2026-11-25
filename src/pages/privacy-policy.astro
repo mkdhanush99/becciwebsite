@@ -1,0 +1,5 @@
+---
+import LegalPage from '../components/LegalPage.astro';
+import { Content, getHeadings } from '../legal/privacy-policy.md';
+---
+<LegalPage slug="privacy-policy" headings={getHeadings()}><Content /></LegalPage>

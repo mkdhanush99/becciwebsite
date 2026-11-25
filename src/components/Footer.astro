@@ -5,7 +5,7 @@
 // oversized dimensional BECCI wordmark rising out of a champagne-gold horizon.
 // Motion is scroll-triggered (IntersectionObserver), transform/opacity only, never traps scrolling.
 // The resting composition is the default: with no JS, or with reduced motion, everything is visible.
-import { site, socials } from '../data/site';
+import { site, socials, legal } from '../data/site';
 import Logo from './Logo.astro';
 
 const cols = [
@@ -36,6 +36,7 @@ const cols = [
     { label: 'Join as a Member', href: '/membership#join' },
     { label: 'Partner with BECCI', href: '/partnerships' },
     { label: 'Contact', href: '/contact' },
+    { label: 'Grievance Redressal', href: '/grievance' },
     { label: 'Member Login', href: '/membership#member-login' },
   ] },
 ];
@@ -68,7 +69,7 @@ const year = new Date().getFullYear();
     </div>
     <div class="cf-legal cf-in" style="--i:5">
       <p>© {year} BECCI · {site.fullName}</p>
-      <p class="cf-legal__links"><a href="/policies#privacy">Privacy Policy</a><span aria-hidden="true"> · </span><a href="/policies#terms">Terms</a><span aria-hidden="true"> · </span><a href="/opportunities/about-data">How we check opportunities</a></p>
+      <p class="cf-legal__links">{legal.pages.map((p) => <><a href={`/${p.slug}`}>{p.short}</a><span aria-hidden="true"> · </span></>)}<a href="/opportunities/about-data">How we check opportunities</a></p>
       <p class="cf-credit">Government scheme logos belong to their issuing authorities and are shown only to identify each scheme. Homepage card photographs are <a href="/policies#photo-credits">illustrative AI images</a>. Typeface: New Black.</p>
     </div>
   </div>

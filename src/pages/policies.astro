@@ -1,18 +1,39 @@
 ---
 import { PHOTO_NOTE } from '../data/photos';
+import { legal } from '../data/site';
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
-import Pending from '../components/Pending.astro';
 ---
-<Base title="Privacy Policy and Terms">
-  <PageHero title="Privacy Policy and Terms" crumbs={[{ label: 'Policies' }]} />
-  <section class="section"><div class="wrap prose">
-    <h2 id="privacy">Privacy Policy</h2>
-    <Pending>BECCI's legally reviewed Privacy Policy has not been supplied yet.</Pending>
-    <p style="margin-top:var(--s-4)">What this website does today: it has no accounts, logins or tracking. Forms are not yet connected to any inbox, so form entries are not sent or stored. The opportunity finder remembers your search in the page address and your scroll position in your browser tab only.</p>
-    <h2 id="terms">Terms of use</h2>
-    <Pending>BECCI's Terms of use have not been supplied yet.</Pending>
-    <h2 id="photo-credits">Photographs</h2>
-    <p>{PHOTO_NOTE}</p>
+<Base title="Legal" description="BECCI's website legal policies: terms, membership terms, refunds, privacy, fees and grievance redressal.">
+  <PageHero tone="ice" title="Legal policies" lede="The terms, policies and grievance route that apply to the BECCI website and to BECCI membership." crumbs={[{ label: 'Legal' }]} />
+  <section class="section section--white"><div class="wrap">
+    <dl class="pol-entity">
+      <div><dt>Legal entity</dt><dd>{legal.entity}</dd></div>
+      <div><dt>Entity type</dt><dd>{legal.type}</dd></div>
+      <div><dt>Website</dt><dd><a href={legal.website}>{legal.website}</a></dd></div>
+      <div><dt>Registered office</dt><dd>{legal.office}</dd></div>
+      <div><dt>Legal and grievance email</dt><dd><a href={`mailto:${legal.email}`}>{legal.email}</a></dd></div>
+    </dl>
+    <ul class="pol-list">
+      {legal.pages.map((p, i) => <li><a href={`/${p.slug}`}><span class="pol-n">{String(i + 1).padStart(2, '0')}</span><strong>{p.title}</strong><span>{p.desc}</span><span class="link-arrow">Read</span></a></li>)}
+    </ul>
+    <div class="prose pol-photo">
+      <h2 id="photo-credits">Photographs</h2>
+      <p>{PHOTO_NOTE}</p>
+    </div>
   </div></section>
 </Base>
+<style>
+  .pol-entity { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--s-4); margin: 0 0 var(--s-7); padding: var(--s-5); border-radius: 14px; background: var(--ivory); border: 1px solid rgb(10 35 82 / 10%); }
+  .pol-entity dt { color: var(--slate); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+  .pol-entity dd { margin: 4px 0 0; color: var(--midnight); font-size: var(--fs-sm); line-height: 1.45; overflow-wrap: anywhere; }
+  .pol-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-4); }
+  .pol-list a { display: grid; align-content: start; gap: 6px; height: 100%; padding: var(--s-5); border-radius: 16px; background: #fff; border: 1px solid rgb(10 35 82 / 12%); color: var(--midnight); text-decoration: none; transition: transform 200ms var(--ease), border-color 200ms, box-shadow 200ms; }
+  .pol-list a:hover { transform: translateY(-2px); border-color: var(--midnight); box-shadow: 0 14px 30px -22px rgb(6 22 56 / 50%); }
+  .pol-n { color: #a9874c; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.14em; }
+  .pol-list strong { font: 700 var(--fs-md)/1.25 var(--font-display); }
+  .pol-list span:not(.pol-n):not(.link-arrow) { color: var(--slate); font-size: var(--fs-sm); line-height: 1.5; }
+  .pol-photo { margin-top: var(--s-8); }
+  @media (max-width: 1000px) { .pol-entity { grid-template-columns: 1fr 1fr; } .pol-list { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .pol-entity, .pol-list { grid-template-columns: 1fr; } }
+</style>

@@ -79,8 +79,15 @@ const journey = [
         <p class="a-statements__purpose"><strong>Our purpose.</strong> {site.identity}</p>
       </div>
       <dl class="a-vmo">
-        <div><dt>Vision</dt><dd>BECCI’s approved vision statement will be published here.</dd></div>
-        <div><dt>Mission</dt><dd>BECCI’s approved mission statement will be published here.</dd></div>
+        <div><dt>Vision</dt><dd>To build a strong, connected and inclusive entrepreneurial ecosystem that contributes to India's economic development.</dd></div>
+        <div><dt>Mission</dt><dd><ul class="a-mission">
+          <li>Encourage entrepreneurship and enterprise development.</li>
+          <li>Facilitate meaningful business connections.</li>
+          <li>Promote community collaboration and commercial opportunities.</li>
+          <li>Improve awareness of government schemes and business support initiatives.</li>
+          <li>Encourage participation in trade, industry and economic development.</li>
+          <li>Support the growth of entrepreneurs and enterprises.</li>
+        </ul></dd></div>
         <div><dt>Objectives</dt><dd>The chamber’s formal objectives will be listed here once approved.</dd></div>
       </dl>
     </div>
@@ -167,6 +174,7 @@ const journey = [
 </Base>
 
 <style>
+  .a-mission { margin: 4px 0 0; padding-left: 1.1em; display: grid; gap: 4px; }
   .a-does { list-style: none; padding: 0; }
   .a-does .tile { height: 100%; }
   .a-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--s-3); }

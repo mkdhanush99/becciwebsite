@@ -1,0 +1,5 @@
+---
+import LegalPage from '../components/LegalPage.astro';
+import { Content, getHeadings } from '../legal/terms.md';
+---
+<LegalPage slug="terms" headings={getHeadings()}><Content /></LegalPage>

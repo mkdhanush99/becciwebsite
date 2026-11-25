@@ -1,0 +1,57 @@
+---
+// Shared layout for the website legal policies: banner, entity details, contents list and the policy text.
+import Base from '../layouts/Base.astro';
+import PageHero from './PageHero.astro';
+import { legal } from '../data/site';
+interface Props { slug: string; headings: { depth: number; slug: string; text: string }[] }
+const { slug, headings } = Astro.props;
+const page = legal.pages.find((p) => p.slug === slug)!;
+const toc = headings.filter((h) => h.depth === 2);
+---
+<Base title={page.title} description={page.desc}>
+  <PageHero tone="ice" title={page.title} lede={page.desc} crumbs={[{ label: 'Legal', href: '/policies' }, { label: page.short }]} />
+  <section class="section section--white lg"><div class="wrap lg__grid">
+    <aside class="lg__side">
+      <dl class="lg__meta">
+        <div><dt>Legal entity</dt><dd>{legal.entity}</dd></div>
+        <div><dt>Entity type</dt><dd>{legal.type}</dd></div>
+        <div><dt>Registered office</dt><dd>{legal.office}</dd></div>
+        <div><dt>Legal and grievance email</dt><dd><a href={`mailto:${legal.email}`}>{legal.email}</a></dd></div>
+        <div><dt>Effective date</dt><dd>{legal.effective}</dd></div>
+        <div><dt>Last updated</dt><dd>{legal.updated}</dd></div>
+      </dl>
+      {toc.length > 2 && (
+        <nav class="lg__toc" aria-label="On this page">
+          <p>On this page</p>
+          <ol>{toc.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}</ol>
+        </nav>
+      )}
+    </aside>
+    <article class="prose lg__body"><slot /></article>
+  </div></section>
+  <section class="section lg__more" aria-labelledby="lg-more"><div class="wrap">
+    <h2 id="lg-more">Other policies</h2>
+    <ul>{legal.pages.filter((p) => p.slug !== slug).map((p) => <li><a href={`/${p.slug}`}><strong>{p.short}</strong><span>{p.desc}</span></a></li>)}</ul>
+  </div></section>
+</Base>
+<style>
+  .lg__grid { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: clamp(32px, 5vw, 80px); align-items: start; }
+  .lg__side { position: sticky; top: calc(var(--header-h) + 24px); display: grid; gap: var(--s-5); }
+  .lg__meta { display: grid; gap: var(--s-3); margin: 0; padding: var(--s-5); border-radius: 14px; background: var(--ivory); border: 1px solid rgb(10 35 82 / 10%); }
+  .lg__meta dt { color: var(--slate); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+  .lg__meta dd { margin: 2px 0 0; color: var(--midnight); font-size: var(--fs-sm); line-height: 1.45; overflow-wrap: anywhere; }
+  .lg__toc p { margin: 0 0 var(--s-2); color: var(--slate); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+  .lg__toc ol { margin: 0; padding: 0; list-style: none; display: grid; gap: 2px; border-left: 2px solid rgb(10 35 82 / 10%); }
+  .lg__toc a { display: block; padding: 6px 12px; color: var(--midnight); font-size: var(--fs-sm); text-decoration: none; }
+  .lg__toc a:hover { color: var(--royal); text-decoration: underline; }
+  .lg__body { max-width: 72ch; }
+  .lg__body :global(h2) { scroll-margin-top: calc(var(--header-h) + 24px); font-size: var(--fs-lg); }
+  .lg__body :global(p), .lg__body :global(li) { color: var(--ink); line-height: 1.7; }
+  .lg__body :global(a) { color: var(--royal); }
+  .lg__more h2 { margin: 0 0 var(--s-5); font-size: var(--fs-xl); }
+  .lg__more ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--s-3); }
+  .lg__more a { display: grid; gap: 4px; height: 100%; padding: var(--s-4) var(--s-5); border-radius: 14px; background: #fff; border: 1px solid rgb(10 35 82 / 12%); color: var(--midnight); text-decoration: none; transition: transform 200ms var(--ease), border-color 200ms; }
+  .lg__more a:hover { transform: translateY(-2px); border-color: var(--midnight); }
+  .lg__more span { color: var(--slate); font-size: var(--fs-sm); }
+  @media (max-width: 900px) { .lg__grid { grid-template-columns: 1fr; } .lg__side { position: static; } .lg__toc { display: none; } }
+</style>
