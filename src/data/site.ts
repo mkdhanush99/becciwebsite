@@ -27,15 +27,15 @@ export const destinations = {
 };
 
 // Website legal policies (client's "Website Legal Policies — Temporary Publication Draft").
-// Dates stay as the draft's placeholders until BECCI confirms them.
+// Effective 5 November 2026 (confirmed by BECCI).
 export const legal = {
   entity: 'BAHUJAN ENTREPRENEURS CHAMBER FOR COMMERCE & INDUSTRY',
   type: 'Section 8 Company',
   website: 'https://becci.in/',
   office: 'H No. 1-10-176, AltF Green Tower, Main Road, Begumpet, Hyderabad – 500016, Telangana, India',
   email: 'grievance@becci.in',
-  effective: '[Insert publication date]',
-  updated: '[Insert date]',
+  effective: '5 November 2026',
+  updated: '5 November 2026',
   pages: [
     { slug: 'terms', title: 'Terms and Conditions', short: 'Terms & Conditions', desc: 'The terms for using the BECCI website and its services.' },
     { slug: 'membership-terms', title: 'Membership Terms and Conditions', short: 'Membership Terms', desc: 'Application, approval, activation, conduct and renewal of membership.' },

@@ -59,8 +59,6 @@ Approved refunds will ordinarily be initiated within **7–10 working days** aft
 
 The actual time taken for the amount to appear in the applicant's account may depend on the payment provider, bank or original payment method.
 
-If BECCI adopts a different operational refund timeline, this section must be updated before publication.
-
 ## 9. How to Request a Refund
 
 Applicants must email:
