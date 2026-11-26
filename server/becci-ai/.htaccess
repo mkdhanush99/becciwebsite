@@ -1,0 +1,9 @@
+# BECCI AI backend: only chat.php is reachable from the web.
+Options -Indexes
+<FilesMatch ".*">
+  Require all denied
+</FilesMatch>
+<Files "chat.php">
+  Require all granted
+</Files>
+RedirectMatch 404 ^/api/vendor(/.*)?$

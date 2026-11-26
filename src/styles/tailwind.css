@@ -21,7 +21,7 @@
   --border: var(--silver-300, #cfd9e8);
   --ring: var(--royal, #0A2352);
   --radius: 14px;
-  font-family: var(--font-body, 'New Black', system-ui, sans-serif);
+  font-family: var(--font-body, 'Onest', 'Inter', 'Times', serif);
   color: var(--foreground);
 }
 [data-theme="becci"] *, [data-theme="becci"] *::before, [data-theme="becci"] *::after { box-sizing: border-box; border: 0 solid; }
@@ -37,7 +37,7 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
   --color-ring: var(--ring);
-  --font-sans: var(--font-body, 'New Black', system-ui, sans-serif);
+  --font-sans: var(--font-body, 'Onest', 'Inter', 'Times', serif);
 }
 
 /* The search field shows focus with the gradient line under it, so the site's focus ring is not drawn twice. */

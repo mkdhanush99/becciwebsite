@@ -6,3 +6,4 @@ dist
 .taste-skill
 *.zip
 review/
+server/becci-ai/vendor/

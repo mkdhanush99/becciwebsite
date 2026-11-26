@@ -398,7 +398,7 @@ const more = [
   .h-hero__bg::after { content: ''; position: absolute; inset: 0; background: none; }
   .h-hero__grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--s-6); align-items: center; }
   /* Headline: heavier editorial weight (ref. Bizpole's bold display), tight leading, measured tracking */
-  .kinetic { color: #fff; font-size: clamp(2.75rem, 0.8rem + 4.4vw, 5.25rem); font-weight: 700; line-height: 0.96; letter-spacing: -0.015em; margin: 0 0 var(--s-5); max-width: none; font-kerning: normal; }
+  .kinetic { color: #fff; font-size: clamp(1.75rem, 0.8rem + 4.4vw, 2.625rem); font-weight: 700; line-height: 0.96; letter-spacing: -0.015em; margin: 0 0 var(--s-5); max-width: none; font-kerning: normal; }
   .kinetic__line { display: block; white-space: nowrap; }
   .kinetic__line--lit { color: #fff; }
   .kw { display: inline-block; overflow: hidden; padding: 0.14em 0.06em 0.08em; margin: -0.14em -0.06em -0.08em; vertical-align: top; }
@@ -454,7 +454,7 @@ const more = [
   }
   @media (max-width: 560px) {
     .h-hero { padding-top: var(--s-6); }
-    .kinetic { font-size: clamp(2.75rem, 13.5vw, 3.75rem); line-height: 0.98; letter-spacing: -0.015em; }
+    .kinetic { font-size: clamp(1.75rem, 13.5vw, 2.625rem); line-height: 0.98; letter-spacing: -0.015em; }
     .kinetic__line { white-space: normal; }
     .h-hero__actions .btn { flex: 1 1 100%; }
     .h-hero__lede { margin-bottom: var(--s-5); }
@@ -489,7 +489,7 @@ const more = [
   .h-motto--cards .h-bc { margin-top: 0; }
   .h-motto--end { margin-top: 0; padding-block: clamp(88px, 10vw, 152px); background: linear-gradient(180deg, var(--ink-night) 0, var(--ink-night) 60%, #081A30 100%); }
   .h-motto--end .h-motto__jali { top: 50%; translate: -50% -50%; }
-  .h-motto__line { margin: 0; font: 700 clamp(2.5rem, 0.9rem + 4.4vw, 6rem)/1.12 'BECCI Motto', 'Cinzel Decorative', 'Trajan Pro', Georgia, serif; letter-spacing: 0.02em; filter: drop-shadow(0 0 28px rgb(198 161 91 / 28%)) drop-shadow(0 2px 0 rgb(0 0 0 / 35%)); }
+  .h-motto__line { margin: 0; font: 700 clamp(1.75rem, 0.9rem + 4.4vw, 2.625rem)/1.12 'BECCI Motto', 'Cinzel Decorative', 'Trajan Pro', Georgia, serif; letter-spacing: 0.02em; filter: drop-shadow(0 0 28px rgb(198 161 91 / 28%)) drop-shadow(0 2px 0 rgb(0 0 0 / 35%)); }
   .h-motto__w { display: inline-block; color: var(--gold); background: linear-gradient(176deg, var(--gold-hi) 8%, var(--gold) 46%, var(--gold-2) 78%, #8a6a35 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
   .h-motto__rule { position: relative; display: block; width: min(560px, 60%); height: 1px; margin: var(--s-5) 0 var(--s-4); background: linear-gradient(90deg, transparent, var(--gold) 22%, var(--gold) 78%, transparent); transform-origin: center; }
   .h-motto__rule i { position: absolute; left: 50%; top: 50%; width: 9px; height: 9px; translate: -50% -50%; rotate: 45deg; background: var(--ink-night); border: 1px solid var(--gold); box-shadow: 0 0 12px rgb(198 161 91 / 60%); }
@@ -509,7 +509,7 @@ const more = [
   .h-bc__num { position: absolute; top: 24px; left: 24px; color: var(--gold-hi); font: 700 0.75rem/1 var(--font-body); letter-spacing: 0.2em; }
   .h-bc__num::after { content: ''; display: inline-block; vertical-align: middle; width: 28px; height: 1px; margin-left: 10px; background: rgb(198 161 91 / 60%); }
   .h-bc__body { position: absolute; inset: auto 0 0; display: grid; padding: 0 26px 28px; }
-  .h-bc__letter { font: 700 clamp(3.5rem, 2rem + 2.6vw, 5.25rem)/0.9 var(--font-display); letter-spacing: -0.01em; color: var(--gold-hi); background: linear-gradient(180deg, #f7ecd2 0%, var(--gold) 70%, var(--gold-2) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 4px 18px rgb(0 0 0 / 45%)); }
+  .h-bc__letter { font: 700 clamp(1.75rem, 2rem + 2.6vw, 2.625rem)/0.9 var(--font-display); letter-spacing: -0.01em; color: var(--gold-hi); background: linear-gradient(180deg, #f7ecd2 0%, var(--gold) 70%, var(--gold-2) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 4px 18px rgb(0 0 0 / 45%)); }
   .h-bc__inf { display: inline-block; width: 46px; height: auto; margin-left: 12px; vertical-align: middle; opacity: 0.9; filter: drop-shadow(0 0 10px rgb(198 161 91 / 50%)); -webkit-text-fill-color: initial; }
   .h-bc__word { margin-top: 14px; padding-top: 14px; border-top: 1px solid rgb(198 161 91 / 55%); color: var(--gold); font: 700 0.75rem/1 var(--font-body); letter-spacing: 0.12em; line-height: 1.35; text-transform: uppercase; }
   .h-bc__title { margin-top: 10px; color: #fff; font: 700 clamp(1.0625rem, 0.85rem + 0.35vw, 1.25rem)/1.25 var(--font-display); text-wrap: balance; }
@@ -539,7 +539,7 @@ const more = [
 
   /* Section heads (Tines: eyebrow, large editorial heading, short lede) */
   .h-head { max-width: 760px; margin-bottom: var(--s-7); }
-  .h-head h2 { font-size: clamp(2.25rem, 1.4rem + 3vw, 4rem); font-weight: 700; letter-spacing: -0.015em; line-height: 1.02; margin-bottom: var(--s-4); }
+  .h-head h2 { font-size: clamp(1.75rem, 1.4rem + 3vw, 2.625rem); font-weight: 700; letter-spacing: -0.015em; line-height: 1.02; margin-bottom: var(--s-4); }
   .h-head p:not(.eyebrow) { color: var(--slate); font-size: var(--fs-md); max-width: 56ch; margin: 0; }
   .h-head--center { max-width: 620px; margin-inline: auto; text-align: center; }
   .h-head--center p:not(.eyebrow) { margin-inline: auto; }
@@ -668,7 +668,7 @@ const more = [
   /* ── Close: Tines-style bordered call-to-action box ── */
   .h-close__box { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; padding: clamp(var(--s-6), 5vw, var(--s-8)); border-radius: 24px; background: var(--ice); border: 1px solid rgb(8 26 53 / 16%); }
   .h-close__art { width: 92px; margin-bottom: var(--s-4); }
-  .h-close__box h2 { max-width: 18ch; font-size: clamp(2rem, 1.3rem + 2.4vw, 3.25rem); font-weight: 700; letter-spacing: -0.015em; line-height: 1.05; }
+  .h-close__box h2 { max-width: 18ch; font-size: clamp(1.75rem, 1.3rem + 2.4vw, 2.625rem); font-weight: 700; letter-spacing: -0.015em; line-height: 1.05; }
   .h-close__box > p { max-width: 58ch; color: var(--slate); }
   .h-close__cta { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-3); margin: var(--s-3) 0 var(--s-7); }
   .h-close__cta .btn { border-radius: 999px; }
@@ -684,7 +684,7 @@ const more = [
   /* ── Government schemes ── */
   .h-gs { background: var(--ivory); }
   .h-gs__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(var(--s-6), 6vw, 96px); align-items: start; }
-  .h-gs h2 { font-size: clamp(2.25rem, 1.4rem + 3vw, 4rem); font-weight: 700; letter-spacing: -0.015em; line-height: 1.02; margin-bottom: var(--s-4); }
+  .h-gs h2 { font-size: clamp(1.75rem, 1.4rem + 3vw, 2.625rem); font-weight: 700; letter-spacing: -0.015em; line-height: 1.02; margin-bottom: var(--s-4); }
   .h-gs__copy p { color: var(--slate); font-size: var(--fs-md); max-width: 46ch; }
   .h-gs__copy .h-gs__rule { margin: var(--s-5) 0 var(--s-6); padding: var(--s-4) var(--s-5); border-radius: 14px; background: var(--white); border: 1px solid rgb(8 26 53 / 12%); color: var(--midnight); font-size: var(--fs-base); font-weight: 500; }
   .h-gs__list { list-style: none; margin: 0; padding: 0; border-top: 1px solid rgb(8 26 53 / 14%); }

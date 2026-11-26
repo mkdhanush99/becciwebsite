@@ -6,6 +6,7 @@ interface Props { title: string; description?: string }
 const { title, description = 'BECCI — Bahujan Entrepreneurs Chamber for Commerce & Industry. Where Community Meets Commerce.' } = Astro.props;
 const fullTitle = title === 'Home' ? 'BECCI — Where Community Meets Commerce' : `${title} · BECCI`;
 import Motion from '../components/Motion.astro';
+import BecciAI from '../components/BecciAI.astro';
 ---
 <!doctype html>
 <html lang="en">
@@ -16,8 +17,7 @@ import Motion from '../components/Motion.astro';
     <meta name="theme-color" content="#0A2352" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    <link rel="preload" href="/fonts/NewBlackTypeface-Regular.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/NewBlackTypeface-Bold.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/onest-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -34,5 +34,6 @@ import Motion from '../components/Motion.astro';
     <main id="main" tabindex="-1"><slot /></main>
     <Footer />
     <Motion />
+    <BecciAI />
   </body>
 </html>
