@@ -1,23 +1,24 @@
 ---
-// Header: logo and actions on top; below, the twelve tabs of the client's blueprint in two groups,
-// Community and Commerce, joined in the middle by the official BECCI infinity symbol.
+// Header: logo, a Google-style search box with recommended searches, Member login and Join on top;
+// below, the twelve tabs of the client's blueprint (Knowledge and Events last). Each tab opens a hover card
+// with its description, links to the parts of that page, and a feature card.
 import { navTabs } from '../data/site';
 import Logo from './Logo.astro';
 import Icon from './Icon.astro';
+import Illo from './Illo.astro';
 import HeaderSearch from './HeaderSearch';
+import SearchBox from './SearchBox';
 import '../styles/tailwind.css';
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const isIn = (href: string) => path === href || path.startsWith(href + '/');
-const groups = [
-  { key: 'community', label: 'Community', tabs: navTabs.community },
-  { key: 'commerce', label: 'Commerce', tabs: navTabs.commerce },
-];
+const tone = { finder: 'royal', chamber: 'cyan', members: 'midnight', updates: 'sky' } as const;
 ---
 <header class="site-header" data-header>
   <div class="wrap site-header__bar">
     <a class="brand" href="/" aria-label="BECCI home"><Logo /></a>
     <div class="header-actions">
-      <a class="hdr-search" href="/opportunities" aria-label="Search BECCI" aria-keyshortcuts="Control+K Meta+K" data-search-open><Icon name="search" size={18} /></a>
+      <div class="hdr-searchbox"><SearchBox client:idle /></div>
+      <a class="hdr-search" href="/opportunities" aria-label="Search BECCI" data-search-open><Icon name="search" size={18} /></a>
       <a class="hdr-login login-link" href="/membership#member-login">Member login</a>
       <a class="btn btn--accent btn--sm" href="/membership#join">Join as a Member</a>
       <button class="menu-toggle" type="button" aria-label="Open menu" aria-haspopup="dialog" aria-expanded="false" aria-controls="site-menu" data-menu-open>
@@ -26,30 +27,36 @@ const groups = [
     </div>
   </div>
   <nav class="tabs-nav" aria-label="Main">
-    <div class="wrap tabs-nav__in">
-      {groups.map((g, gi) => (
-        <>
-          {gi === 1 && (
-            <span class="tabs-nav__link" aria-hidden="true">
-              <img src="/brand/becci-symbol-navy.svg" alt="" width="44" height="22" />
-            </span>
-          )}
-          <div class:list={['tabs-grp', `tabs-grp--${g.key}`]}>
-            <p class="tabs-grp__label" id={`tabs-${g.key}`}>{g.label}</p>
-            <ul aria-labelledby={`tabs-${g.key}`}>
-              {g.tabs.map((t) => (
-                <li>
-                  <a class="tab" href={t.href} aria-current={isIn(t.href) ? 'page' : undefined} aria-describedby={`tab-d-${t.href.slice(1)}`}>
-                    {t.label}
-                    <span class="tab__tip" id={`tab-d-${t.href.slice(1)}`} role="tooltip">{t.desc}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
+    <ul class="wrap tabs-nav__in">
+      {navTabs.map((t, i) => (
+        <li class="nav-item">
+          <a class="tab" href={t.href} aria-current={isIn(t.href) ? 'page' : undefined} aria-expanded="false" aria-controls={`tab-card-${i}`}>{t.label}</a>
+          <div class={`mm mm--${tone[t.feature.illo]}`} id={`tab-card-${i}`}>
+            <span class="mm__back" aria-hidden="true"></span>
+            <div class="mm__card">
+              <p class="mm__eyebrow">{t.label}</p>
+              <p class="mm__intro">{t.desc}</p>
+              <ul class="mm__links">
+                {t.links.map((c, j) => (
+                  <li style={`--j:${j}`}><a href={c.href}>
+                    <span class={`mm__ic mm__ic--${j % 4}`}><Icon name={c.icon as any} size={22} /></span>
+                    <span class="mm__l"><span class="mm__t">{c.label}</span><span class="mm__d">{c.desc}</span></span>
+                    <span class="mm__go" aria-hidden="true">→</span>
+                  </a></li>
+                ))}
+              </ul>
+            </div>
+            <a class="mm__feature" href={t.feature.href}>
+              <span class="mm__f-eyebrow">{t.feature.eyebrow}</span>
+              <span class="mm__f-title">{t.feature.title}</span>
+              <span class="mm__f-text">{t.feature.text}</span>
+              <span class="mm__f-art"><Illo name={t.feature.illo} /></span>
+              <span class="mm__f-cta">{t.feature.cta} →</span>
+            </a>
           </div>
-        </>
+        </li>
       ))}
-    </div>
+    </ul>
   </nav>
   <dialog class="mobile-nav" id="site-menu" aria-label="Menu" data-menu>
     <div class="mobile-nav__inner">
@@ -60,20 +67,14 @@ const groups = [
         </button>
       </div>
       <a class="m-search" href="/opportunities" data-search-open><Icon name="search" size={20} />Search pages and schemes</a>
-      {groups.map((g, gi) => (
-        <>
-          {gi === 1 && <div class="m-link" aria-hidden="true"><img src="/brand/becci-symbol-navy.svg" alt="" width="40" height="20" /></div>}
-          <section class="m-tabs" aria-labelledby={`m-tabs-${g.key}`}>
-            <p class="m-tabs__label" id={`m-tabs-${g.key}`}>{g.label}</p>
-            <ul>{g.tabs.map((t, j) => (
-              <li><a href={t.href} aria-current={isIn(t.href) ? 'page' : undefined}>
-                <span class={`mm__ic mm__ic--${j % 4}`}><Icon name={t.icon as any} size={20} /></span>
-                <span class="m-l"><strong>{t.label}</strong><span>{t.desc}</span></span>
-              </a></li>
-            ))}</ul>
-          </section>
-        </>
-      ))}
+      <nav class="m-tabs" aria-label="Main">
+        <ul>{navTabs.map((t, j) => (
+          <li><a href={t.href} aria-current={isIn(t.href) ? 'page' : undefined}>
+            <span class={`mm__ic mm__ic--${j % 4}`}><Icon name={t.icon as any} size={20} /></span>
+            <span class="m-l"><strong>{t.label}</strong><span>{t.desc}</span></span>
+          </a></li>
+        ))}</ul>
+      </nav>
       <div class="mobile-nav__cta">
         <a class="btn btn--accent" href="/membership#join">Join as a Member</a>
         <a class="btn btn--ghost" href="/membership#member-login">Member login</a>
@@ -86,6 +87,38 @@ const groups = [
   const header = document.querySelector('[data-header]');
   const onScroll = () => header?.toggleAttribute('data-scrolled', window.scrollY > 8);
   onScroll(); window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Tab hover cards: open on mouse hover (with a short intent delay) or ArrowDown; close on leave,
+  // Escape or focus moving out. A click on the tab itself still goes to its page.
+  const tabs = [...document.querySelectorAll<HTMLAnchorElement>('.tabs-nav .tab')];
+  const cardOf = (t: HTMLAnchorElement) => document.getElementById(t.getAttribute('aria-controls')!)!;
+  const closeAll = (except?: HTMLAnchorElement) => tabs.forEach((t) => { if (t !== except) { t.setAttribute('aria-expanded', 'false'); cardOf(t).removeAttribute('data-open'); } });
+  tabs.forEach((t, i) => {
+    const card = cardOf(t);
+    const links = () => [...card.querySelectorAll<HTMLAnchorElement>('a')];
+    const open = () => {
+      const switching = tabs.some((o) => o !== t && o.getAttribute('aria-expanded') === 'true');
+      closeAll(t); t.setAttribute('aria-expanded', 'true');
+      card.toggleAttribute('data-swap', switching); card.setAttribute('data-open', '');
+    };
+    const close = () => { t.setAttribute('aria-expanded', 'false'); card.removeAttribute('data-open'); };
+    t.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown') { e.preventDefault(); open(); links()[0]?.focus(); }
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); close(); tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length].focus(); }
+    });
+    card.addEventListener('keydown', (e) => {
+      const ls = links(); const k = ls.indexOf(document.activeElement as HTMLAnchorElement);
+      if (e.key === 'ArrowDown' && k > -1) { e.preventDefault(); ls[(k + 1) % ls.length].focus(); }
+      if (e.key === 'ArrowUp' && k > -1) { e.preventDefault(); k === 0 ? t.focus() : ls[k - 1].focus(); }
+    });
+    const item = t.parentElement!;
+    let timer: number | undefined; let intent: number | undefined;
+    item.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') { clearTimeout(timer); intent = window.setTimeout(open, 90); } });
+    item.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') { clearTimeout(intent); timer = window.setTimeout(close, 220); } });
+    item.addEventListener('keydown', (e) => { if (e.key === 'Escape') { close(); t.focus(); } });
+    item.addEventListener('focusout', (e) => { if (!item.contains(e.relatedTarget as Node)) close(); });
+  });
+  document.addEventListener('click', (e) => { if (!(e.target as Element).closest('.nav-item')) closeAll(); });
 
   const dlg = document.querySelector<HTMLDialogElement>('[data-menu]')!;
   const opener = document.querySelector<HTMLButtonElement>('[data-menu-open]');

@@ -125,14 +125,14 @@ const src = { label: `${S.short} statement`, url: S.url };
   .st-card { position: relative; overflow: hidden; isolation: isolate; display: flex; flex-direction: column; gap: var(--s-3); padding: clamp(var(--s-5), 3vw, var(--s-7)); border-radius: 24px; border: 1px solid transparent; }
   .st-card--midnight { background: var(--midnight); color: #c3d1e8; }
   .st-card--midnight::before { content: ''; position: absolute; inset: auto -20% -60% 30%; height: 120%; z-index: -1; background: radial-gradient(closest-side, rgb(10 35 82 / 55%), rgb(200 210 228 / 18%) 55%, transparent); }
-  .st-card--royal { background: var(--royal); color: #e6eefc; }
-  .st-card--ice { background: var(--ice); border-color: #d3e4f5; color: var(--ink-2); }
+  .st-card--royal { background: var(--royal); color: #e9edf4; }
+  .st-card--ice { background: var(--ice); border-color: #dfe5ee; color: var(--ink-2); }
   .st-card--cyan { background: var(--cyan-tint); border-color: #dfe5ee; color: var(--ink-2); }
   .st-card--ivory { background: var(--white); border-color: var(--silver-200); color: var(--ink-2); }
 
   .st-label { margin: 0; font-size: var(--fs-sm); font-weight: 600; letter-spacing: 0.01em; }
   .st-card--midnight .st-label { color: var(--sky); }
-  .st-card--royal .st-label, .st-card--royal .st-meta dt { color: #bfe7ff; }
+  .st-card--royal .st-label, .st-card--royal .st-meta dt { color: #c8d2e4; }
   .st-card--ice .st-label, .st-card--cyan .st-label, .st-card--ivory .st-label { color: var(--royal-deep); }
   .st-num { margin: 0; font-weight: 600; letter-spacing: -0.015em; line-height: 0.92; font-variant-numeric: tabular-nums; color: var(--midnight); }
   .st-card--midnight .st-num { color: #fff; }
@@ -141,7 +141,7 @@ const src = { label: `${S.short} statement`, url: S.url };
   .st-num--md { font-size: clamp(2.25rem, 1rem + 2.8vw, 3.75rem); }
   .st-num small { font-size: 0.38em; letter-spacing: -0.01em; font-weight: 500; }
   .st-note { margin: 0; font-size: var(--fs-sm); max-width: 46ch; }
-  .st-card--midnight .st-note { color: #c3d1e8; } .st-card--royal .st-note { color: #e6eefc; }
+  .st-card--midnight .st-note { color: #c3d1e8; } .st-card--royal .st-note { color: #e9edf4; }
 
   .st-meta { margin: auto 0 0; padding-top: var(--s-4); border-top: 1px solid rgb(10 35 82 / 12%); display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); font-size: var(--fs-label); }
   .st-card--midnight .st-meta, .st-card--royal .st-meta { border-top-color: rgb(255 255 255 / 16%); }

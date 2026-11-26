@@ -1,37 +1,33 @@
 ---
 // Testimonials (Critique §4.4): feedback from members, entrepreneurs and partners, in their own words,
-// published only with their consent. Bento layout in three columns; cards reveal one after another.
-// The current entries are marked Sample placeholders until BECCI supplies approved testimonials.
+// published only with their consent. One endless sideways scroll: the list is drawn twice and the track moves
+// by exactly one copy, so the loop has no seam and never ends. Hover or focus pauses it; with reduced motion
+// it becomes a normal horizontal scroller.
 import { testimonials } from '../data/site';
 import SampleBadge from './SampleBadge.astro';
-
-// Column layout: [large, small] [three dark] [small, large]
-const tone = ['grid', 'navy', 'dark', 'dark', 'dark', 'navy', 'grid'];
-const t = testimonials.slice(0, 7).map((x, i) => ({ ...x, tone: tone[i], big: tone[i] === 'grid' }));
-const cols = t.length === 7 ? [[t[0], t[1]], [t[2], t[3], t[4]], [t[5], t[6]]] : [t];
-let n = 0;
+const tones = ['light', 'navy', 'light', 'dark'];
 ---
-{t.length > 0 && (
-  <section class="tst" aria-labelledby="tst-title" data-tst>
-    <div class="wrap">
-      <header class="tst__head">
-        <h2 id="tst-title" class="tst__in" style="--i:0">In their words</h2>
-        <p class="tst__in" style="--i:1">What members, entrepreneurs and partners say about their journey with BECCI.</p>
-      </header>
-      <div class="tst__grid">
-        {cols.map((col, c) => (
-          <div class:list={['tst__col', `tst__col--${c}`]}>
-            {col.map((x) => (
-              <figure class:list={['tst__card', `tst__card--${x.tone}`, x.big && 'tst__card--big', 'tst__in']} style={`--i:${n++}`}>
-                {x.tone === 'grid' && <span class="tst__lines" aria-hidden="true"></span>}
+{testimonials.length > 0 && (
+  <section class="tst" aria-labelledby="tst-title">
+    <div class="wrap tst__head">
+      <span class="story-kicker">06 · Voices</span>
+      <h2 id="tst-title">In their words</h2>
+    </div>
+    <div class="tst__viewport" tabindex="0" aria-label="Testimonials, scrolling">
+      <div class="tst__track" style={`--n:${testimonials.length}`}>
+        {[0, 1].map((copy) => (
+          <ul class="tst__list" aria-hidden={copy === 1 ? 'true' : undefined}>
+            {testimonials.map((x, i) => (
+              <li class:list={['tst__card', `tst__card--${tones[i % tones.length]}`]}>
                 <blockquote><p>“{x.quote}”</p></blockquote>
-                <figcaption>
-                  <span class="tst__who"><strong>{x.name}</strong><span>{x.context}</span>{x.sample && <SampleBadge />}</span>
-                  {x.photo && <img src={x.photo} alt="" width="64" height="64" loading="lazy" decoding="async" />}
-                </figcaption>
-              </figure>
+                <div class="tst__who">
+                  {x.photo && <img src={x.photo} alt="" width="56" height="56" loading="lazy" decoding="async" />}
+                  <span><strong>{x.name}</strong><span>{x.context}</span></span>
+                  {x.sample && <SampleBadge />}
+                </div>
+              </li>
             ))}
-          </div>
+          </ul>
         ))}
       </div>
     </div>
@@ -39,47 +35,30 @@ let n = 0;
 )}
 
 <style>
-  .tst { padding-block: clamp(64px, 8vw, 120px); background: #fff; }
-  .tst__head { max-width: 760px; margin: 0 auto clamp(32px, 4vw, 56px); text-align: center; }
-  .tst__head h2 { margin: 0 0 var(--s-2); }
-  .tst__head p { margin: 0; color: var(--slate); }
-  .tst__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
-  .tst__col { display: flex; flex-direction: column; gap: 10px; }
-  .tst__card { position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; gap: var(--s-5); margin: 0; padding: 22px; border-radius: 10px; border: 1px solid rgb(10 35 82 / 12%); transition: transform 300ms var(--ease), box-shadow 300ms var(--ease); }
-  .tst__card:hover { transform: translateY(-2px); box-shadow: 0 18px 40px -24px rgb(6 22 56 / 45%); }
-  .tst__col--0 .tst__card--big, .tst__col--2 .tst__card--big { flex: 7; min-height: 340px; }
-  .tst__col--0 .tst__card--navy, .tst__col--2 .tst__card--navy { flex: 3; }
-  .tst__col--1 .tst__card { flex: 1; }
-  .tst__card--grid { background: var(--ivory, #f7f5ef); color: var(--midnight); }
+  .tst { padding-block: clamp(72px, 9vw, 128px); background: #fff; overflow: hidden; }
+  .tst__head { margin-bottom: clamp(32px, 4vw, 56px); text-align: center; }
+  .tst__head h2 { margin: 0; font-size: clamp(2rem, 1.3rem + 2.4vw, 3.25rem); letter-spacing: -0.015em; }
+  .tst__viewport { position: relative; outline: none;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+  .tst__track { display: flex; width: max-content; animation: tst-scroll calc(var(--n) * 9s) linear infinite; }
+  .tst__viewport:hover .tst__track, .tst__viewport:focus-within .tst__track { animation-play-state: paused; }
+  @keyframes tst-scroll { to { transform: translateX(-50%); } }
+  .tst__list { display: flex; gap: 20px; margin: 0; padding: 0 10px; list-style: none; }
+  .tst__card { display: flex; flex-direction: column; justify-content: space-between; gap: var(--s-5); width: 400px; min-height: 260px; padding: 28px; border-radius: 16px; border: 1px solid rgb(10 35 82 / 12%); }
+  .tst__card--light { background: var(--ivory); color: var(--midnight); }
   .tst__card--navy { background: #0A2352; color: #fff; border-color: transparent; }
-  .tst__card--dark { background: var(--midnight, #061638); color: #fff; border-color: transparent; }
-  .tst__lines { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to right, rgb(10 35 82 / 9%) 1px, transparent 1px), linear-gradient(to bottom, rgb(10 35 82 / 9%) 1px, transparent 1px); background-size: 50px 56px; mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, #000 70%, transparent 110%); -webkit-mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, #000 70%, transparent 110%); }
-  .tst__card blockquote { position: relative; margin: 0; }
-  .tst__card blockquote p { margin: 0; font: 500 1rem/1.55 var(--font-body); }
-  .tst__card--big blockquote p { font-size: 1.125rem; }
-  .tst__card figcaption { position: relative; display: flex; justify-content: space-between; align-items: flex-end; gap: var(--s-4); }
-  .tst__who { display: grid; gap: 2px; justify-items: start; }
-  .tst__who strong { font: 700 1.125rem/1.25 var(--font-display); }
-  .tst__who > span { font-size: var(--fs-sm); opacity: 0.8; }
-  .tst__card img { flex: none; width: 64px; height: 64px; border-radius: 12px; object-fit: cover; }
-  @media (prefers-reduced-motion: no-preference) {
-    :global(.js) .tst__in { opacity: 0; transform: translateY(-20px); filter: blur(10px); transition: opacity 500ms ease, transform 500ms ease, filter 500ms ease; transition-delay: calc(var(--i) * 150ms); }
-    :global(.js) .tst[data-in] .tst__in { opacity: 1; transform: none; filter: blur(0); }
-    :global(.js) .tst[data-in] .tst__card:hover { transform: translateY(-2px); }
+  .tst__card--dark { background: #061638; color: #fff; border-color: transparent; }
+  .tst__card blockquote { margin: 0; }
+  .tst__card blockquote p { margin: 0; font: 500 1.0625rem/1.55 var(--font-body); }
+  .tst__who { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; }
+  .tst__who img { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; }
+  .tst__who > span { display: grid; gap: 2px; }
+  .tst__who strong { font: 700 1rem/1.25 var(--font-display); }
+  .tst__who > span > span { font-size: var(--fs-sm); opacity: 0.75; }
+  @media (prefers-reduced-motion: reduce) {
+    .tst__viewport { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
+    .tst__track { animation: none; }
+    .tst__list[aria-hidden] { display: none; }
   }
-  @media (max-width: 1000px) {
-    .tst__grid { grid-template-columns: 1fr; }
-    .tst__col--0 .tst__card--big, .tst__col--2 .tst__card--big { min-height: 0; }
-  }
+  @media (max-width: 560px) { .tst__card { width: 300px; min-height: 240px; padding: 22px; } }
 </style>
-
-<script>
-  const s = document.querySelector<HTMLElement>('[data-tst]');
-  if (s) {
-    if (!('IntersectionObserver' in window)) s.dataset.in = '';
-    else {
-      const io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { s.dataset.in = ''; io.disconnect(); } }, { threshold: 0.15 });
-      io.observe(s);
-    }
-  }
-</script>

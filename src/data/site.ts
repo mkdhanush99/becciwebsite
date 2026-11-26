@@ -48,102 +48,109 @@ export const legal = {
 
 export const socials: { label: string; url: string }[] = []; // official URLs to be supplied (PRD §21)
 
-export interface NavLink { label: string; href: string; note?: string; icon?: string; desc?: string }
-export type NavTone = 'royal' | 'cyan' | 'midnight' | 'sky';
-export interface NavGroup {
-  label: string; href: string; intro?: string; tone?: NavTone; illo?: 'finder' | 'chamber' | 'members' | 'updates';
-  children?: NavLink[]; more?: NavLink[];
-  feature?: { eyebrow: string; title: string; text: string; href: string; cta: string };
+
+// Header tabs (client's Website improvement blueprint, §4): twelve tabs, Knowledge and Events last.
+// Each tab opens a hover card: the blueprint's description, links to the parts of that page, and a feature card.
+export interface NavTab {
+  label: string; href: string; desc: string; icon: string;
+  links: { label: string; href: string; icon: string; desc: string }[];
+  feature: { eyebrow: string; title: string; text: string; cta: string; href: string; illo: 'finder' | 'chamber' | 'members' | 'updates' };
 }
-
-// Header tabs (client's Website improvement blueprint, §4): twelve tabs in two groups, Community and Commerce,
-// joined by the BECCI infinity symbol. Descriptions are the blueprint's own words.
-export interface NavTab { label: string; href: string; desc: string; icon: string }
-export const navTabs: { community: NavTab[]; commerce: NavTab[] } = {
-  community: [
-    { label: 'About', href: '/about', desc: 'Introduction, Vision, Mission, What We Do', icon: 'community' },
-    { label: 'Leadership', href: '/leadership', desc: 'Founder, Advisors, Committees', icon: 'leadership' },
-    { label: 'Membership', href: '/membership', desc: 'Types, benefits, directory, upgrades', icon: 'membership' },
-    { label: 'Wings', href: '/wings', desc: "Women's Wing, Youth Wing", icon: 'women' },
-    { label: 'Knowledge', href: '/knowledge', desc: 'News, articles, laws, videos', icon: 'knowledge' },
-    { label: 'Events', href: '/events', desc: 'Conferences, workshops, networking events', icon: 'events' },
-  ],
-  commerce: [
-    { label: 'Biz Connect', href: '/biz-connect', desc: 'Networking, referrals, business volume', icon: 'chapters' },
-    { label: 'Marketplace', href: '/marketplace', desc: 'Directory, buying, selling, B2B', icon: 'entrepreneur' },
-    { label: 'Schemes', href: '/schemes', desc: 'Central and State schemes', icon: 'schemes' },
-    { label: 'Opportunities', href: '/opportunities', desc: 'Tenders, jobs, procurement', icon: 'tenders' },
-    { label: 'Franchise', href: '/franchise', desc: 'Franchise models and business ownership', icon: 'franchise' },
-    { label: 'Services', href: '/services', desc: 'Finance, insurance, consultancy, mentorship, compliance', icon: 'funding' },
-  ],
-};
-
-// Mega-navigation: four visual panels (client brief, Nov 2026). Each panel has its own
-// colour, illustration and feature card; "more" holds the secondary links for that area.
-export const nav: NavGroup[] = [
-  {
-    label: 'Opportunities', href: '/opportunities', tone: 'royal', illo: 'finder',
-    intro: 'Schemes, tenders, scholarships, jobs and funding, each checked against its official source.',
-    children: [
-      { label: 'Government schemes', href: '/schemes', icon: 'schemes', desc: 'Explained, with official links' },
-      { label: 'Tenders and procurement', href: '/opportunities/tenders', icon: 'tenders', desc: 'Bids and supplier registration' },
-      { label: 'Scholarships', href: '/opportunities/scholarships', icon: 'scholarship', desc: 'School, college and higher study' },
-      { label: 'Jobs and internships', href: '/opportunities/jobs', icon: 'jobs', desc: 'Including apprenticeships' },
-      { label: 'Loans and funding', href: '/opportunities/finance', icon: 'funding', desc: 'Credit, grants and subsidies' },
-      { label: 'Business opportunities', href: '/franchise', icon: 'franchise', desc: 'Franchise and enterprise models' },
+export const navTabs: NavTab[] = [
+  { label: 'About', href: '/about', desc: 'Introduction, Vision, Mission, What We Do', icon: 'community',
+    links: [
+      { label: 'About BECCI', href: '/about', icon: 'community', desc: 'Introduction and background' },
+      { label: 'Vision and Mission', href: '/about#purpose', icon: 'sectors', desc: 'What BECCI works towards' },
+      { label: 'What We Do', href: '/about#what', icon: 'services', desc: 'Six areas of work' },
+      { label: 'Governance', href: '/about#structure', icon: 'leadership', desc: 'Institutional structure' },
     ],
-    more: [
-      { label: 'All opportunities', href: '/opportunities' },
-      { label: 'How we check listings', href: '/opportunities/about-data' },
+    feature: { eyebrow: 'Our story', title: 'Where Community Meets Commerce', text: 'The five letters of BECCI, read as one entrepreneur’s journey.', cta: 'Read the story', href: '/about', illo: 'chamber' } },
+  { label: 'Leadership', href: '/leadership', desc: 'Founder, Advisors, Committees', icon: 'leadership',
+    links: [
+      { label: 'Founder', href: '/about#founder', icon: 'leadership', desc: 'Founding vision' },
+      { label: 'Advisors', href: '/leadership', icon: 'community', desc: 'Guidance and expertise' },
+      { label: 'Committees', href: '/leadership', icon: 'chapters', desc: 'National, State and Sector' },
+      { label: 'Wings Presidents', href: '/leadership', icon: 'women', desc: 'Women’s and Youth Wings' },
     ],
-    feature: { eyebrow: 'Opportunity Finder', title: 'Search every verified listing', text: 'Filter by category, State and who can apply. No account needed.', href: '/opportunities', cta: 'Open the finder' },
-  },
-  {
-    label: 'Chamber', href: '/about', tone: 'cyan', illo: 'chamber',
-    intro: 'Who BECCI is, who leads it and how members are organised.',
-    children: [
-      { label: 'About BECCI', href: '/about', icon: 'community', desc: 'Purpose, story and structure' },
-      { label: 'Leadership', href: '/leadership', icon: 'leadership', desc: 'Who is accountable' },
+    feature: { eyebrow: 'Leadership', title: 'The people accountable for BECCI', text: 'Profiles are published once each person approves them.', cta: 'Meet the leadership', href: '/leadership', illo: 'chamber' } },
+  { label: 'Membership', href: '/membership', desc: 'Types, benefits, directory, upgrades', icon: 'membership',
+    links: [
+      { label: 'Benefits', href: '/membership#benefits', icon: 'entrepreneur', desc: 'What membership gives you' },
+      { label: 'Who can join', href: '/membership#eligibility', icon: 'membership', desc: 'Central OBC or State BC/OBC list' },
+      { label: 'Join Now', href: '/membership#join', icon: 'arrow', desc: 'Start your application' },
+      { label: 'Member Login', href: '/membership#member-login', icon: 'community', desc: 'For existing members' },
+      { label: 'Membership Fees', href: '/membership-fees', icon: 'funding', desc: 'How fees are confirmed' },
+      { label: 'Membership Terms', href: '/membership-terms', icon: 'schemes', desc: 'Conditions of membership' },
+    ],
+    feature: { eyebrow: 'Join BECCI', title: 'Start with a call', text: 'Request a call and the membership team will explain how to join.', cta: 'Join as a Member', href: '/membership#join', illo: 'members' } },
+  { label: 'Wings', href: '/wings', desc: "Women's Wing, Youth Wing", icon: 'women',
+    links: [
       { label: "Women's Wing", href: '/wings/women', icon: 'women', desc: 'For women in business' },
       { label: 'Youth Wing', href: '/wings/youth', icon: 'youth', desc: 'Students and first-time founders' },
       { label: 'Chapters and sectors', href: '/wings', icon: 'chapters', desc: 'State chapters, sector committees' },
     ],
-    more: [
-      { label: 'Partner with BECCI', href: '/partnerships' },
-      { label: 'Services', href: '/services' },
-      { label: 'Contact', href: '/contact' },
+    feature: { eyebrow: 'Wings', title: 'Find your place in the chamber', text: 'Wings and sector committees bring members with shared goals together.', cta: 'Explore the wings', href: '/wings', illo: 'chamber' } },
+  { label: 'Biz Connect', href: '/biz-connect', desc: 'Networking, referrals, business volume', icon: 'chapters',
+    links: [
+      { label: 'Biz Connect', href: '/biz-connect', icon: 'chapters', desc: 'Structured business networking' },
+      { label: 'Partner with BECCI', href: '/partnerships', icon: 'partnership', desc: 'Institutional collaboration' },
+      { label: 'Success stories', href: '/success-stories', icon: 'stories', desc: 'Connections that became business' },
     ],
-    feature: { eyebrow: 'Our story', title: 'Where Community Meets Commerce', text: 'The five letters of BECCI, read as one entrepreneur’s journey.', href: '/about', cta: 'Read the story' },
-  },
-  {
-    label: 'Membership', href: '/membership', tone: 'midnight', illo: 'members',
-    intro: 'For Bahujan entrepreneurs, professionals and students on a Central or State OBC/BC list.',
-    children: [
-      { label: 'Membership information', href: '/membership', icon: 'membership', desc: 'Who can join and the categories' },
-      { label: 'Member benefits', href: '/membership#benefits', icon: 'entrepreneur', desc: 'What membership gives you' },
-      { label: 'Join BECCI', href: '/membership#join', icon: 'arrow', desc: 'Start with a call from the team' },
+    feature: { eyebrow: 'Biz Connect', title: 'Connections that turn into business', text: 'Referrals, partnerships and business volume between members.', cta: 'About Biz Connect', href: '/biz-connect', illo: 'members' } },
+  { label: 'Marketplace', href: '/marketplace', desc: 'Directory, buying, selling, B2B', icon: 'entrepreneur',
+    links: [
+      { label: 'Marketplace', href: '/marketplace', icon: 'entrepreneur', desc: 'Member businesses, B2B' },
+      { label: 'Member directory', href: '/membership#directory', icon: 'membership', desc: 'Find member enterprises' },
+      { label: 'Services', href: '/services', icon: 'services', desc: 'Support for your business' },
     ],
-    more: [
-      { label: 'Member login', href: '/membership#member-login' },
+    feature: { eyebrow: 'Marketplace', title: 'Buy from and sell to members', text: 'A directory for buying, selling and B2B between member businesses.', cta: 'About the Marketplace', href: '/marketplace', illo: 'finder' } },
+  { label: 'Schemes', href: '/schemes', desc: 'Central and State schemes', icon: 'schemes',
+    links: [
+      { label: 'All schemes', href: '/schemes', icon: 'schemes', desc: 'Central and State, explained' },
+      { label: 'PMEGP', href: '/schemes/pmegp', icon: 'funding', desc: 'Employment generation programme' },
+      { label: 'PM Mudra Yojana', href: '/schemes/pm-mudra-yojana', icon: 'funding', desc: 'Loans for small enterprises' },
+      { label: 'PM Vishwakarma', href: '/schemes/pm-vishwakarma', icon: 'entrepreneur', desc: 'Support for artisans' },
     ],
-    feature: { eyebrow: 'Join BECCI', title: 'Become part of the chamber', text: 'Request a call and the membership team will explain each category.', href: '/membership#join', cta: 'Request a call' },
-  },
-  {
-    label: 'Updates', href: '/news', tone: 'sky', illo: 'updates',
-    intro: 'What the chamber is announcing, organising and learning.',
-    children: [
+    feature: { eyebrow: 'Government schemes', title: 'Schemes, explained simply', text: 'Each scheme in six short chapters, with the official source.', cta: 'Browse schemes', href: '/schemes', illo: 'finder' } },
+  { label: 'Opportunities', href: '/opportunities', desc: 'Tenders, jobs, procurement', icon: 'tenders',
+    links: [
+      { label: 'Tenders and procurement', href: '/opportunities/tenders', icon: 'tenders', desc: 'Bids and supplier registration' },
+      { label: 'Jobs and internships', href: '/opportunities/jobs', icon: 'jobs', desc: 'Including apprenticeships' },
+      { label: 'Scholarships', href: '/opportunities/scholarships', icon: 'scholarship', desc: 'School, college, higher study' },
+      { label: 'Loans and funding', href: '/opportunities/finance', icon: 'funding', desc: 'Credit, grants and subsidies' },
+    ],
+    feature: { eyebrow: 'Opportunity Finder', title: 'Search every verified listing', text: 'Filter by category, State and who can apply. No account needed.', cta: 'Open the finder', href: '/opportunities', illo: 'finder' } },
+  { label: 'Franchise', href: '/franchise', desc: 'Franchise models and business ownership', icon: 'franchise',
+    links: [
+      { label: 'Franchise opportunities', href: '/franchise', icon: 'franchise', desc: 'Business models to explore' },
+      { label: 'Listings', href: '/franchise#fr-list', icon: 'entrepreneur', desc: 'Current franchise listings' },
+      { label: 'Loans and funding', href: '/opportunities/finance', icon: 'funding', desc: 'Finance to get started' },
+    ],
+    feature: { eyebrow: 'Franchise', title: 'Own a proven business', text: 'Practical pathways towards establishing and operating a business.', cta: 'See franchise models', href: '/franchise', illo: 'finder' } },
+  { label: 'Services', href: '/services', desc: 'Finance, insurance, consultancy, mentorship, compliance', icon: 'funding',
+    links: [
+      { label: 'Business services', href: '/services', icon: 'services', desc: 'Finance, insurance, consultancy' },
+      { label: 'Request a service', href: '/services#service', icon: 'arrow', desc: 'Tell us what you need' },
+      { label: 'Partner with BECCI', href: '/partnerships', icon: 'partnership', desc: 'Become a service provider' },
+    ],
+    feature: { eyebrow: 'Services', title: 'Help for growing businesses', text: 'Finance, insurance, consultancy, mentorship and compliance support.', cta: 'Explore services', href: '/services', illo: 'members' } },
+  { label: 'Knowledge', href: '/knowledge', desc: 'News, articles, laws, videos', icon: 'knowledge',
+    links: [
+      { label: 'Knowledge Centre', href: '/knowledge', icon: 'knowledge', desc: 'Guides and resources' },
       { label: 'News', href: '/news', icon: 'news', desc: 'Announcements from BECCI' },
-      { label: 'Events', href: '/events', icon: 'events', desc: 'Meetings, workshops, conferences' },
       { label: 'Success stories', href: '/success-stories', icon: 'stories', desc: 'Entrepreneurs who made it work' },
-      { label: 'Knowledge Centre', href: '/knowledge', icon: 'knowledge', desc: 'Guides and regulatory updates' },
+      { label: 'How we check listings', href: '/opportunities/about-data', icon: 'schemes', desc: 'Our verification method' },
     ],
-    more: [
-      { label: 'Biz Connect', href: '/biz-connect', note: 'Coming later' },
-      { label: 'Marketplace', href: '/marketplace', note: 'Coming later' },
+    feature: { eyebrow: 'Knowledge Centre', title: 'Learn what you need to grow', text: 'Guides, scheme explainers and official portals, searchable by topic.', cta: 'Open the Knowledge Centre', href: '/knowledge', illo: 'updates' } },
+  { label: 'Events', href: '/events', desc: 'Conferences, workshops, networking events', icon: 'events',
+    links: [
+      { label: 'Event calendar', href: '/events', icon: 'events', desc: 'Conferences and workshops' },
+      { label: 'News', href: '/news', icon: 'news', desc: 'What the chamber announces' },
+      { label: 'Contact', href: '/contact', icon: 'support', desc: 'Ask about an event' },
     ],
-    feature: { eyebrow: 'Event calendar', title: 'Meet the chamber in person', text: 'Dates are published here once BECCI confirms them.', href: '/events', cta: 'See the calendar' },
-  },
+    feature: { eyebrow: 'Event calendar', title: 'Meet the chamber in person', text: 'Dates are published here once BECCI confirms them.', cta: 'See the calendar', href: '/events', illo: 'updates' } },
 ];
+
 
 export const story = [
   { letter: 'B', name: 'Beginning of an Entrepreneurial Journey', title: 'The Beginning', text: 'Every great business begins with a person, an idea and a dream. The journey starts with the aspirations, skills and talents of our people.', link: { label: 'Scholarships, jobs and first steps', href: '/opportunities/scholarships' } },

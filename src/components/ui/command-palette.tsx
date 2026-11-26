@@ -35,7 +35,7 @@ const LIGHT = "#c8d2e4"
 const GRADIENT = "linear-gradient(120deg,#061638,#0A2352 45%,#16336b)"
 
 /** Subsequence match. Returns the matched indexes and a score (lower is better), or null. */
-function fuzzy(text: string, q: string): { idx: number[]; score: number } | null {
+export function fuzzy(text: string, q: string): { idx: number[]; score: number } | null {
   if (!q) return { idx: [], score: 0 }
   const t = text.toLowerCase(), s = q.toLowerCase()
   const at = t.indexOf(s)
