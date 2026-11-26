@@ -713,3 +713,4 @@ ul.w-list li::before { content: ''; position: absolute; left: 14px; top: 13px; w
 /* The menu dialog keeps its light panel. */
 .site-header .mobile-nav { color: var(--ink); }
 .site-header .tabs-nav__in { padding-inline: 0; }
+.site-header :focus-visible { outline-color: #C6A15B; }

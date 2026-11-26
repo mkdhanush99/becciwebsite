@@ -110,7 +110,8 @@ const src = { label: `${S.short} statement`, url: S.url };
 <style>
   .st { --ice: #f1f3f8; --cyan-tint: #eef1f6; background: var(--ivory); padding-block: clamp(var(--s-8), 9vw, 136px); border-top: 1px solid var(--silver-200); }
   .st-head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(var(--s-6), 6vw, var(--s-9)); align-items: end; margin-bottom: clamp(var(--s-6), 5vw, var(--s-8)); }
-  .st-head h2 { font-size: clamp(1.75rem, 1.4rem + 3vw, 2.625rem); font-weight: 700; line-height: 1.02; letter-spacing: -0.015em; margin: 0; max-width: 12ch; }
+  .st-head h2 { font-size: clamp(1.75rem, 1.4rem + 3vw, 2.625rem); font-weight: 700; line-height: 1.02; letter-spacing: -0.015em; margin: 0; max-width: 14ch; text-wrap: balance; }
+  @media (max-width: 560px) { .st-head h2 { max-width: none; } }
   .st-head__side p { color: var(--ink-2); margin: 0 0 var(--s-4); }
   .st-src { font-size: var(--fs-sm); color: var(--slate) !important; padding-top: var(--s-4); border-top: 1px solid var(--silver-300); }
   .st-src a { color: var(--royal-deep); }
@@ -145,7 +146,8 @@ const src = { label: `${S.short} statement`, url: S.url };
 
   .st-meta { margin: auto 0 0; padding-top: var(--s-4); border-top: 1px solid rgb(10 35 82 / 12%); display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); font-size: var(--fs-label); }
   .st-card--midnight .st-meta, .st-card--royal .st-meta { border-top-color: rgb(255 255 255 / 16%); }
-  .st-meta div { display: flex; gap: 6px; }
+  .st-meta div { display: flex; align-items: center; gap: 6px; }
+  .st-meta dd a { min-height: 32px; }
   .st-meta dt { font-weight: 600; color: var(--slate); }
   .st-meta dd { margin: 0; }
   .st-card--midnight .st-meta dt { color: var(--sky); }
