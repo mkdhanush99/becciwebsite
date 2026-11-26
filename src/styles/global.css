@@ -661,3 +661,55 @@ ul.w-list li::before { content: ''; position: absolute; left: 14px; top: 13px; w
 .story-kicker.story-kicker.story-kicker { display: flex; width: max-content; max-width: 100%; align-items: center; gap: 12px; margin: 0 0 var(--s-3); color: #A9874C; font: 700 0.75rem/1 var(--font-body); letter-spacing: 0.2em; text-transform: uppercase; }
 .story-kicker.story-kicker.story-kicker::before { content: ''; width: 28px; height: 1px; background: currentColor; }
 .story-kicker.story-kicker.story-kicker--dark { color: #C6A15B; }
+
+/* ---------- Header: black to midnight-navy (#000 → #081A30) ----------
+   Darker at both edges, a soft navy glow behind the logo, a fine grain over the gradient so it never bands.
+   One alignment system: both rows share .wrap; logo left; search, Member login and Join right, 16px apart;
+   the twelve tabs on one line, first and last tab text flush with the same edges. */
+.site-header {
+  --hdr-navy: #081A30;
+  background:
+    radial-gradient(420px 150% at calc(max(var(--gutter), (100% - var(--max)) / 2) + 90px) 32%, rgb(22 52 96 / 55%) 0%, rgb(8 26 48 / 30%) 45%, transparent 75%),
+    linear-gradient(90deg, #000 0%, #020812 14%, #05111f 30%, var(--hdr-navy) 50%, #05111f 70%, #020812 86%, #000 100%);
+  backdrop-filter: none; border-bottom: 1px solid rgb(198 161 91 / 22%); color: #fff;
+}
+.site-header::before { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0.05; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.site-header::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgb(255 255 255 / 3%), transparent 40%, rgb(0 0 0 / 22%)); }
+.site-header > * { position: relative; z-index: 1; }
+.site-header > .tabs-nav { z-index: 2; }
+.site-header[data-scrolled] { background:
+    radial-gradient(420px 150% at calc(max(var(--gutter), (100% - var(--max)) / 2) + 90px) 32%, rgb(22 52 96 / 55%) 0%, rgb(8 26 48 / 30%) 45%, transparent 75%),
+    linear-gradient(90deg, #000 0%, #020812 14%, #05111f 30%, var(--hdr-navy) 50%, #05111f 70%, #020812 86%, #000 100%);
+  border-bottom-color: rgb(198 161 91 / 28%); }
+.site-header__bar { gap: var(--s-4); }
+.site-header .brand { color: #fff; }
+.site-header .brand__logo { filter: drop-shadow(0 0 14px rgb(120 160 230 / 16%)); }
+.site-header .brand__full { border-left-color: rgb(255 255 255 / 18%); }
+.site-header .brand__name { color: #e6ecf5; }
+.site-header .brand__tag { color: #C6A15B; }
+.site-header .brand__tag i { color: #A9874C; }
+.site-header .header-actions { gap: var(--s-4); }
+.site-header .hdr-searchbox { margin-right: 0; }
+.site-header .sbx__input { background: rgb(255 255 255 / 6%); border-color: rgb(255 255 255 / 16%); color: #fff; box-shadow: inset 0 1px 0 rgb(255 255 255 / 6%); }
+.site-header .sbx__input::placeholder { color: #9fb0c9; }
+.site-header .sbx__input:hover { border-color: rgb(255 255 255 / 26%); box-shadow: inset 0 1px 0 rgb(255 255 255 / 6%); }
+.site-header .sbx__input:focus { background: rgb(255 255 255 / 9%); border-color: #C6A15B; box-shadow: 0 0 0 3px rgb(198 161 91 / 22%); }
+.site-header .sbx__icon { color: #9fb0c9; }
+.site-header .sbx__kbd { background: rgb(255 255 255 / 6%); border-color: rgb(255 255 255 / 14%); color: #c8d2e4; }
+.site-header .hdr-login { padding: 0 var(--s-2); color: #fff; }
+.site-header .hdr-login:hover { background: rgb(255 255 255 / 8%); color: #fff; }
+.site-header .header-actions .btn--accent { --bg: #C6A15B; --bd: #C6A15B; --fg: #061638; }
+.site-header .header-actions .btn--accent:hover { --bg: #d4b273; --bd: #d4b273; --fg: #061638; }
+.site-header .hdr-search { color: #fff; }
+.site-header .hdr-search:hover { background: rgb(255 255 255 / 8%); color: #fff; }
+.site-header .tabs-nav { border-top-color: rgb(255 255 255 / 8%); }
+.site-header .tab { color: #dfe5ee; }
+.site-header .tab::after { background: #C6A15B; }
+.site-header .tab:hover, .site-header .tab:focus-visible, .site-header .tab[aria-expanded='true'] { background: rgb(255 255 255 / 7%); color: #fff; }
+.site-header .tab[aria-current='page'] { color: #fff; }
+.site-header .tab:focus-visible { outline: 2px solid #C6A15B; outline-offset: 2px; }
+@media (max-width: 1240px) { .site-header .menu-toggle { border-color: rgb(255 255 255 / 18%); background: rgb(255 255 255 / 6%); color: #fff; } }
+/* The menu dialog keeps its light panel. */
+.site-header .mobile-nav { color: var(--ink); }
+.site-header .tabs-nav__in { padding-inline: 0; }
