@@ -65,7 +65,7 @@ const more = [
     <div class="wrap h-hero__grid">
       <div class="h-film" aria-hidden="true">
         <!-- BECCI brand films (client files, Nov 2026): the title film (36 s) builds the infinity from light and
-             resolves into the logo; then the 12 s loop keeps the finished logo alive. The title plays once per visit.
+             resolves into the logo; then the 12 s loop keeps the finished logo alive. The title plays in full on every visit.
              Black is keyed out in WebGL, so only the light sits on the hero's gradient: no frame, no controls. -->
         <video class="h-film__v" muted playsinline preload="auto" width="1280" height="720" data-film-title>
           <source src="/video/becci-title.mp4" type="video/mp4" />
@@ -315,11 +315,9 @@ const more = [
   const cv = document.querySelector<HTMLCanvasElement>('[data-film-canvas]');
   const box = cv?.closest<HTMLElement>('.h-film');
   const still = !window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
-  let seen = false;
-  try { seen = sessionStorage.getItem('becci-title-seen') === '1'; } catch {}
   if (title && loopV && cv && box) {
-    // The title film plays once per visit; after it (or on a return visit) the 12 s loop carries on from the logo.
-    let cur: HTMLVideoElement = seen || still ? loopV : title;
+    // Every homepage visit plays the full title film once; then the 12 s loop carries on from the finished logo.
+    let cur: HTMLVideoElement = still ? loopV : title;
     const gl = cv.getContext('webgl', { premultipliedAlpha: true, alpha: true, antialias: false });
     let draw = () => {};
     if (gl) {
@@ -358,7 +356,6 @@ const more = [
       // Get the loop ready before the title ends, then hand over on the last frame: both show the same logo.
       title.addEventListener('timeupdate', () => { if (title.duration && title.currentTime > title.duration - 8 && loopV.preload !== 'auto') { loopV.preload = 'auto'; loopV.load(); } });
       title.addEventListener('ended', () => {
-        try { sessionStorage.setItem('becci-title-seen', '1'); } catch {}
         cur = loopV; box.dataset.clip = 'loop';
         if (onScreen) loopV.play().catch(() => {});
       });
