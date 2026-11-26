@@ -32,24 +32,8 @@ const tilePhotos = [
   { photo: photos.industry, pos: '55% 40%' },
 ];
 const pillars = story.map((t, i) => ({ letter: t.letter, word: t.name, title: t.title, text: t.text, href: t.link.href, infinity: t.letter === 'C', ...tilePhotos[i] }));
-const motto = ['Bahujana', 'Hitāya,', 'Bahujana', 'Sukhāya'];
-// "BC doesn't mean Backward Class" story card (client text, verbatim), told one sentence at a time.
-const bcStory: { t: string; key?: boolean }[][] = [
-  [
-    { t: 'History gave them a label meant to keep them behind, yet they spent centuries pushing the nation forward.' },
-    { t: 'While the world looks at towering skyscrapers and booming markets, it often forgets the calloused hands, the sleepless nights, and the unbreakable spirit working silently at the foundation.' },
-    { t: 'BC does not stand for Backward Class—it stands for the Backbone Class of the Indian Economy.', key: true },
-    { t: 'Without their sweat, the engine of this country would come to a standstill.' },
-    { t: 'Respect the roots that keep the tree alive.', key: true },
-  ],
-  [
-    { t: 'For decades, two letters—BC—were used as a reminder of where we stood in line.' },
-    { t: 'Today, it’s time to change the meaning of those letters forever.' },
-    { t: 'Look at the farms, the factories, the small businesses, and the artisans shaping India’s future.' },
-    { t: 'Who is carrying the weight of a billion dreams on their shoulders?' },
-    { t: 'It’s time the world knew: BC isn’t Backward Class. It is the Backbone Class—the heartbeat and the foundation of the Indian economy.', key: true },
-  ],
-];
+// Set in Samarkan (client's chosen face), which has no macron letters, so the words are written without them.
+const motto = ['Bahujana', 'Hitaya,', 'Bahujana', 'Sukhaya'];
 // The four questions every visitor should get an answer to (Critique Review §20),
 // each with what works today and what is still being set up.
 // Four content pillars. Each answers one visitor question (Critique Review §20) and says
@@ -142,34 +126,12 @@ const more = [
     </ol>
   </section>
 
-  <section class="bc" aria-labelledby="bc-title" data-bc>
-    <div class="wrap bc__grid">
-      <div class="bc__stage">
-        <figure class="bc__photo"><img src="/images/sample/story-pottery.webp" alt="" width="1024" height="768" loading="lazy" decoding="async" /></figure>
-        <div class="bc__mark">
-          <span class="story-kicker story-kicker--dark">02 · The Backbone Class</span>
-          <h2 id="bc-title" class="bc__title">
-            <span class="bc__bc" aria-hidden="true">BC</span>
-            <span class="bc__not">doesn’t mean <s>Backward Class</s>.</span>
-            <span class="bc__is">It means <em>Backbone Class</em> of Indian Economy.</span>
-          </h2>
-        </div>
-      </div>
-      <div class="bc__story">
-        {bcStory.map((para, pi) => (
-          <div class="bc__para">
-            {para.map((line) => <p class:list={['bc__line', line.key && 'bc__line--key']} data-bc-line>{line.t}</p>)}
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
 
   <section class="section h-paths h-curtain" aria-labelledby="paths-title">
     <div class="wrap">
       <InfinityRule class="h-rule" />
       <div class="h-head" data-reveal>
-        <span class="story-kicker">03 · Your path</span>
+        <span class="story-kicker">02 · Your path</span>
         <h2 id="paths-title">BECCI for…</h2>
       </div>
       <ul class="h-paths__list" data-reveal-group>
@@ -189,7 +151,7 @@ const more = [
     <div class="wrap">
       <div class="section-head" data-reveal>
         <div>
-          <span class="story-kicker">04 · Open today</span>
+          <span class="story-kicker">03 · Open today</span>
           <h2 id="open-title">Opportunities you can apply for</h2>
         </div>
         <a class="link-arrow" href="/opportunities">All {opportunities.length} records and {portals.length} official portals</a>
@@ -220,7 +182,7 @@ const more = [
   <section class="section h-gs" aria-labelledby="gs-title">
     <div class="wrap h-gs__grid">
       <div class="h-gs__copy">
-        <span class="story-kicker">05 · Schemes</span>
+        <span class="story-kicker">04 · Schemes</span>
         <h2 id="gs-title">Government schemes, explained</h2>
         <a class="btn" href="/schemes">Browse government schemes</a>
       </div>
@@ -246,7 +208,7 @@ const more = [
   <section class="section" aria-labelledby="does-title">
     <div class="wrap">
       <div class="h-head" data-reveal>
-        <span class="story-kicker">07 · How BECCI helps</span>
+        <span class="story-kicker">06 · How BECCI helps</span>
         <h2 id="does-title">Discover. Develop. Connect. Grow.</h2>
       </div>
       <ul class="h-does" data-reveal-group>
@@ -268,6 +230,34 @@ const more = [
 
 
   <AdvisorsStrip />
+
+  <!-- The Backbone Class (client's card): one short animated board. "Backward Class" is struck through and
+       flips to "Backbone Class"; the four groups the client names pop in with BECCI icons. Plays once in view. -->
+  <section class="bcx" aria-labelledby="bcx-title" data-bcx>
+    <div class="wrap">
+      <div class="bcx__card">
+        <span class="bcx__glow" aria-hidden="true"></span>
+        <div class="bcx__head">
+          <span class="story-kicker story-kicker--dark">07 · The Backbone Class</span>
+          <h2 id="bcx-title" class="bcx__title">
+            <span class="visually-hidden">BC doesn’t mean Backward Class. It means Backbone Class of the Indian Economy.</span>
+            <span class="bcx__bc" aria-hidden="true">BC</span>
+            <span class="bcx__swap" aria-hidden="true">
+              <span class="bcx__pre"><span class="bcx__p-old">doesn’t mean</span><span class="bcx__p-new">means</span></span>
+              <span class="bcx__flip"><span class="bcx__old">Backward Class</span><span class="bcx__new">Backbone Class</span></span>
+              <span class="bcx__post">of the Indian Economy</span>
+            </span>
+          </h2>
+        </div>
+        <ul class="bcx__tiles" aria-label="Who BC stands for">
+          {[['youth', 'Farms'], ['sectors', 'Factories'], ['commerce', 'Small businesses'], ['entrepreneur', 'Artisans']].map(([ic, t], k) => (
+            <li style={`--k:${k}`}><span class="bcx__ic"><Icon name={ic as any} size={26} /></span><span>{t}</span></li>
+          ))}
+        </ul>
+        <p class="bcx__line">Respect the roots that keep the tree alive.</p>
+      </div>
+    </div>
+  </section>
 
   <section class="section h-close" aria-labelledby="close-title">
     <div class="wrap">
@@ -305,12 +295,8 @@ const more = [
   // Story boards: the Backbone Class lines light up one by one as they reach the middle of the screen,
   // and each board's heading and items fade up once when they come into view.
   if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches && 'IntersectionObserver' in window) {
-    const bc = document.querySelector<HTMLElement>('[data-bc]');
-    if (bc) {
-      new IntersectionObserver((es, o) => es.forEach((e) => { if (e.isIntersecting) { bc.setAttribute('data-in', ''); o.disconnect(); } }), { threshold: 0.2 }).observe(bc);
-      const lit = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.setAttribute('data-lit', ''); lit.unobserve(e.target); } }), { rootMargin: '0px 0px -38% 0px' });
-      bc.querySelectorAll('[data-bc-line]').forEach((l) => lit.observe(l));
-    }
+    const bcx = document.querySelector<HTMLElement>('[data-bcx]');
+    if (bcx) new IntersectionObserver((es, o) => es.forEach((e) => { if (e.isIntersecting) { bcx.setAttribute('data-play', ''); o.disconnect(); } }), { threshold: 0.45 }).observe(bcx);
     const rev = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.setAttribute('data-shown', ''); rev.unobserve(e.target); } }), { threshold: 0.12 });
     document.querySelectorAll<HTMLElement>('[data-reveal], [data-reveal-group]').forEach((el) => {
       if (el.hasAttribute('data-reveal-group')) Array.from(el.children).forEach((c, k) => (c as HTMLElement).style.setProperty('--k', String(k)));
@@ -492,8 +478,8 @@ const more = [
 
   /* Statement */
   /* BECCI card experience: Sanskrit motto in champagne gold over five art-directed photographic cards. */
-  @font-face { font-family: 'BECCI Motto'; src: url('/fonts/CinzelDecorative-700-latin.woff2') format('woff2'); font-weight: 700; font-display: swap; unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
-  @font-face { font-family: 'BECCI Motto'; src: url('/fonts/CinzelDecorative-700-latin-ext.woff2') format('woff2'); font-weight: 700; font-display: swap; unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+  /* Samarkan (Titivillus Foundry, shareware): served unaltered with its README, as its licence requires. */
+  @font-face { font-family: 'BECCI Motto'; src: url('/fonts/samarkan/SamarkanNormal-Gg5D.ttf') format('truetype'); font-weight: 400; font-display: swap; }
   .h-motto { --gold: #c6a15b; --gold-2: #a9874c; --gold-hi: #ecd6a4; --ink-night: #061329; position: relative; isolation: isolate; padding-block: calc(var(--s-9) + 40px) calc(var(--s-8) + 40px); margin-top: -40px; overflow: hidden;
     /* continues the hero's royal blue and settles into midnight, so the section emerges rather than cuts in */
     background: linear-gradient(180deg, #000 0, #02060f 220px, #040c22 420px, var(--ink-night) 560px, var(--ink-night) calc(100% - 260px), #081b38 100%); }
@@ -514,7 +500,7 @@ const more = [
   .h-motto--cards .h-bc { margin-top: 0; }
   .h-motto--end { margin-top: 0; padding-block: clamp(88px, 10vw, 152px); background: linear-gradient(180deg, var(--ink-night) 0, var(--ink-night) 60%, #081A30 100%); }
   .h-motto--end .h-motto__jali { top: 50%; translate: -50% -50%; }
-  .h-motto__line { margin: 0; font: 700 clamp(1.75rem, 0.9rem + 4.4vw, 2.625rem)/1.12 'BECCI Motto', 'Cinzel Decorative', 'Trajan Pro', Georgia, serif; letter-spacing: 0.02em; filter: drop-shadow(0 0 28px rgb(198 161 91 / 28%)) drop-shadow(0 2px 0 rgb(0 0 0 / 35%)); }
+  .h-motto__line { margin: 0; font: 400 clamp(1.75rem, 0.9rem + 4.4vw, 2.625rem)/1.2 'BECCI Motto', Georgia, serif; letter-spacing: 0.01em; filter: drop-shadow(0 0 28px rgb(198 161 91 / 28%)) drop-shadow(0 2px 0 rgb(0 0 0 / 35%)); }
   .h-motto__w { display: inline-block; color: var(--gold); background: linear-gradient(176deg, var(--gold-hi) 8%, var(--gold) 46%, var(--gold-2) 78%, #8a6a35 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
   .h-motto__rule { position: relative; display: block; width: min(560px, 60%); height: 1px; margin: var(--s-5) 0 var(--s-4); background: linear-gradient(90deg, transparent, var(--gold) 22%, var(--gold) 78%, transparent); transform-origin: center; }
   .h-motto__rule i { position: absolute; left: 50%; top: 50%; width: 9px; height: 9px; translate: -50% -50%; rotate: 45deg; background: var(--ink-night); border: 1px solid var(--gold); box-shadow: 0 0 12px rgb(198 161 91 / 60%); }
@@ -573,37 +559,13 @@ const more = [
 
   /* ── 02 · The Backbone Class: a sticky photograph and statement, the story told one sentence at a time ── */
   .h-bc__kicker { margin-bottom: var(--s-5); }
-  .bc { position: relative; padding-block: clamp(96px, 11vw, 168px); background: #061638; color: #fff; }
-  .bc__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(40px, 6vw, 112px); align-items: start; }
-  .bc__stage { position: sticky; top: calc(var(--header-h) + 32px); }
-  .bc__photo { position: relative; margin: 0; aspect-ratio: 4 / 5; overflow: hidden; border-radius: 18px; background: #0A2352; }
-  .bc__photo img { width: 100%; height: 100%; object-fit: cover; object-position: 32% 62%; filter: grayscale(1) contrast(1.15) brightness(0.9); mix-blend-mode: luminosity; opacity: 0.55; transform: scale(1.04); transition: transform 2400ms var(--ease); }
-  .bc__photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgb(6 22 56 / 10%) 0%, rgb(6 22 56 / 35%) 45%, #061638 100%); }
-  .bc[data-in] .bc__photo img { transform: scale(1); }
-  .bc__mark { position: relative; margin-top: -46%; padding: 0 clamp(20px, 2.4vw, 36px); }
-  .bc__title { display: grid; gap: 10px; margin: 0; font-weight: 700; }
-  .bc__bc { font: 700 clamp(5rem, 3rem + 6vw, 9rem)/0.85 var(--font-display); letter-spacing: -0.03em; color: #fff; }
-  .bc__not { color: rgb(255 255 255 / 70%); font: 500 clamp(1.125rem, 0.9rem + 0.6vw, 1.5rem)/1.3 var(--font-body); }
-  .bc__not s { position: relative; text-decoration: none; color: rgb(255 255 255 / 55%); }
-  .bc__not s::after { content: ''; position: absolute; left: -2px; right: -2px; top: 52%; height: 2px; background: #C6A15B; transform-origin: left; transform: scaleX(var(--strike, 1)); transition: transform 900ms var(--ease) 400ms; }
-  .bc__is { font: 700 clamp(1.5rem, 1rem + 1.4vw, 2.375rem)/1.15 var(--font-display); letter-spacing: -0.01em; color: #fff; }
-  .bc__is em { font-style: normal; color: #C6A15B; }
-  .bc__story { display: grid; gap: clamp(48px, 6vw, 96px); padding-top: clamp(8px, 4vw, 64px); }
-  .bc__para { display: grid; gap: var(--s-5); }
-  .bc__line { margin: 0; max-width: 34ch; font: 500 clamp(1.25rem, 0.95rem + 0.8vw, 1.75rem)/1.45 var(--font-display); letter-spacing: -0.005em; color: #fff; }
-  .bc__line--key { color: #C6A15B; font-weight: 700; }
   @media (prefers-reduced-motion: no-preference) {
-    :global(.js) .bc__line { opacity: 0.18; transform: translateY(14px); transition: opacity 700ms var(--ease), transform 900ms var(--ease); }
-    :global(.js) .bc__line[data-lit] { opacity: 1; transform: none; }
     :global(.js) .bc:not([data-in]) { --strike: 0; }
     :global(.js) [data-reveal], :global(.js) [data-reveal-group] > * { opacity: 0; transform: translateY(24px); transition: opacity 800ms var(--ease), transform 1000ms var(--ease); }
     :global(.js) [data-reveal-group] > * { transition-delay: calc(var(--k, 0) * 90ms); }
     :global(.js) [data-reveal][data-shown], :global(.js) [data-reveal-group][data-shown] > * { opacity: 1; transform: none; }
   }
   @media (max-width: 900px) {
-    .bc__grid { grid-template-columns: 1fr; }
-    .bc__stage { position: relative; top: 0; max-width: 520px; }
-    .bc__line { max-width: none; }
   }
 
   /* ── Audience paths: colour-blocked "BECCI for" cards ── */
@@ -723,4 +685,54 @@ const more = [
   .h-gs__by { font-size: var(--fs-sm); color: var(--slate); }
   .h-gs__meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-3); margin-top: var(--s-2); font-size: var(--fs-sm); color: var(--ink-2); }
   @media (max-width: 900px) { .h-gs__grid { grid-template-columns: 1fr; } }
+
+  /* Backbone Class board */
+  .bcx { padding-block: clamp(56px, 7vw, 96px); background: var(--ivory); }
+  .bcx__card { position: relative; isolation: isolate; overflow: hidden; display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: var(--s-6) clamp(32px, 5vw, 72px); align-items: center;
+    padding: clamp(32px, 4.5vw, 64px); border-radius: 24px; color: #fff;
+    background: linear-gradient(115deg, #000 0%, #04101f 40%, #081A30 75%, #0A2352 100%); box-shadow: 0 30px 60px -30px rgb(6 22 56 / 55%); }
+  .bcx__glow { position: absolute; z-index: -1; inset: -40% auto auto -10%; width: 60%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(closest-side, rgb(198 161 91 / 18%), transparent); }
+  .bcx__head { display: grid; gap: var(--s-4); }
+  .bcx__title { margin: 0; display: flex; align-items: center; gap: clamp(16px, 2.4vw, 32px); color: #fff; }
+  .bcx__bc { font: 700 clamp(4.5rem, 3rem + 5vw, 7.5rem)/0.82 var(--font-display); letter-spacing: -0.04em; color: #fff; }
+  .bcx__swap { display: grid; gap: 6px; font-weight: 700; }
+  .bcx__pre { display: grid; height: 1.25em; overflow: hidden; font: 500 var(--fs-md)/1.25 var(--font-body); color: rgb(255 255 255 / 70%); }
+  .bcx__pre > span { grid-area: 1 / 1; white-space: nowrap; }
+  .bcx__p-new { color: #fff; transform: translateY(110%); }
+  .bcx__flip { position: relative; display: grid; height: 1.15em; overflow: hidden; font: 700 var(--fs-2xl)/1.15 var(--font-display); letter-spacing: -0.015em; }
+  .bcx__flip > span { grid-area: 1 / 1; white-space: nowrap; }
+  .bcx__old { position: relative; color: rgb(255 255 255 / 55%); }
+  .bcx__old::after { content: ''; position: absolute; left: 0; right: 0; top: 55%; height: 3px; border-radius: 3px; background: #C6A15B; transform: scaleX(0); transform-origin: left; }
+  .bcx__new { color: #C6A15B; transform: translateY(110%); }
+  .bcx__post { font: 500 var(--fs-md)/1.2 var(--font-body); color: #fff; }
+  .bcx__tiles { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .bcx__tiles li { display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 12px 14px; border-radius: 16px; background: rgb(255 255 255 / 6%); border: 1px solid rgb(255 255 255 / 12%); font: 700 var(--fs-base)/1.2 var(--font-display); color: #fff; }
+  .bcx__ic { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 12px; background: rgb(198 161 91 / 14%); color: #fff; --icon-accent: #C6A15B; border: 1px solid rgb(198 161 91 / 35%); }
+  .bcx__line { grid-column: 1 / -1; margin: 0; padding-top: var(--s-5); border-top: 1px solid rgb(255 255 255 / 12%); font: 700 var(--fs-lg)/1.3 var(--font-display); color: #C6A15B; text-align: center; }
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) .bcx__bc, :global(.js) .bcx__pre, :global(.js) .bcx__flip, :global(.js) .bcx__post, :global(.js) .bcx__tiles li, :global(.js) .bcx__line { opacity: 0; }
+    .bcx[data-play] .bcx__bc { animation: bcx-pop 700ms cubic-bezier(.34,1.56,.64,1) both; }
+    .bcx[data-play] .bcx__pre { animation: bcx-up 500ms var(--ease) 350ms both; }
+    .bcx[data-play] .bcx__flip { animation: bcx-up 500ms var(--ease) 550ms both; }
+    .bcx[data-play] .bcx__old::after { animation: bcx-strike 500ms var(--ease) 1250ms both; }
+    .bcx[data-play] .bcx__old { animation: bcx-out 450ms var(--ease) 1950ms both; }
+    .bcx[data-play] .bcx__p-old { animation: bcx-out 450ms var(--ease) 1950ms both; }
+    .bcx[data-play] .bcx__p-new { animation: bcx-in 550ms cubic-bezier(.34,1.56,.64,1) 2000ms both; }
+    .bcx[data-play] .bcx__new { animation: bcx-in 550ms cubic-bezier(.34,1.56,.64,1) 2000ms both; }
+    .bcx[data-play] .bcx__post { animation: bcx-up 500ms var(--ease) 2400ms both; }
+    .bcx[data-play] .bcx__tiles li { animation: bcx-pop 560ms cubic-bezier(.34,1.56,.64,1) calc(2700ms + var(--k) * 140ms) both; }
+    .bcx[data-play] .bcx__line { animation: bcx-up 600ms var(--ease) 3450ms both; }
+    .bcx__tiles li { transition: transform 200ms var(--ease), border-color 200ms; }
+    .bcx__tiles li:hover { transform: translateY(-2px); border-color: rgb(198 161 91 / 55%); }
+  }
+  @media (prefers-reduced-motion: reduce) { .bcx__old, .bcx__p-old { display: none; } .bcx__new, .bcx__p-new { transform: none; } }
+  :global(html:not(.js)) .bcx__old, :global(html:not(.js)) .bcx__p-old { display: none; }
+  :global(html:not(.js)) .bcx__new, :global(html:not(.js)) .bcx__p-new { transform: none; }
+  @keyframes bcx-pop { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: none; } }
+  @keyframes bcx-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  @keyframes bcx-strike { to { transform: scaleX(1); } }
+  @keyframes bcx-out { to { opacity: 0; transform: translateY(-110%); } }
+  @keyframes bcx-in { from { transform: translateY(110%); } to { transform: none; } }
+  @media (max-width: 900px) { .bcx__card { grid-template-columns: 1fr; } }
+  @media (max-width: 480px) { .bcx__title { flex-direction: column; align-items: flex-start; gap: 10px; } .bcx__flip { font-size: 26px; } }
 </style>
