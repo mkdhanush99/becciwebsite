@@ -96,12 +96,24 @@ const tone = { finder: 'royal', chamber: 'cyan', members: 'midnight', updates: '
   tabs.forEach((t, i) => {
     const card = cardOf(t);
     const links = () => [...card.querySelectorAll<HTMLAnchorElement>('a')];
+    let closing: number | undefined;
     const open = () => {
+      // Interruptible: re-hovering a card that is closing takes it straight back.
+      clearTimeout(closing); card.removeAttribute('data-closing');
       const switching = tabs.some((o) => o !== t && o.getAttribute('aria-expanded') === 'true');
       closeAll(t); t.setAttribute('aria-expanded', 'true');
+      // Grow out of the tab that opened it.
       card.toggleAttribute('data-swap', switching); card.setAttribute('data-open', '');
+      const tb = t.getBoundingClientRect(), cb = card.getBoundingClientRect();
+      card.style.setProperty('--ox', `${Math.round(tb.left + tb.width / 2 - cb.left)}px`);
     };
-    const close = () => { t.setAttribute('aria-expanded', 'false'); card.removeAttribute('data-open'); };
+    const close = () => {
+      t.setAttribute('aria-expanded', 'false');
+      if (!card.hasAttribute('data-open')) return;
+      // Leave along the same path it came in on, then hide.
+      card.setAttribute('data-closing', ''); clearTimeout(closing);
+      closing = window.setTimeout(() => { card.removeAttribute('data-open'); card.removeAttribute('data-closing'); }, 150);
+    };
     t.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowDown') { e.preventDefault(); open(); links()[0]?.focus(); }
       if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); close(); tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length].focus(); }

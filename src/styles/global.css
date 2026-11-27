@@ -714,3 +714,29 @@ ul.w-list li::before { content: ''; position: absolute; left: 14px; top: 13px; w
 .site-header .mobile-nav { color: var(--ink); }
 .site-header .tabs-nav__in { padding-inline: 0; }
 .site-header :focus-visible { outline-color: #C6A15B; }
+
+/* ---------- Fluid feel (Apple HIG translated to the web) ----------
+   Feedback on press, not release, and instant; hover cards grow from their tab and leave the way they came;
+   glass gives way to solid surfaces when people ask for less transparency or more contrast. */
+.btn { transition-property: background, border-color, color, transform, box-shadow; }
+.btn:active { transform: scale(0.97); transition-duration: 90ms; transition-timing-function: ease-out; }
+.tab:active, .hdr-login:active, .h-cats a:active, .sbx__chips button:active, .h-more a:active { transform: scale(0.97); transition: transform 90ms ease-out; }
+.h-paths__list a:active, .h-bc__card:active, .mm__links a:active, .mm__feature:active, .sbx__list a:active, .h-open__list a:active { transform: scale(0.985); transition: transform 90ms ease-out; }
+.mm__card, .mm__back { transform-origin: var(--ox, 50%) 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .mm[data-closing] .mm__card, .mm[data-closing] .mm__back { animation: mm-out 150ms cubic-bezier(0.4, 0, 1, 1) forwards; }
+  .mm[data-closing] .mm__feature { animation: mm-feat-out 150ms cubic-bezier(0.4, 0, 1, 1) forwards; }
+  .mm[data-closing] .mm__links li { animation: none; }
+}
+@keyframes mm-out { to { opacity: 0; transform: translateY(-8px) scale(0.985); } }
+@keyframes mm-feat-out { to { opacity: 0; transform: translate(16px, 8px); } }
+@media (prefers-reduced-transparency: reduce) {
+  .site-header .sbx__input { background: #0e2440; }
+  .bai__fab { background: #0A2352 !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+  .bai__fab::before, .bai__fab::after { display: none; }
+}
+@media (prefers-contrast: more) {
+  .site-header .sbx__input { background: #000; border-color: #fff; }
+  .site-header .tab { color: #fff; }
+  .bai__fab { background: #061638 !important; border-color: #C6A15B; }
+}
